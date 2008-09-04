@@ -15,36 +15,31 @@ class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
 		$this->operationManager = $this->getMock('tx_caretakerinstance_OperationManager',
 			array('executeOperation'));
 		
-		$this->securityManager = $this->getMock('tx_caretakerinstance_SecurityManager',
-			array('checkRequest', 'decryptRequest'));
+		$this->securityManager = $this->getMock('tx_caretakerinstance_ISecurityManager');
 		
 		$this->commandService = new tx_caretakerinstance_CommandService(
 			$this->operationManager, $this->securityManager);
 			
 		$this->commandRequest = new tx_caretakerinstance_CommandRequest(
-			array('client_info' => array(
-				'host_address' => '192.168.10.100',
-				'client_key' => 'abcdefg'
-			),
-			'operations' => array(
-				array('mock', array('foo' => 'bar')),
-				array('mock', array('foo' => 'bar'))
-			),
-			// Crypted JSON
-			'encrypted' => 'xxer4rt34x'
+			array('data' => array(
+				'operations' => array(
+					array('mock', array('foo' => 'bar')),
+					array('mock', array('foo' => 'bar'))
+				)
+			)
 		));
 	}
 	
 	function testExecuteCommandWithSecurity() {
 		$this->securityManager->expects($this->once())
-			->method('checkRequest')
+			->method('validateRequest')
 			->with($this->equalTo($this->commandRequest))
 			->will($this->returnValue(true));
 
 		$this->securityManager->expects($this->once())
-			->method('decryptRequest')
+			->method('decodeRequest')
 			->with($this->equalTo($this->commandRequest))
-			->will($this->returnValue($this->commandRequest));
+			->will($this->returnValue(true));
 			
 		$this->operationManager->expects($this->exactly(2))
 			->method('executeOperation')
@@ -66,12 +61,12 @@ class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
 	
 	function testExecuteCommandSecurityCheckFailed() {
 		$this->securityManager->expects($this->once())
-			->method('checkRequest')
+			->method('validateRequest')
 			->with($this->equalTo($this->commandRequest))
 			->will($this->returnValue(false));
 
 		$this->securityManager->expects($this->never())
-			->method('decryptRequest');
+			->method('decodeRequest');
 		
 		$result = $this->commandService->executeCommand($this->commandRequest);
 		
@@ -82,12 +77,12 @@ class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
 	
 	function testExecuteCommandDecryptionFailed() {
 		$this->securityManager->expects($this->once())
-			->method('checkRequest')
+			->method('validateRequest')
 			->with($this->equalTo($this->commandRequest))
 			->will($this->returnValue(true));
 
 		$this->securityManager->expects($this->once())
-			->method('decryptRequest');
+			->method('decodeRequest');
 		
 		$this->operationManager->expects($this->never())
 			->method('executeOperation');
@@ -97,6 +92,16 @@ class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
 		$this->assertFalse($result->isSuccessful());
 		
 		$this->assertEquals('The request could not be decrypted', $result->getMessage());
+	}
+	
+	function testRequestSessionToken() {
+		$this->securityManager->expects($this->once())
+			->method('createSessionToken')
+			->with($this->equalTo('10.0.0.1'))
+			->will($this->returnValue('me-is-token'));
+
+		$token = $this->commandService->requestSessionToken('10.0.0.1');
+		$this->assertEquals('me-is-token', $token);
 	}
 }
 ?>
