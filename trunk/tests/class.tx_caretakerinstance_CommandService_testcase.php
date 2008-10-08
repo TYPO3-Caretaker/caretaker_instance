@@ -11,11 +11,18 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @subpackage	tx_caretakerinstance
  */
 class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
+	
+	/**
+	 * @var tx_caretakerinstance_SecurityManager
+	 */
+	protected $securityManager;
+	
 	function setUp() {
 		$this->operationManager = $this->getMock('tx_caretakerinstance_OperationManager',
 			array('executeOperation'));
 		
 		$this->securityManager = $this->getMock('tx_caretakerinstance_ISecurityManager');
+	
 		
 		$this->commandService = new tx_caretakerinstance_CommandService(
 			$this->operationManager, $this->securityManager);
@@ -28,6 +35,27 @@ class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
 				)
 			)
 		));
+	}
+	
+	function testWrapCommandResult() {		
+		$result = new tx_caretakerinstance_CommandResult(true,
+			new tx_caretakerinstance_OperationResult(true, array('foo' => 'bar'))
+		);
+		
+		$data = json_encode(array(true,
+			array(true, array('foo' => 'bar'))
+		));
+		
+		$this->securityManager->expects($this->once())
+			->method('encrypt')
+			->with($this->equalTo($data), $this->equalTo('FakeClientPublicKey'))
+			->will($this->returnValue(true));
+		
+		$wrap = $this->commandService->wrapCommandResult($result);
+		
+		$this->assertTrue(is_string($wrap));
+		
+		
 	}
 	
 	function testExecuteCommandWithSecurity() {
