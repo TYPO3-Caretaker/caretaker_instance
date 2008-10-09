@@ -21,6 +21,9 @@ class tx_caretakerinstance_ServiceFactory {
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance']);
 	}
 	
+	/**
+	 * @return tx_caretakerinstance_CommandService
+	 */
 	public function getCommandService() {
 		if($this->commandService == null) {
 			$this->commandService = new tx_caretakerinstance_CommandService(
@@ -30,7 +33,10 @@ class tx_caretakerinstance_ServiceFactory {
 		}
 		return $this->commandService;
 	}
-	
+
+	/**
+	 * @return tx_caretakerinstance_SecurityManager
+	 */
 	public function getSecurityManager() {
 		if($this->securityManager == null) {
 			$this->securityManager = new tx_caretakerinstance_SecurityManager(
@@ -44,14 +50,21 @@ class tx_caretakerinstance_ServiceFactory {
 		return $this->securityManager;
 	}
 	
+	/**
+	 * @return tx_caretakerinstance_OperationManager
+	 */
 	public function getOperationManager() {
 		if($this->operationManager == null) {
 			$this->operationManager = new tx_caretakerinstance_OperationManager();
 			// TODO register additional operations
+			$this->operationManager->registerOperation('GetPHPVersion', 'tx_caretakerinstance_Operation_GetPHPVersion');
 		}
 		return $this->operationManager;
 	}
-	
+
+	/**
+	 * @return tx_caretakerinstance_CryptoManager
+	 */
 	public function getCryptoManager() {
 		if($this->cryptoManager == null) {
 			$this->cryptoManager = new tx_caretakerinstance_CryptoManager();

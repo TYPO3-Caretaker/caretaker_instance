@@ -1,7 +1,43 @@
 <?php
+/***************************************************************
+*  Copyright notice
+*
+*  (c) 2008 Christopher Hlubek (hlubek@networkteam.com)
+*  All rights reserved
+*
+*  This script is part of the TYPO3 project. The TYPO3 project is
+*  free software; you can redistribute it and/or modify
+*  it under the terms of the GNU General Public License as published by
+*  the Free Software Foundation; either version 2 of the License, or
+*  (at your option) any later version.
+*
+*  The GNU General Public License can be found at
+*  http://www.gnu.org/copyleft/gpl.html.
+*
+*  This script is distributed in the hope that it will be useful,
+*  but WITHOUT ANY WARRANTY; without even the implied warranty of
+*  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+*  GNU General Public License for more details.
+*
+*  This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/
+
 require_once('class.tx_caretakerinstance_CommandRequest.php');
 require_once('class.tx_caretakerinstance_CommandResult.php');
 
+
+/**
+ * The Command Service can execute Commands and
+ * is a coarse front service for the caretaker instance.
+ * 
+ * It uses the Security Manager and the Operation Manager
+ * to verify and authenticate Command Requests and
+ * execute them.
+ * 
+ * @author Christopher Hlubek <hlubek@networkteam.com>
+ * @package		TYPO3
+ * @subpackage	tx_caretakerinstance
+ */
 class tx_caretakerinstance_CommandService {
 	/**
 	 * @var tx_caretakerinstance_ISecurityManager
@@ -13,13 +49,21 @@ class tx_caretakerinstance_CommandService {
 	 */
 	protected $operationManager;
 
+	/**
+	 * Create a new Command Service
+	 *
+	 * @param tx_caretakerinstance_OperationManager $operationManager
+	 * @param tx_caretakerinstance_ISecurityManager $securityManager
+	 */
 	public function __construct(tx_caretakerinstance_OperationManager $operationManager, tx_caretakerinstance_ISecurityManager $securityManager) {
 		$this->operationManager = $operationManager;
 		$this->securityManager = $securityManager;
 	}
 
 	/**
-	 * Execute a command (multiple operations)
+	 * Execute a Command Request (which consists of multiple Operation keys and parameters).
+	 * 
+	 * The Command Request is validated, decoded and then executed.
 	 *
 	 * @param tx_caretakerinstance_CommandRequest $commandRequest
 	 * @return tx_caretakerinstance_CommandResult The command result object
@@ -46,6 +90,12 @@ class tx_caretakerinstance_CommandService {
 	
 	public function requestSessionToken($clientHostAddress) {
 		return $this->securityManager->createSessionToken($clientHostAddress);
+	}
+	
+	public function wrapCommandResult(tx_caretakerinstance_CommandResult $commandResult) {
+		$json = $commandResult->toJson();
+		
+		return $this->securityManager->encodeResult($json);
 	}
 }
 ?>

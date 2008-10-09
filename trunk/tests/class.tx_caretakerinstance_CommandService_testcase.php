@@ -37,25 +37,21 @@ class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
 		));
 	}
 	
-	function testWrapCommandResult() {		
+	function testWrapCommandResultEncodesResult() {
 		$result = new tx_caretakerinstance_CommandResult(true,
 			new tx_caretakerinstance_OperationResult(true, array('foo' => 'bar'))
 		);
 		
-		$data = json_encode(array(true,
-			array(true, array('foo' => 'bar'))
-		));
+		$data = $result->toJson();
 		
 		$this->securityManager->expects($this->once())
-			->method('encrypt')
-			->with($this->equalTo($data), $this->equalTo('FakeClientPublicKey'))
-			->will($this->returnValue(true));
+			->method('encodeResult')
+			->with($this->equalTo($data))
+			->will($this->returnValue('Encoded result data'));
 		
 		$wrap = $this->commandService->wrapCommandResult($result);
 		
-		$this->assertTrue(is_string($wrap));
-		
-		
+		$this->assertEquals('Encoded result data', $wrap);		
 	}
 	
 	function testExecuteCommandWithSecurity() {

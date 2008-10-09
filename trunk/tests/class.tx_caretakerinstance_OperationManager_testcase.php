@@ -15,17 +15,17 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @subpackage	tx_caretakerinstance
  */
 class tx_caretakerinstance_OperationManager_testcase extends tx_phpunit_testcase {
-	public function testAddOperationAsClass() {
+	public function testRegisterOperationAsClass() {
 		$operationManager = new tx_caretakerinstance_OperationManager();
-		$operationManager->addOperation('get_php_version',
+		$operationManager->registerOperation('get_php_version',
 			'tx_caretakerinstance_Operation_GetPHPVersion');
 		$operation = $operationManager->getOperation('get_php_version');
 		$this->assertType('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
 	}
 
-	public function testAddOperationAsInstance() {
+	public function testRegisterOperationAsInstance() {
 		$operationManager = new tx_caretakerinstance_OperationManager();
-		$operationManager->addOperation('get_php_version',
+		$operationManager->registerOperation('get_php_version',
 			new tx_caretakerinstance_Operation_GetPHPVersion());
 		$operation = $operationManager->getOperation('get_php_version');
 		$this->assertType('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
@@ -53,7 +53,7 @@ class tx_caretakerinstance_OperationManager_testcase extends tx_phpunit_testcase
 			->with($this->equalTo(array('foo' => 'bar')))
 			->will($this->returnValue(new tx_caretakerinstance_OperationResult(true, 'bar')));
 		
-		$operationManager->addOperation('mock',	$operation);
+		$operationManager->registerOperation('mock', $operation);
 		
 		$result = $operationManager->executeOperation('mock', array('foo' => 'bar'));
 		$this->assertTrue($result->isSuccessful());

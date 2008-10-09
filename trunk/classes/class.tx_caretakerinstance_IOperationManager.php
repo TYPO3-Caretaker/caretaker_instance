@@ -22,50 +22,31 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-
-require_once('class.tx_caretakerinstance_IOperationManager.php');
-
 /**
- * Operation manager for operation registration and execution.
- * 
- * This implementation registers Operations in an array.
+ * The Operation manager is responsible for registering and
+ * executing Operations. An Operation is registered with
+ * a unique key either as a class name or instance.
  * 
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOperationManager {
-
+interface tx_caretakerinstance_IOperationManager {
 	/**
-	 * @var array of tx_caretakerinstance_IOperation
-	 */
-	protected $operations;
-
-	/**
-	 * Register a new operation
+	 * Register a new operation with the given key.
 	 * 
 	 * @param string $operationKey The key of the operation (All lowercase, underscores)
 	 * @param string|object $operation Operation instance or class 
 	 */
-	function registerOperation($operationKey, $operation) {
-		$this->operations[$operationKey] = $operation;
-	}
-
+	function registerOperation($operationKey, $operation);
+	
 	/**
-	 * Get a registered operation as instance
+	 * Get a registered operation as instance by key
 	 *
 	 * @param string $operationKey
-	 * @return tx_caretakerinstance_IOperation|boolean The operation instance or FALSE if not registered
+	 * @return tx_caretakerinstance_IOperation|boolean The Operation instance or FALSE if not registered
 	 */
-	function getOperation($operationKey) {
-		if (is_string($this->operations[$operationKey])) {
-			return t3lib_div::makeInstance($this->operations[$operationKey]);
-		} elseif (is_object($this->operations[$operationKey])) {
-			return $this->operations[$operationKey];
-		} else {
-			return FALSE;
-		}
-	}
+	function getOperation($operationKey);
 
 	/**
 	 * Execute an Operation by key with optional parameters
@@ -74,13 +55,6 @@ class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOpe
 	 * @param array $parameter
 	 * @return tx_caretakerinstance_OperationResult
 	 */
-	function executeOperation($operationKey, $parameter = array()) {
-		$operation = $this->getOperation($operationKey); 
-		if ($operation) {
-			return $operation->execute($parameter);
-		} else {
-			return new tx_caretakerinstance_OperationResult(FALSE, 'Operation [' . $operationKey . '] unknown');
-		}
-	}
+	function executeOperation($operationKey, $parameter = array());
 }
 ?>

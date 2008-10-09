@@ -19,7 +19,7 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 	protected $privateKey;
 	
 	/**
-	 * Public key of the client accessing the instance (a.k.a crateaker server)
+	 * Public key of the client accessing the instance (a.k.a caretaker server), this must be preconfigured
 	 *
 	 * @var string
 	 */
@@ -129,6 +129,10 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 	
 	public function getSessionTokenExpiration() {
 		return $this->sessionTokenExpiration;
+	}
+	
+	public function encodeResult($resultData) {
+		return $this->cryptoManager->encrypt($resultData, $this->clientPublicKey);
 	}
 }
 ?>
