@@ -23,19 +23,19 @@ TYPO3_version<?php
 ***************************************************************/
 
 /**
- * A sample Operation which returns the installed PHP version 
+ * A sample Operation which returns the current TYPO3 version 
  * 
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_Operation_GetPHPVersion implements tx_caretakerinstance_IOperation {
+class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinstance_IOperation {
 	/**
 	 * @param array $parameter None
 	 * @return the current PHP version
 	 */
 	public function execute($parameter = array()) {
-		return new tx_caretakerinstance_OperationResult(true, phpversion());
+		return new tx_caretakerinstance_OperationResult(true, TYPO3_version);
 	}
 }
 ?>

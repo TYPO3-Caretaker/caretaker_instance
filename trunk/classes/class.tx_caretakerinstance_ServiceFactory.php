@@ -56,8 +56,19 @@ class tx_caretakerinstance_ServiceFactory {
 	public function getOperationManager() {
 		if($this->operationManager == null) {
 			$this->operationManager = new tx_caretakerinstance_OperationManager();
-			// TODO register additional operations
-			$this->operationManager->registerOperation('GetPHPVersion', 'tx_caretakerinstance_Operation_GetPHPVersion');
+			
+			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'])) {
+				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] as $key => $operationRef) {
+					if(is_string($operationRef)) {
+						$operation = t3lib_div::getUserObj($operationRef);
+					} elseif ($operationRef instanceof tx_caretakerinstance_IOperation) {
+						$operation = $operationRef;
+					} else {
+						// TODO log error if some strange value is registered
+					}
+					$this->operationManager->registerOperation($key, $operation);
+				}
+			}
 		}
 		return $this->operationManager;
 	}
@@ -70,6 +81,10 @@ class tx_caretakerinstance_ServiceFactory {
 			$this->cryptoManager = new tx_caretakerinstance_CryptoManager();
 		}
 		return $this->cryptoManager;
+	}
+	
+	public function destroy() {
+		self::$instance = null;
 	}
 }
 ?>

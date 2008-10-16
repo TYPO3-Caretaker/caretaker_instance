@@ -49,5 +49,34 @@ class tx_caretakerinstance_ServiceFactory_testcase extends tx_phpunit_testcase {
 		$this->assertEquals('FakeClientPublicKey', $securityManager->getClientPublicKey());
 		$this->assertEquals('10.0.0.1', $securityManager->getClientHostAddressRestriction());
 	}
+	
+	function testOperationClassRegistrationByConfVars() {
+		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] = array(
+			'dummy' => 'EXT:caretaker_instance/tests/fixtures/class.tx_caretakerinstance_DummyOperation.php:&tx_caretakerinstance_DummyOperation'
+		);
+		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
+		$operationManager = $factory->getOperationManager();
+		
+		$result = $operationManager->executeOperation('dummy', array('foo' => 'bar'));
+		
+		$this->assertEquals('bar', $result->getValue());
+	}
+	
+	function testOperationInstanceRegistrationByConfVars() {
+		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] = array(
+			'dummyInstance' => new tx_caretakerinstance_DummyOperation()
+		);
+		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
+		$operationManager = $factory->getOperationManager();
+		
+		$result = $operationManager->executeOperation('dummyInstance', array('foo' => 'bar'));
+		
+		$this->assertEquals('bar', $result->getValue());
+	}
+	
+	function tearDown() {
+		// Destroy Service Factory singleton after each test
+		tx_caretakerinstance_ServiceFactory::destroy();
+	}
 }
 ?>

@@ -23,19 +23,32 @@ TYPO3_version<?php
 ***************************************************************/
 
 /**
- * A sample Operation which returns the installed PHP version 
+ * An Operation that returns the version of an installed extension 
  * 
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_Operation_GetPHPVersion implements tx_caretakerinstance_IOperation {
+class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretakerinstance_IOperation {
 	/**
 	 * @param array $parameter None
-	 * @return the current PHP version
+	 * @return the extension version
 	 */
 	public function execute($parameter = array()) {
-		return new tx_caretakerinstance_OperationResult(true, phpversion());
+		$extensionKey = $parameter['extensionKey'];
+		
+		if (!t3lib_extMgm::isLoaded($extensionKey)) {
+			return new tx_caretakerinstance_OperationResult(false, 'Extension [' . $extensionKey . '] is not loaded');
+		}
+		
+		$_EXTKEY = $extensionKey;		
+		@include(t3lib_extMgm::extPath($extensionKey, 'ext_emconf.php'));
+
+		if (is_array($EM_CONF[$extensionKey])) {
+			return new tx_caretakerinstance_OperationResult(true, $EM_CONF[$extensionKey]['version']);
+		} else {
+			return new tx_caretakerinstance_OperationResult(false, 'Cannot read EM_CONF for extension [' . $extensionKey . ']');
+		}
 	}
 }
 ?>
