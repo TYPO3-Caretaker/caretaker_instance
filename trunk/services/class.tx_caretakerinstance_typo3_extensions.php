@@ -38,7 +38,9 @@ require_once(t3lib_extMgm::extPath('caretaker').'/services/interface.tx_caretake
 require_once(t3lib_extMgm::extPath('caretaker').'/classes/class.tx_caretaker_TestConf.php');
 require_once(t3lib_extMgm::extPath('caretaker').'/classes/class.tx_caretaker_TestResult.php');
 
-class tx_caretaker_typo3_extensions extends t3lib_svbase implements tx_caretaker_TestService {
+require_once (t3lib_extMgm::extPath('caretaker').'/services/class.tx_caretaker_TestServiceBase.php');
+
+class tx_caretakerinstance_ExtensionTestService extends tx_caretaker_TestServiceBase {
 	var $prefixId = 'tx_caretakerinstance_typo3_extensions';		// Same as class name
 	var $scriptRelPath = 'services/class.tx_caretakerinstance_typo3_extensions.php';	// Path to this script relative to the extension dir.
 	var $extKey = 'caretaker_instance';	// The extension key.

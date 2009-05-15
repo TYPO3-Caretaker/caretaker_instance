@@ -38,14 +38,9 @@ require_once(t3lib_extMgm::extPath('caretaker').'/services/interface.tx_caretake
 require_once(t3lib_extMgm::extPath('caretaker').'/classes/class.tx_caretaker_TestConf.php');
 require_once(t3lib_extMgm::extPath('caretaker').'/classes/class.tx_caretaker_TestResult.php');
 
-/**
- * Service "Dummy" for the "caretaker" extension.
- *
- * @author	Patrick Kollodzik <patrick@work.de>
- * @package	TYPO3
- * @subpackage	tx_caretaker
- */
-class tx_caretakerinstance_typo3_version extends t3lib_svbase implements tx_caretaker_TestService {
+require_once (t3lib_extMgm::extPath('caretaker').'/services/class.tx_caretaker_TestServiceBase.php');
+	
+class tx_caretakerinstance_typo3_version extends tx_caretaker_TestServiceBase {
 	var $prefixId = 'tx_caretakerinstance_typo3_version';		// Same as class name
 	var $scriptRelPath = 'services/class.tx_caretakerinstance_typo3_version.php';	// Path to this script relative to the extension dir.
 	var $extKey = 'caretaker_instance';	// The extension key.
