@@ -7,7 +7,7 @@
  * @Author	Martin Ficzel		<martin@work.de>
  * @Author	Patrick Kollodzik	<patrick@work.de>
  * 
- * $$Id: class.tx_caretaker_typo3_version.php 33 2008-06-13 14:00:38Z thomas $$
+ * $$Id: class.tx_caretaker_typo3_extensions.php 33 2008-06-13 14:00:38Z thomas $$
  */
 
 /***************************************************************
@@ -33,28 +33,29 @@
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(PATH_t3lib.'class.t3lib_svbase.php');
-require_once(t3lib_extMgm::extPath('caretaker').'/services/interface.tx_caretaker_TestService.php');
-require_once(t3lib_extMgm::extPath('caretaker').'/classes/class.tx_caretaker_TestConf.php');
-require_once(t3lib_extMgm::extPath('caretaker').'/classes/class.tx_caretaker_TestResult.php');
-
 require_once (t3lib_extMgm::extPath('caretaker').'/services/class.tx_caretaker_TestServiceBase.php');
+
+class tx_caretakerinstance_ExtensionTestService extends tx_caretaker_TestServiceBase {
 	
-class tx_caretakerinstance_typo3_version extends tx_caretaker_TestServiceBase {
-	var $prefixId = 'tx_caretakerinstance_typo3_version';		// Same as class name
-	var $scriptRelPath = 'services/class.tx_caretakerinstance_typo3_version.php';	// Path to this script relative to the extension dir.
-	var $extKey = 'caretaker_instance';	// The extension key.
-	
-	public function runTest($flexFormData){
-		$testResult = new tx_caretaker_TestResult();
+	public function runTest(){
+		
+		$extension_key = $this->getConfigValue('extension_key');
+		
+		if (!$extension_key){
+			return  tx_caretaker_TestResult::create( TX_CARETAKER_STATE_UNDEFINED, 0 , 'No extension key was given' );
+		}
+		
+		// here happens magic
+		 
+		$testResult =  tx_caretaker_TestResult::create( TX_CARETAKER_STATE_OK, 0 , 'Port was not defined' );
+		
 		return $testResult;
+		
 	}
-
+	
 }
 
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker/services/class.tx_caretaker_typo3_version.php'])	{
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker/sv1/class.tx_caretaker_version.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker/services/class.tx_caretaker_ExtensionTestService.php'])	{
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker/services/class.tx_caretaker_ExtensionTestService.php']);
 }
-
 ?>
