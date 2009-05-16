@@ -27,6 +27,7 @@
 					<config>
 						<type>input</type>
 						<size>30</size>
+						<eval>required</eval>
 					</config>
 				</TCEforms>
 			</extension_key>
@@ -36,17 +37,21 @@
 					<config>
 						<type>radio</type>
 						<items>
-							<numIndex index='0'>
+							<numIndex index="0">
 								<numIndex index="0">none</numIndex>
 								<numIndex index="1">none</numIndex>
 							</numIndex>
-							<numIndex index='1'>
+							<numIndex index="1">
 								<numIndex index="0">required</numIndex>
 								<numIndex index="1">required</numIndex>
 							</numIndex>
-							<numIndex index='2'>
+							<numIndex index="2">
 								<numIndex index="0">forbidden</numIndex>
 								<numIndex index="1">forbidden</numIndex>
+							</numIndex>
+							<numIndex index="3">
+								<numIndex index="0">evil</numIndex>
+								<numIndex index="1">evil</numIndex>
 							</numIndex>
 						</items>
 						<default>0</default>
