@@ -54,7 +54,7 @@ class tx_caretakerinstance_ServiceFactory {
 	 * @return tx_caretakerinstance_OperationManager
 	 */
 	public function getOperationManager() {
-		if($this->operationManager == null) {
+		if ($this->operationManager == null) {
 			$this->operationManager = new tx_caretakerinstance_OperationManager();
 			
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'])) {
@@ -77,10 +77,24 @@ class tx_caretakerinstance_ServiceFactory {
 	 * @return tx_caretakerinstance_CryptoManager
 	 */
 	public function getCryptoManager() {
-		if($this->cryptoManager == null) {
+		if ($this->cryptoManager == null) {
 			$this->cryptoManager = new tx_caretakerinstance_CryptoManager();
 		}
 		return $this->cryptoManager;
+	}
+	
+	
+	/**
+	 * @return tx_caretakerinstance_RemoteCommandConnector
+	 */
+	public function getRemoteCommandConnector() {
+		if ($this->remoteCommandConnector == null) {
+			$this->remoteCommandConnector = new tx_caretakerinstance_RemoteCommandConnector(
+				$this->getCryptoManager(),
+				$this->getSecurityManager()
+			);
+		}
+		return $this->remoteCommandConnector;
 	}
 	
 	public function destroy() {

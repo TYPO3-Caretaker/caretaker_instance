@@ -59,5 +59,9 @@ interface tx_caretakerinstance_ISecurityManager {
 	 * @return string The encrypted Command Result data 
 	 */
 	function encodeResult($resultData);
+	
+	function decodeResult($encryptedString);
+	
+	function getPrivateKey();
 }
 ?>

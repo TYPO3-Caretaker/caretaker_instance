@@ -92,5 +92,29 @@ class tx_caretakerinstance_CryptoManager_testcase extends tx_phpunit_testcase {
 		$this->assertEquals($data, $decrypt);
 	}
 	
+	function testEncryptAJson() {
+		$crypt = $this->cryptoManager->encrypt(
+			'{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}', 
+			$this->publicKey
+		);
+		$this->assertEquals(
+			'UKrckK7W6mUFuQOJbjvYays0k1i70envRfJOAx3SYcyFvnURuSpuC1aeat8gc2/rRi+GN0BEWUJQ8687FPpB3prkE6BjekMN7hMO1UVNalzj48vL9BCbQ2ZTuQX6GC9dhglWgADq3CjNjWWV4gEh5HsBMM+tPkdTz9cgEzmACwI=', 
+			$crypt
+		);
+		// t3lib_div::debug($crypt);
+	}
+	
+	function testDecryptAString() {
+		$plain = $this->cryptoManager->decrypt(
+			'UKrckK7W6mUFuQOJbjvYays0k1i70envRfJOAx3SYcyFvnURuSpuC1aeat8gc2/rRi+GN0BEWUJQ8687FPpB3prkE6BjekMN7hMO1UVNalzj48vL9BCbQ2ZTuQX6GC9dhglWgADq3CjNjWWV4gEh5HsBMM+tPkdTz9cgEzmACwI=', 
+			$this->privateKey
+		);
+	
+		$this->assertEquals(
+			'{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}', 
+			$plain
+		);
+	}
+	
 }
 ?>

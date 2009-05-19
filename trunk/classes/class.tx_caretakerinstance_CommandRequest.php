@@ -55,11 +55,21 @@ class tx_caretakerinstance_CommandRequest {
 	 */
 	public function __construct($options) {
 		$this->sessionToken = $options['session_token'];
-		$this->data = $options['data'];
-		$this->clientKey = $options['client_info']['client_key'];
-		$this->clientHostAdress = $options['client_info']['host_address'];
+		$this->data = $options['data'];		
 		$this->rawData = $options['raw'];
 		$this->signature = $options['signature'];
+		
+		// if we have client infos, we are recieving a command
+		if (is_array($options['client_info'])) {
+			$this->clientKey = $options['client_info']['client_key'];
+			$this->clientHostAdress = $options['client_info']['host_address'];
+		}
+		
+		// if we have server infos, we are going to send this Request
+		if (is_array($options['server_info'])) {
+			$this->serverKey = $options['server_info']['server_key'];
+			$this->serverUrl = $options['server_info']['server_url'];
+		}
 	}
 	
 	/**
@@ -84,6 +94,20 @@ class tx_caretakerinstance_CommandRequest {
 	}
 	
 	/**
+	 * @return string The Server's (read: instance) URL
+	 */
+	public function getServerUrl() {
+		return $this->serverUrl;
+	}
+	
+	/**
+	 * @return string The Server's (read: instance) URL
+	 */
+	public function getServerKey() {
+		return $this->serverKey;
+	}
+	
+	/**
 	 * @return string The raw data (encrypted)
 	 */
 	public function getRawData() {
@@ -95,6 +119,13 @@ class tx_caretakerinstance_CommandRequest {
 	 */
 	public function getSignature() {
 		return $this->signature;
+	}
+	
+	/**
+	 * @param string The signature
+	 */
+	public function setSignature($signature) {
+		$this->signature = $signature;
 	}
 	
 	/**

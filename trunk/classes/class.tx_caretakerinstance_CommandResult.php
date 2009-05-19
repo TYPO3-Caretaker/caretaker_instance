@@ -97,5 +97,28 @@ class tx_caretakerinstance_CommandResult {
 		
 		return json_encode($array);
 	}
+	
+	/**
+	 * create a new CommandResult from a Json-String (e.g. recieved by http-call)
+	 * 
+	 * @param $json string
+	 * @return tx_caretakerinstance_CommandResult
+	 */
+	public static function fromJson($json) {
+		$data = json_decode($json);
+		
+		if (is_object($data)) {
+			$results = array();
+			foreach ($data->results as $key => $result) {
+				// TODO: can we cast the stdObject to tx_caretakerinstance_OperationResult?
+				$results[] =  new tx_caretakerinstance_OperationResult($result->status, $result->value);
+			}
+			$data->results = $results;
+			
+			return new tx_caretakerinstance_CommandResult($data->status, $data->results, $data->message);
+		} else {
+			return false;
+		}
+	}
 }
 ?>

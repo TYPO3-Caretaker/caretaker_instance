@@ -74,6 +74,14 @@ class tx_caretakerinstance_ServiceFactory_testcase extends tx_phpunit_testcase {
 		$this->assertEquals('bar', $result->getValue());
 	}
 	
+	
+	function testRemoteCommandConnector() {
+		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
+		$connector = $factory->getRemoteCommandConnector();
+		
+		$this->assertType('tx_caretakerinstance_RemoteCommandConnector', $connector);
+	}
+	
 	function tearDown() {
 		// Destroy Service Factory singleton after each test
 		tx_caretakerinstance_ServiceFactory::destroy();

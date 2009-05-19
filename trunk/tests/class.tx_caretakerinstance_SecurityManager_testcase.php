@@ -172,5 +172,15 @@ class tx_caretakerinstance_SecurityManager_testcase extends tx_phpunit_testcase 
 		$encodedResult = $this->securityManager->encodeResult('My result data');
 		$this->assertEquals('Encoded result', $encodedResult);
 	}
+	
+	function testEncodeResultDecodesStringWithPrivateKey() {
+		$this->cryptoManager->expects($this->once())
+			->method('decrypt')
+			->with($this->equalTo('Encoded result'), $this->equalTo('FakePrivateKey'))
+			->will($this->returnValue('My result data'));
+		
+		$encodedResult = $this->securityManager->decodeResult('Encoded result');
+		$this->assertEquals('My result data', $encodedResult);
+	}
 }
 ?>

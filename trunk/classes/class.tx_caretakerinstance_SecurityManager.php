@@ -80,6 +80,8 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 				return false;
 			}
 			$data = json_decode($raw, true);
+			
+			// merge decrypted data into raw data
 			$commandRequest->mergeData($data);
 		}
 		
@@ -133,6 +135,10 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 	
 	public function encodeResult($resultData) {
 		return $this->cryptoManager->encrypt($resultData, $this->clientPublicKey);
+	}
+	
+	public function decodeResult($encryptedData) {
+		return $this->cryptoManager->decrypt($encryptedData, $this->privateKey);
 	}
 }
 ?>
