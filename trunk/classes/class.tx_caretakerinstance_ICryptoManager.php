@@ -43,5 +43,12 @@ interface tx_caretakerinstance_ICryptoManager {
 	function encrypt($data, $key);
 	
 	function decrypt($data, $key);
+
+	/**
+	 * Generate a new key pair
+	 *
+	 * @return array with public and private key as string
+	 */
+	function generateKeyPair();
 }
 ?>

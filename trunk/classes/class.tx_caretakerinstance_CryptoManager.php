@@ -36,6 +36,8 @@ require_once('class.tx_caretakerinstance_ICryptoManager.php');
  * @subpackage	tx_caretakerinstance
  */
 class tx_caretakerinstance_CryptoManager implements tx_caretakerinstance_ICryptoManager {
+
+	const KEY_LENGTH = 64;
 	
 	protected $rsa;
 	
@@ -75,6 +77,12 @@ class tx_caretakerinstance_CryptoManager implements tx_caretakerinstance_ICrypto
 	public function decrypt($data, $key) {
 		$rsa = $this->getRsa();
 		return $rsa->decrypt($data, $this->rsaKey($key));
+	}
+
+	public function generateKeyPair() {
+		$keyPair = new Crypt_RSA_KeyPair(self::KEY_LENGTH);
+
+		return array($keyPair->getPublicKey()->toString(), $keyPair->getPrivateKey()->toString()); 
 	}
 	
 	/**
