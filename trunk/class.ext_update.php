@@ -1,5 +1,8 @@
 <?php
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_ServiceFactory.php'));
+
+if (t3lib_extMgm::isLoaded('caretaker_instance') == true){
+	require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_ServiceFactory.php'));
+}
 
 /**
  * Extension manager update class to generate public / private key pairs.
@@ -18,6 +21,7 @@ class ext_update {
 	 * @return boolean Whether the update should be shown / allowed
 	 */
 	public function access() {
+		
 		$extConf = $this->getExtConf();
 		
 		$show = !strlen($extConf['crypto.']['instance.']['publicKey']) ||
@@ -31,6 +35,7 @@ class ext_update {
 	 * @return string
 	 */
 	public function main() {
+		
 		$extConf = $this->getExtConf();
 		
 		$this->factory = tx_caretakerinstance_ServiceFactory::getInstance();
