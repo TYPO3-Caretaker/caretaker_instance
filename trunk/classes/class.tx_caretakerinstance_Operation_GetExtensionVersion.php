@@ -22,6 +22,8 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
+
 /**
  * An Operation that returns the version of an installed extension 
  * 
@@ -32,22 +34,22 @@
 class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretakerinstance_IOperation {
 	/**
 	 * @param array $parameter None
-	 * @return the extension version
+	 * @return The extension version
 	 */
 	public function execute($parameter = array()) {
 		$extensionKey = $parameter['extensionKey'];
 		
 		if (!t3lib_extMgm::isLoaded($extensionKey)) {
-			return new tx_caretakerinstance_OperationResult(false, 'Extension [' . $extensionKey . '] is not loaded');
+			return new tx_caretakerinstance_OperationResult(FALSE, 'Extension [' . $extensionKey . '] is not loaded');
 		}
 		
 		$_EXTKEY = $extensionKey;		
 		@include(t3lib_extMgm::extPath($extensionKey, 'ext_emconf.php'));
 
 		if (is_array($EM_CONF[$extensionKey])) {
-			return new tx_caretakerinstance_OperationResult(true, $EM_CONF[$extensionKey]['version']);
+			return new tx_caretakerinstance_OperationResult(TRUE, $EM_CONF[$extensionKey]['version']);
 		} else {
-			return new tx_caretakerinstance_OperationResult(false, 'Cannot read EM_CONF for extension [' . $extensionKey . ']');
+			return new tx_caretakerinstance_OperationResult(FALSE, 'Cannot read EM_CONF for extension [' . $extensionKey . ']');
 		}
 	}
 }

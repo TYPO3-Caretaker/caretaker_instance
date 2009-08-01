@@ -1,15 +1,4 @@
 <?php
-/**
- * This is a file of the caretaker project.
- * Copyright 2008 by n@work Internet Informationssystem GmbH (www.work.de)
- * 
- * @Author	Thomas Hempel 		<thomas@work.de>
- * @Author	Martin Ficzel		<martin@work.de>
- * @Author	Patrick Kollodzik	<patrick@work.de>
- * 
- * $$Id: class.tx_caretaker_typo3_extensions.php 33 2008-06-13 14:00:38Z thomas $$
- */
-
 /***************************************************************
  *  Copyright notice
  *
@@ -35,8 +24,91 @@
 
 require_once(t3lib_extMgm::extPath('caretaker') . '/services/class.tx_caretaker_TestServiceBase.php');
 
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_ServiceFactory.php'));
+
 abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_TestServiceBase {
+	/**
+	 * Execute a list of operations on the configured instance.
+	 * 
+	 * The operations must be of the form
+	 * <code>
+	 * array(array("SomeOperationWithParams", array("foo" => "bar")), array("OperationWithoutParams"))
+	 * </code>
+	 * 
+	 * @param $operations Array of array of operations
+	 * @return tx_caretakerinstance_CommandResult|boolean
+	 */
+	protected function executeRemoteOperations($operations) {
+		$instanceUrl = $this->instance->getUrl();
+		$instancePublicKey = $this->instance->getPublicKey();
+
+		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
+		$connector = $factory->getRemoteCommandConnector();
+		
+		return $connector->executeOperations($operations, $instanceUrl, $instancePublicKey);
+	}
+
+	/**
+	 * Is the command result successful
+	 * @param $commandResult
+	 * @return tx_caretakerinstance_CommandResult|boolean
+	 */
+	protected function isCommandResultSuccessful($commandResult) {
+		return is_object($commandResult) && $commandResult->isSuccessful();
+	}
+
+	/**
+	 * Get the test result for a failed command result
+	 * @param $commandResult
+	 * @return tx_caretaker_TestResult
+	 */
+	protected function getFailedCommandResultTestResult($commandResult) {
+		return tx_caretaker_TestResult::create(
+			TX_CARETAKER_STATE_UNDEFINED,
+			0,
+			'Command execution failed: ' . (is_object($commandResult) ? $commandResult->getMessage() : 'undefined')
+		);
+	}
+
+	/**
+	 * Get the test result for a failed operation result
+	 * @param $operationResult
+	 * @return tx_caretaker_TestResult
+	 */
+	protected function getFailedOperationResultTestResult($operationResult) {
+		return tx_caretaker_TestResult::create(
+			TX_CARETAKER_STATE_UNDEFINED,
+			0,
+			'Operation execution failed: ' . $operationResult->getValue()
+		);
+	}
 	
+	protected function checkVersionRange($actualVersion, $minVersion, $maxVersion) {
+		if ($minVersion == '') {
+			$minVersion = '0.0.0';
+		}
+		if ($maxVersion == '') {
+			$maxVersion = '9999.9999.9999';
+		}
+		list($actualMajor, $actualMinor, $actualRelease) = explode('.', $actualVersion);
+		list($minMajor, $minMinor, $minRelease) = explode('.', $minVersion);
+		list($maxMajor, $maxMinor, $maxRelease) = explode('.', $maxVersion);
+
+		$actualMajor = intval($actualMajor);
+		$actualMinor = intval($actualMinor);
+		$actualRelease = intval($actualRelease);
+		$minMajor = intval($minMajor);
+		$minMinor = intval($minMinor);
+		$minRelease = intval($minRelease);
+		$maxMajor = intval($maxMajor);
+		$maxMinor = intval($maxMinor);
+		$maxRelease = intval($maxRelease);
+		
+		$b1 = $actualMajor >= $minMajor && $actualMajor <= $maxMajor;
+		$b2 = $actualMinor >= $minMinor && $actualMinor <= $maxMinor;
+		$b3 = $actualRelease >= $minRelease && $actualRelease <= $maxRelease;
+		return $b1 && $b2 && $b3;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretakerinstance_RemoteTestServiceBase.php'])	{

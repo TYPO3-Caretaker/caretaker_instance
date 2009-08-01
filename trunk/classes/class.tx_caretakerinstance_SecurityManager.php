@@ -50,8 +50,7 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 	
 	public function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest) {
 		$sessionToken = $commandRequest->getSessionToken();
-		$timestamp = $this->cryptoManager
-			->verifySessionToken($sessionToken, $this->privateKey);
+		$timestamp = $this->cryptoManager->verifySessionToken($sessionToken, $this->privateKey);
 		if ((time() - $timestamp) > $this->sessionTokenExpiration) {
 			// Session token expired
 			return false;
@@ -59,9 +58,10 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 			$commandRequest->getClientHostAddress() != $this->clientHostAddressRestriction) {
 			// Client IP address is not allowed
 			return false;
-		} elseif (!$this->cryptoManager
-			->verifySignature($commandRequest->getDataForSignature(),
-			$commandRequest->getSignature(), $this->clientPublicKey)) {
+		} elseif (!$this->cryptoManager->verifySignature(
+			$commandRequest->getDataForSignature(),
+			$commandRequest->getSignature(),
+			$this->clientPublicKey)) {
 			// Signature didn't verify
 			return false;
 		}
@@ -70,7 +70,7 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 	}
 	
 	public function decodeRequest(tx_caretakerinstance_CommandRequest $commandRequest) {
-		$data = json_decode($commandRequest->getRawData(), true);
+		$data = json_decode($commandRequest->getRawData(), TRUE);
 		$commandRequest->mergeData($data);
 		
 		if(strlen($commandRequest->getData('encrypted'))) {

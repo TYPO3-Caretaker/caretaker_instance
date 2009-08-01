@@ -4,9 +4,10 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandService.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_SecurityManager.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CryptoManager.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_RemoteCommandConnector.php'));
 
 class tx_caretakerinstance_ServiceFactory {
-	
+
 	protected static $instance;
 	
 	public static function getInstance() {

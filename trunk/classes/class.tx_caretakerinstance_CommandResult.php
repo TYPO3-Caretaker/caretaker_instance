@@ -22,12 +22,14 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
+
 /**
  * The Command Result encapsulates the result of a Command execution.
  * 
  * @author Christopher Hlubek <hlubek@networkteam.com>
- * @package		TYPO3
- * @subpackage	tx_caretakerinstance
+ * @package TYPO3
+ * @subpackage tx_caretakerinstance
  */
 class tx_caretakerinstance_CommandResult {
 	
@@ -85,10 +87,12 @@ class tx_caretakerinstance_CommandResult {
 	 */
 	public function toJson() {
 		$results = array();
-		foreach ($this->operationResults as $result) {
-			$results[] = $result->toArray();
+		if (is_array($this->operationResults)) {
+			foreach ($this->operationResults as $result) {
+				$results[] = $result->toArray();
+			}
 		}
-		
+
 		$array = array(
 			'status' => $this->status,
 			'results' => $results,
@@ -111,7 +115,7 @@ class tx_caretakerinstance_CommandResult {
 			$results = array();
 			foreach ($data->results as $key => $result) {
 				// TODO: can we cast the stdObject to tx_caretakerinstance_OperationResult?
-				$results[] =  new tx_caretakerinstance_OperationResult($result->status, $result->value);
+				$results[] = new tx_caretakerinstance_OperationResult($result->status, $result->value);
 			}
 			$data->results = $results;
 			

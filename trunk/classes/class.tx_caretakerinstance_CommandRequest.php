@@ -39,14 +39,29 @@
 class tx_caretakerinstance_CommandRequest {
 	
 	/**
-	 * @var string The client public key
+	 * @var string The client public key when receiving a command
 	 */
 	protected $clientKey;
 	
 	/**
-	 * @var string The client host address (IP)
+	 * @var string The client host address (IP) when receiving a command
 	 */
 	protected $clientHostAddress;
+
+	/**
+	 * @var string The public key of the server when sending a command
+	 */
+	protected $serverKey;
+
+	/**
+	 * @var string The URL of the server (to the TYPO3 site root) when sending a command
+	 */
+	protected $serverUrl;
+
+	/**
+	 * @var array
+	 */
+	protected $data = array();
 	
 	/**
 	 * Create a new Command Request 
@@ -59,13 +74,13 @@ class tx_caretakerinstance_CommandRequest {
 		$this->rawData = $options['raw'];
 		$this->signature = $options['signature'];
 		
-		// if we have client infos, we are recieving a command
+		// If we have client infos, we are recieving a command
 		if (is_array($options['client_info'])) {
 			$this->clientKey = $options['client_info']['client_key'];
 			$this->clientHostAdress = $options['client_info']['host_address'];
 		}
 		
-		// if we have server infos, we are going to send this Request
+		// If we have server infos, we are going to send this Request
 		if (is_array($options['server_info'])) {
 			$this->serverKey = $options['server_info']['server_key'];
 			$this->serverUrl = $options['server_info']['server_url'];
@@ -101,7 +116,7 @@ class tx_caretakerinstance_CommandRequest {
 	}
 	
 	/**
-	 * @return string The Server's (read: instance) URL
+	 * @return string The Server's (read: instance) public key
 	 */
 	public function getServerKey() {
 		return $this->serverKey;

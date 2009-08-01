@@ -70,21 +70,19 @@ class tx_caretakerinstance_CommandService {
 	 */
 	public function executeCommand(tx_caretakerinstance_CommandRequest $commandRequest) {
 		if($this->securityManager->validateRequest($commandRequest)) {
-			
 			if($this->securityManager->decodeRequest($commandRequest)) {
-			
 				$operations = $commandRequest->getData('operations');
+				
 				$results = array();
 				foreach($operations as $operation) {
 					$results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
 				}
-				return new tx_caretakerinstance_CommandResult(true, $results);
-			
+				return new tx_caretakerinstance_CommandResult(TRUE, $results);
 			} else {
-				return new tx_caretakerinstance_CommandResult(false, null, 'The request could not be decrypted');
+				return new tx_caretakerinstance_CommandResult(FALSE, NULL, 'The request could not be decrypted');
 			}
 		} else {
-			return new tx_caretakerinstance_CommandResult(false, null, 'The request could not be certified');
+			return new tx_caretakerinstance_CommandResult(FALSE, NULL, 'The request could not be certified');
 		}
 	}
 	

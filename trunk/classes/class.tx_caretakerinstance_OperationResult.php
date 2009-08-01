@@ -53,7 +53,7 @@ class tx_caretakerinstance_OperationResult {
 	public function isSuccessful() {
 		return $this->status;
 	}
-	
+
 	/**
 	 * @return array|string The operation value
 	 */

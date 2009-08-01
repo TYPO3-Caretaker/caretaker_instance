@@ -45,11 +45,13 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
 					'host_address' => $remoteAddress
 				)
 			),
-			'raw' => $data,
+			'data' => array(),
+			'raw' => stripslashes($data),
 			'signature' => $signature
 		));
+
 	$result = $commandService->executeCommand($request);
-	
+
 	// TODO Check for result failure and maybe throw a HTTP status code
 	
 	echo $commandService->wrapCommandResult($result);

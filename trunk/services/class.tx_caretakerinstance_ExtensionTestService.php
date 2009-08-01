@@ -38,35 +38,30 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
 class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
 	
 	public function runTest() {
-		
 		$extensionKey = $this->getConfigValue('extension_key');
 		$requirementMode = $this->getConfigValue('requirement_mode');
-		
+		$minVersion = $this->getConfigValue('min_version');
+		$maxVersion = $this->getConfigValue('max_version');
+
 		if (!$extensionKey){
 			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 0, 'Cannot execute extension test without extension key');
 		}
-		
+
 		$operation = array('GetExtensionVersion', array('extensionKey' => $extensionKey));
+		$operations = array($operation);
 
-		$instanceUrl = $this->instance->getUrl();
-		$instancePublicKey = $this->instance->getPublicKey();
+		$commandResult = $this->executeRemoteOperations($operations);
 
-		// TODO execute operation on instance
-		// $commandResult = ...
-		
-		if (!$commandResult->isSuccessful()) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 0, 'Command execution failed: ' . $commandResult->getMessage());
+		if (!$this->isCommandResultSuccessful($commandResult)) {
+			return $this->getFailedCommandResultTestResult($commandResult);
 		}
 		
 		$results = $commandResult->getOperationResults();
 		$operationResult = $results[0];
-		// Status can be true or false
-		$status = $operationResult->getStatus();
-		// The value is the extension version if status is true
-		if ($status === TRUE) {
+		if ($operationResult->isSuccessful()) {
 			$extensionVersion = $operationResult->getValue();
 		} else {
-			$extensionVersion = '';
+			$extensionVersion = FALSE;
 		}
 		
 		$checkResult = $this->checkVersionForRequirementAndVersionRange(
@@ -74,10 +69,11 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 			$requirementMode,
 			$minVersion,
 			$maxVersion);
-		if ($checkResult === TRUE) {
+		if ($checkResult) {
 			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0);
 		} else {
-			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, 'Extension check for [' . $extensionKey . '] failed: ' . $checkResult);
+			$message = 'Extension check for [' . $extensionKey . '] failed';
+			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, $message);
 		}
 
 		return $testResult;
@@ -90,37 +86,18 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 			} else {
 				return TRUE;
 			}
+		} elseif ($requirement == 'required') {
+			if (!$actualValue) {
+				return FALSE;
+			} else {
+				return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
+			}
+		} elseif ($requirement == 'forbidden') {
+			return !$actualValue;
+		} elseif ($requirement == 'evil') {
+			// TODO implement check for installed but not loaded extension
 		}
 	}
-	
-	protected function checkVersionRange($actualVersion, $minVersion, $maxVersion) {
-		if ($minVersion == '') {
-			$minVersion = '0.0.0';
-		}
-		if ($maxVersion == '') {
-			$maxVersion = '9999.9999.9999';
-		}
-		list($actualMajor, $actualMinor, $actualRelease) = explode('.', $actualVersion);
-		list($minMajor, $minMinor, $minRelease) = explode('.', $minVersion);
-		list($maxMajor, $maxMinor, $maxRelease) = explode('.', $maxVersion);
-		/*
-		$actualMajor = intval($actualMajor);
-		$actualMinor = intval($actualMinor);
-		$actualRelease = intval($actualRelease);
-		$minMajor = intval($minMajor);
-		$minMinor = intval($minMinor);
-		$minRelease = intval($minRelease);
-		$maxMajor = intval($maxMajor);
-		$maxMinor = intval($maxMinor);
-		$maxRelease = intval($maxRelease);
-		*/
-		
-		$b1 = $actualMajor >= $minMajor && $actualMajor <= $maxMajor;
-		$b2 = $actualMinor >= $minMinor && $actualMinor <= $maxMinor;
-		$b3 = $actualRelease >= $minRelease && $actualRelease <= $maxRelease;
-		var_dump($b1, $b2, $b3);
-		return $b1 && $b2 && $b3;
-	}	
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php'])	{
