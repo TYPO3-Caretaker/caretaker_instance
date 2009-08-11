@@ -21,24 +21,108 @@
 		</TCEforms> 
 		<type>array</type>
 		<el>
-			<ter_insecure>
+			<check_extension_locations>
 				<TCEforms>
-					<label>Find Insecure Extensions from TER</label>
+					<label>Wich extension-locations should be checked</label>
 					<config>
 						<type>check</type>
+					    <items>
+					    	<numIndex index="0">
+					    		<numIndex index="0">System</numIndex>
+								<numIndex index="1"></numIndex>
+					    	</numIndex>
+					    	<numIndex index="1">
+					    		<numIndex index="0">Global</numIndex>
+								<numIndex index="1"></numIndex>
+					    	</numIndex>
+					    	<numIndex index="2">
+					    		<numIndex index="0">Local</numIndex>
+								<numIndex index="1"></numIndex>
+					    	</numIndex>
+					  </items>
+					  <default>6</default>
+					  <cols>3</cols>
+					</config>
+				</TCEforms>
+			</check_extension_locations>
+			<status_of_installed_insecure_extensions>
+				<TCEforms>
+					<label>Status of installed insecure Extensions</label>
+					<config>
+						<type>select</type>
+						<items>
+					    	<numIndex index="0">
+					    		<numIndex index="0">OK</numIndex>
+								<numIndex index="1">0</numIndex>
+					    	</numIndex>
+					    	<numIndex index="1">
+					    		<numIndex index="0">Warning</numIndex>
+								<numIndex index="1">1</numIndex>
+					    	</numIndex>
+					    	<numIndex index="2">
+					    		<numIndex index="0">Error</numIndex>
+								<numIndex index="1">2</numIndex>
+					    	</numIndex>
+						</items>
+						<default>2</default>
+					</config>
+				</TCEforms>
+			</status_of_installed_insecure_extensions>
+			<status_of_uninstalled_insecure_extensions>
+				<TCEforms>
+					<label>Status of present but uninstalled insecure extensions</label>
+					<config>
+						<type>select</type>
+						<items>
+					    	<numIndex index="0">
+					    		<numIndex index="0">OK</numIndex>
+								<numIndex index="1">0</numIndex>
+					    	</numIndex>
+					    	<numIndex index="1">
+					    		<numIndex index="0">Warning</numIndex>
+								<numIndex index="1">1</numIndex>
+					    	</numIndex>
+					    	<numIndex index="2">
+					    		<numIndex index="0">Error</numIndex>
+								<numIndex index="1">2</numIndex>
+					    	</numIndex>
+						</items>
 						<default>1</default>
 					</config>
 				</TCEforms>
-			</ter_insecure>
-			<ter_not_present>
+			</status_of_uninstalled_insecure_extensions>
+			<status_of_custom_extensions>
 				<TCEforms>
-					<label>Find Extensions wich are not from TER</label>
+					<label>Status of Custom Extension wich are not found in TER</label>
 					<config>
-						<type>check</type>
+						<type>select</type>
+						<items>
+					    	<numIndex index="0">
+					    		<numIndex index="0">ignore</numIndex>
+								<numIndex index="1">0</numIndex>
+					    	</numIndex>
+					    	<numIndex index="1">
+					    		<numIndex index="0">Warning</numIndex>
+								<numIndex index="1">1</numIndex>
+					    	</numIndex>
+					    	<numIndex index="2">
+					    		<numIndex index="0">Error</numIndex>
+								<numIndex index="1">2</numIndex>
+					    	</numIndex>
+						</items>
 						<default>0</default>
 					</config>
 				</TCEforms>
-			</ter_not_present>
+			</status_of_custom_extensions>
+			<custom_extkey_whitlelist>
+				<TCEforms>
+					<label>Custom Extension Key Whitelist</label>
+					<config>
+						<type>text</type>
+					</config>
+				</TCEforms>
+			</custom_extkey_whitlelist>
+			
 		</el>
 	</ROOT>
 </T3DataStructure>

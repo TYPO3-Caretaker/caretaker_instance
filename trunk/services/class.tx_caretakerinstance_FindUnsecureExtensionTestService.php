@@ -38,8 +38,10 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
 class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
 	
 	public function runTest() {
-
-		$operation = array('GetExtensionList', array());
+		
+		$location_list = $this->getLocationList();
+		
+		$operation = array('GetExtensionList', array('locations'=>$location_list));
 		$operations = array($operation);
 
 		$commandResult = $this->executeRemoteOperations($operations);
@@ -50,20 +52,45 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		
 		$results = $commandResult->getOperationResults();
 		$operationResult = $results[0];
-		debug($operationResult->getValue());
-
-		if ($operationResult->isSuccessful()) {
-			$extensionVersion = $operationResult->getValue();
-		} else {
-			$extensionVersion = FALSE;
+		
+		if (!$operationResult->isSuccessful()) {
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 'remote Operation failed');
+		} 
+	
+		$extensionList = $operationResult->getValue();
+		$errors =  array();
+		$warnings = array();
+		foreach ($extensionList as $extensionInfo){
+			$this->checkExtension( $extensionInfo , &$errors, &$warnings);
 		}
 		
-		$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 'not implemented yet');
+			// throw error if insecure extensions are installed
+		if (count($errors)>0){
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 'ERRORS:'.implode(",",$errors).'WARNINGS:'.implode(",",$warnings));
+		}
+		
+			// throw warning if insecure extensions are present
+		if (count($warnings)>0){
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, 'remote Operation failed');
+		}
+		
+		$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, '');
 
 		return $testResult;
 	}
 	
-
+	public function checkExtension( $extensionInfo , &$errors, &$warnings){
+		return ;
+	}
+	
+	public function getLocationList(){
+		$location_code = (int)$this->getConfigValue('check_extension_locations');
+		$location_list = array();
+		if ($location_code & 1) $location_list[] = 'system';
+		if ($location_code & 2) $location_list[] = 'global';
+		if ($location_code & 4) $location_list[] = 'local';
+		return $location_list;
+	} 
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php'])	{
