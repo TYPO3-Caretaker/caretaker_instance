@@ -41,23 +41,21 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 		
 		$result = array();
 		
-		$result = array_merge_recursive( $result, $this->getPathExtensionList( PATH_typo3.'sysext/'  , 'system') );
-		$result = array_merge_recursive( $result, $this->getPathExtensionList( PATH_typo3.'ext/'     , 'global') );
-		$result = array_merge_recursive( $result, $this->getPathExtensionList( PATH_typo3conf.'ext/' , 'local' ) );
+		$this->getPathExtensionList(&$result, PATH_typo3.'sysext/'  , 'system');
+		$this->getPathExtensionList(&$result, PATH_typo3.'ext/'     , 'global');
+		$this->getPathExtensionList(&$result, PATH_typo3conf.'ext/' , 'local' );
 		
 		return new tx_caretakerinstance_OperationResult(TRUE, $result );
 		
 	}
 	
-	function getPathExtensionList($path, $scope)	{
+	function getPathExtensionList(&$extensionInfo, $path, $scope)	{
 
 		if (@is_dir($path))	{
 			$extensionList = t3lib_div::get_dirs($path);
-			$extensionInfo = array();
 			if (is_array($extensionList))	{
 				//$old = $GLOBALS['_EXTKEY'];
 				foreach($extensionList as $extKey)	{
-					$extensionInfo[$extKey]=array();
 						// is installed
 					$extensionInfo[$extKey]['isLoaded'] = (boolean)t3lib_extMgm::isLoaded($extKey);
 						// get Version
@@ -71,9 +69,7 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 					}
 				}
 			}
-			return $extensionInfo;
 		}
-		return false;
 	}
 }
 ?>
