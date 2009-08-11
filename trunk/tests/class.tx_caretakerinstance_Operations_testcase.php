@@ -6,6 +6,7 @@ require_once('fixtures/class.tx_caretakerinstance_DummyOperation.php');
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetPHPVersion.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetTYPO3Version.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetExtensionVersion.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetExtensionList.php'));
 
 
 
@@ -66,6 +67,15 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$operation = new tx_caretakerinstance_Operation_GetExtensionVersion();
 		
 		$result = $operation->execute(array('extensionKey' => 'not_loaded_extension'));
+		
+		$this->assertFalse($result->isSuccessful());
+	}
+	
+	public function testOperation_getExtensionList(){
+		$operation = new tx_caretakerinstance_Operation_GetExtensionList();
+		
+		$result = $operation->execute();
+		debug($result->getValue());
 		
 		$this->assertFalse($result->isSuccessful());
 	}
