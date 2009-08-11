@@ -38,16 +38,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
 class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
 	
 	public function runTest() {
-		/*
-		$extensionKey = $this->getConfigValue('extension_key');
-		$requirementMode = $this->getConfigValue('requirement_mode');
-		$minVersion = $this->getConfigValue('min_version');
-		$maxVersion = $this->getConfigValue('max_version');
 
-		if (!$extensionKey){
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 0, 'Cannot execute extension test without extension key');
-		}
-		*/
 		$operation = array('GetExtensionList', array());
 		$operations = array($operation);
 
@@ -60,46 +51,19 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$results = $commandResult->getOperationResults();
 		$operationResult = $results[0];
 		debug($operationResult->getValue());
+
 		if ($operationResult->isSuccessful()) {
 			$extensionVersion = $operationResult->getValue();
 		} else {
 			$extensionVersion = FALSE;
 		}
 		
-		$checkResult = $this->checkVersionForRequirementAndVersionRange(
-			$extensionVersion,
-			$requirementMode,
-			$minVersion,
-			$maxVersion);
-		if ($checkResult) {
-			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0);
-		} else {
-			$message = 'Extension check for [' . $extensionKey . '] failed';
-			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, $message);
-		}
+		$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 'not implemented yet');
 
 		return $testResult;
 	}
 	
-	public function checkVersionForRequirementAndVersionRange($actualValue, $requirement, $minVersion, $maxVersion) {
-		if ($requirement == 'none') {
-			if ($actualValue) {
-				return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
-			} else {
-				return TRUE;
-			}
-		} elseif ($requirement == 'required') {
-			if (!$actualValue) {
-				return FALSE;
-			} else {
-				return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
-			}
-		} elseif ($requirement == 'forbidden') {
-			return !$actualValue;
-		} elseif ($requirement == 'evil') {
-			// TODO implement check for installed but not loaded extension
-		}
-	}
+
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php'])	{
