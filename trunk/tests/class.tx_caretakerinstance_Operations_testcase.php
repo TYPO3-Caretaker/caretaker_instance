@@ -71,13 +71,23 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$this->assertFalse($result->isSuccessful());
 	}
 	
-	public function testOperation_getExtensionList(){
+	public function testOperation_getExtensionListFailsIfNoLocationListIsGiven(){
 		$operation = new tx_caretakerinstance_Operation_GetExtensionList();
 		
 		$result = $operation->execute();
-		debug($result->getValue());
 		
 		$this->assertFalse($result->isSuccessful());
 	}
+
+	public function testOperation_getExtensionListReturnsAnArrayOfExtensions(){
+		$operation = new tx_caretakerinstance_Operation_GetExtensionList();
+		
+		$result = $operation->execute(array('locations'=>array('global','local','system')));
+				
+		$this->assertTrue($result->isSuccessful());
+		$this->assertGreaterThan( 0 , count($result->getValue() ) );
+		
+	}
+	
 }
 ?>

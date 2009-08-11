@@ -38,14 +38,17 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	 */
 	public function execute($parameter = array()) {
 
+		$locations = $parameter['locations'];
 		
-		$result = array();
-		
-		$this->getPathExtensionList(&$result, PATH_typo3.'sysext/'  , 'system');
-		$this->getPathExtensionList(&$result, PATH_typo3.'ext/'     , 'global');
-		$this->getPathExtensionList(&$result, PATH_typo3conf.'ext/' , 'local' );
-		
-		return new tx_caretakerinstance_OperationResult(TRUE, $result );
+		if (is_array($locations)){
+			$extensionList = array();
+			if (in_array('system',$locations) ) $this->getPathExtensionList(&$extensionList, PATH_typo3.'sysext/'  , 'system');
+			if (in_array('global',$locations) ) $this->getPathExtensionList(&$extensionList, PATH_typo3.'ext/'     , 'global');
+			if (in_array('local', $locations) ) $this->getPathExtensionList(&$extensionList, PATH_typo3conf.'ext/' , 'local' );
+			return new tx_caretakerinstance_OperationResult(TRUE, $extensionList );
+		} else {
+			return new tx_caretakerinstance_OperationResult(FALSE, "No locations list given" );
+		}
 		
 	}
 	
