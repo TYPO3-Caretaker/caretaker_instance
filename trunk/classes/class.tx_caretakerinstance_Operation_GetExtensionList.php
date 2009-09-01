@@ -37,14 +37,14 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	 * @return The extension version
 	 */
 	public function execute($parameter = array()) {
-
 		$locations = $parameter['locations'];
-		
-		if (is_array($locations)){
+		if (is_array($locations) && count($locations) > 0 ) {
 			$extensionList = array();
-			if (in_array('system',$locations) ) $this->getPathExtensionList(&$extensionList, PATH_typo3.'sysext/'  , 'system');
-			if (in_array('global',$locations) ) $this->getPathExtensionList(&$extensionList, PATH_typo3.'ext/'     , 'global');
-			if (in_array('local', $locations) ) $this->getPathExtensionList(&$extensionList, PATH_typo3conf.'ext/' , 'local' );
+			foreach ($locations as $scope) {
+				if (in_array($scope, array('system', 'global', 'local')) ) {
+					$extensionList = array_merge($extensionList, $this->getPathExtensionList($scope));
+				}
+			}
 			return new tx_caretakerinstance_OperationResult(TRUE, $extensionList );
 		} else {
 			return new tx_caretakerinstance_OperationResult(FALSE, "No locations list given" );
@@ -52,8 +52,26 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 		
 	}
 	
-	function getPathExtensionList(&$extensionInfo, $path, $scope)	{
-
+	protected function getPathForScope($scope) {
+		$path = '';
+		switch ($scope) {
+			case 'system':
+				$path = PATH_typo3 . 'sysext/';
+				break;
+			case 'global':
+				$path = PATH_typo3 . 'ext/';
+				break;
+			case 'local':
+			default:
+				$path = PATH_typo3conf . 'ext/';
+				break;
+		}
+		return $path;
+	}
+	
+	function getPathExtensionList($scope)	{
+		$path = $this->getPathForScope($scope);
+		$extensionList = array();
 		if (@is_dir($path))	{
 			$extensionList = t3lib_div::get_dirs($path);
 			if (is_array($extensionList))	{
@@ -73,6 +91,7 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 				}
 			}
 		}
+		return $extensionInfo;
 	}
 }
 ?>
