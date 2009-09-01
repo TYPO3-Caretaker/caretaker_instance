@@ -3,7 +3,11 @@
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationManager.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandService.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_SecurityManager.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CryptoManager.php'));
+
+// FIXME: Do *not* use Base64CryptoManager. This is for demonstration/debugging only!
+// require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CryptoManager.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Base64CryptoManager.php'));
+
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_RemoteCommandConnector.php'));
 
 class tx_caretakerinstance_ServiceFactory {
@@ -79,7 +83,9 @@ class tx_caretakerinstance_ServiceFactory {
 	 */
 	public function getCryptoManager() {
 		if ($this->cryptoManager == null) {
-			$this->cryptoManager = new tx_caretakerinstance_CryptoManager();
+			// FIXME: Do *not* use Base64CryptoManager. This is for demonstration/debugging only!
+			// $this->cryptoManager = new tx_caretakerinstance_CryptoManager();
+			$this->cryptoManager = new tx_caretakerinstance_Base64CryptoManager();
 		}
 		return $this->cryptoManager;
 	}

@@ -22,28 +22,18 @@
 *  This copyright notice MUST APPEAR in all copies of the script!
 ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'lib/Crypt/RSA.php'));
-
 require_once('class.tx_caretakerinstance_ICryptoManager.php');
 
 /**
  * A Crypt based Crypto Manager implementation
- * 
- * TODO: reimplement CryptoManager based on another Library
- * TODO: encrypt/decrypt is to slow on 'huge' data sets (> 2000 byte)
- * TODO: Crypt_RSA does not support PHP 5.3
- * TODO: after reimplementing the CryptoManager, remove the temporary Base64CryptoManager!
+ * FIXME: Do *not* use Base64CryptoManager. This is for demonstration/debugging only!
  * 
  * 
- * @author Christopher Hlubek <hlubek@networkteam.com>
+ * @author Tobias Liebig <liebig@networkteam.com>
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_CryptoManager implements tx_caretakerinstance_ICryptoManager {
-
-	const KEY_LENGTH = 64;
-	
-	protected $rsa;
+class tx_caretakerinstance_Base64CryptoManager implements tx_caretakerinstance_ICryptoManager {
 	
 	public function createSessionToken($data, $secret) {				
 		$salt = substr(md5(rand()), 0, 12);
@@ -64,46 +54,25 @@ class tx_caretakerinstance_CryptoManager implements tx_caretakerinstance_ICrypto
 	}
 
 	public function createSignature($data, $privateKey) {
-		$rsa = $this->getRsa();
-		return $rsa->createSign($data, $this->rsaKey($privateKey));
+		return md5($data);
 	}
 	
 	public function verifySignature($data, $signature, $publicKey) {
-		$rsa = $this->getRsa();
-		return $rsa->validateSign($data, $signature, $this->rsaKey($publicKey));
+		
+		return md5($data) == $signature;
 	}
 	
 	public function encrypt($data, $key) {
-		$rsa = $this->getRsa();
-		return $rsa->encrypt($data, $this->rsaKey($key));
+		return base64_encode($data);
 	}
 	
 	public function decrypt($data, $key) {
-		$rsa = $this->getRsa();
-		return $rsa->decrypt($data, $this->rsaKey($key));
+		return base64_decode($data);
 	}
 
 	public function generateKeyPair() {
-		$keyPair = new Crypt_RSA_KeyPair(self::KEY_LENGTH);
-
-		return array($keyPair->getPublicKey()->toString(), $keyPair->getPrivateKey()->toString()); 
+		return array('', ''); 
 	}
 	
-	/**
-	 * @return Crypt_RSA RSA instance
-	 */
-	protected function getRsa() {
-		if($this->rsa == null) {
-			$this->rsa = new Crypt_RSA();
-		}
-		return $this->rsa;
-	}
-	
-	protected function rsaKey($key) {
-		if(is_string($key)) {
-			$key = Crypt_RSA_Key::fromString($key);
-		}
-		return $key;
-	}
 }
 ?>
