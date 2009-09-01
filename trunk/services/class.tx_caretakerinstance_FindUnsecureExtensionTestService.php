@@ -61,7 +61,7 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$errors =  array();
 		$warnings = array();
 		foreach ($extensionList as $extensionInfo){
-			$this->checkExtension( $extensionInfo , &$errors, &$warnings);
+			$this->checkExtension( $extensionInfo , $errors, $warnings);
 		}
 		
 			// throw error if insecure extensions are installed
