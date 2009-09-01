@@ -45,7 +45,6 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$operations = array($operation);
 
 		$commandResult = $this->executeRemoteOperations($operations);
-
 		if (!$this->isCommandResultSuccessful($commandResult)) {
 			return $this->getFailedCommandResultTestResult($commandResult);
 		}
@@ -54,34 +53,32 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$operationResult = $results[0];
 		
 		if (!$operationResult->isSuccessful()) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 'remote Operation failed');
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 0, 'remote Operation failed');
 		} 
 	
 		$extensionList = $operationResult->getValue();
+				
 		$errors =  array();
 		$warnings = array();
-		foreach ($extensionList as $extensionInfo){
-			$this->checkExtension( $extensionInfo , $errors, $warnings);
+		foreach ($extensionList as $extension){
+			$this->checkExtension( $extension , &$errors, &$warnings);
 		}
 		
 			// throw error if insecure extensions are installed
 		if (count($errors)>0){
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 'ERRORS:'.implode(",",$errors).'WARNINGS:'.implode(",",$warnings));
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0,  'ERRORS: '.implode(",",$errors).' WARNINGS: '.implode(",",$warnings));
 		}
 		
 			// throw warning if insecure extensions are present
 		if (count($warnings)>0){
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, 'remote Operation failed');
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, 0, 'WARNINGS: '.implode(",",$warnings) );
 		}
 		
-		$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, '');
+		$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, '');
 
 		return $testResult;
 	}
 	
-	public function checkExtension( $extensionInfo , &$errors, &$warnings){
-		return ;
-	}
 	
 	public function getLocationList(){
 		$location_code = (int)$this->getConfigValue('check_extension_locations');
@@ -90,7 +87,87 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		if ($location_code & 2) $location_list[] = 'global';
 		if ($location_code & 4) $location_list[] = 'local';
 		return $location_list;
-	} 
+	}
+	 
+	public function checkExtension( $extension , &$errors, &$warnings ){
+				
+		$ext_key       = $extension->ext_key;
+		$ext_version   = $extension->version;
+		$ext_installed = $extension->installed; 
+		
+			// find extension in TER
+		$ter_info = $this->getExtensionTerInfos($ext_key, $ext_version);
+		if ($ter_info){ 	
+				// ext is in TER
+				
+				// ext is secure
+			if ($ter_info['reviewstate'] > -1 ) return array( 0, '' );
+				
+			if ($ext_installed){
+				$handling = $this->getInstalledExtensionErrorHandling();
+			} else {
+				$handling = $this->getUninstalledExtensionErrorHandling();
+			}
+			
+				// return result
+			switch ($handling) {
+				case 0: #ignore
+					return;
+				case 1: #warning
+					$warnings[] = 'Extension '.$ext_key.' is installed in version '.$ext_version;
+					return;
+				case 2: #error
+					$errors[]  = 'Extension '.$ext_key.' is installed in version '.$ext_version;
+					return;
+			}
+		} else {
+				// ext is not in TER
+				
+				// check whitelist
+			$ext_whitelist = $this->getCustomExtensionWhitelist();
+			if (in_array($ext_key, $ext_whitelist) ) return; 
+			
+			$handling = $this->getCustomExtensionErrorHandling();
+				// return result
+			switch ($handling) {
+				case 0: #ignore
+					return;
+				case 1: #warning
+					$warnings[] = 'Extension '.$ext_key.' is installed in version '.$ext_version;
+					return;
+				case 2: #error
+					$errors[]  = 'Extension '.$ext_key.' is installed in version '.$ext_version;
+					return;
+			
+			}
+		}
+	}
+	
+	public function getExtensionTerInfos( $ext_key, $ext_version ){
+		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('extkey, version, reviewstate','cache_extensions','extkey = '.$GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key,'cache_extensions' ).' AND version = '.$GLOBALS['TYPO3_DB']->fullQuoteStr($ext_version,'cache_extensions'), '', '' , 1 );
+		if (count($ext_infos)==1){
+			return $ext_infos[0];
+		} else {
+			return false;
+		}
+	}
+	
+	public function getInstalledExtensionErrorHandling(){
+		return (int)$this->getConfigValue('status_of_installed_insecure_extensions');
+	}
+	
+	public function getUninstalledExtensionErrorHandling(){
+		return (int)$this->getConfigValue('status_of_uninstalled_insecure_extensions');
+	}
+	
+	public function getCustomExtensionErrorHandling(){
+		return (int)$this->getConfigValue('status_of_custom_extensions');
+	}
+	
+	public function getCustomExtensionWhitelist(){
+		return explode( chr(10) ,$this->getConfigValue('custom_extkey_whitlelist') );
+	}
+	
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php'])	{

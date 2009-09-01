@@ -70,15 +70,18 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	}
 	
 	function getPathExtensionList($scope)	{
+		debug ($scope);
 		$path = $this->getPathForScope($scope);
-		$extensionList = array();
+		$extensionInfo = array();
 		if (@is_dir($path))	{
-			$extensionList = t3lib_div::get_dirs($path);
-			if (is_array($extensionList))	{
+			$extensionFolders = t3lib_div::get_dirs($path);
+			if (is_array($extensionFolders))	{
 				//$old = $GLOBALS['_EXTKEY'];
-				foreach($extensionList as $extKey)	{
+				foreach($extensionFolders as $extKey)	{
+						// key
+					$extensionInfo[$extKey]['ext_key'] = $extKey;					
 						// is installed
-					$extensionInfo[$extKey]['isLoaded'] = (boolean)t3lib_extMgm::isLoaded($extKey);
+					$extensionInfo[$extKey]['installed'] = (boolean)t3lib_extMgm::isLoaded($extKey);
 						// get Version
 					if (@is_file($path.$extKey.'/ext_emconf.php') )	{
 						$_EXTKEY = $extKey;
@@ -91,6 +94,7 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 				}
 			}
 		}
+		
 		return $extensionInfo;
 	}
 }
