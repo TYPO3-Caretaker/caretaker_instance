@@ -43,6 +43,8 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 * @return string The encrypted data
 	 */
 	public function encrypt($data, $publicKey) {
+		$publicKey = $this->decodeKey($publicKey);
+
 		openssl_seal($data, $cryptedData, $envelopeKeys, array($publicKey));
 		
 		$envelopeKey = $envelopeKeys[0];
@@ -60,6 +62,8 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 * @return string The decrypted data
 	 */
 	public function decrypt($data, $privateKey) {
+		$privateKey = $this->decodeKey($privateKey);
+
 		list($envelopeKey, $cryptedData) = explode(':', $data);
 		
 		$envelopeKey = base64_decode($envelopeKey);
@@ -71,12 +75,16 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	}
 
 	public function createSignature($data, $privateKey) {
+		$privateKey = $this->decodeKey($privateKey);
+
 		openssl_sign($data, $signature, $privateKey);
 		$signature = base64_encode($signature);
 		return $signature;
 	}
 	
 	public function verifySignature($data, $signature, $publicKey) {
+		$publicKey = $this->decodeKey($publicKey);
+
 		$signature = base64_decode($signature);
 		$correct = openssl_verify($data, $signature, $publicKey);
 		return $correct === 1; 
@@ -90,7 +98,26 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 		$publicKey = openssl_pkey_get_details($keyPair);
 		$publicKey = $publicKey['key'];
 
-		return array($publicKey, $privateKey); 
+		return array($this->encodeKey($publicKey), $this->encodeKey($privateKey));
+	}
+	
+	/**
+	 * Encode linebreaks in key to make it usable in ext config
+	 * @param string $key The key in PEM format
+	 * @return string The key without linebreaks (not in PEM!)
+	 */
+	protected function encodeKey($key) {
+		return str_replace("\n", '|', $key);
+	}
+
+	/**
+	 * Add linebreaks in key to make it conform to PEM format
+	 * 
+	 * @param string $key The key without linebreaks
+	 * @return string The key with linebreaks (in PEM)
+	 */
+	protected function decodeKey($key) {
+		return str_replace('|', "\n", $key);
 	}
 }
 ?>

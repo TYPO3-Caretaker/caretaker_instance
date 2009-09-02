@@ -35,7 +35,6 @@ class ext_update {
 	 * @return string
 	 */
 	public function main() {
-		
 		$extConf = $this->getExtConf();
 		
 		$this->factory = tx_caretakerinstance_ServiceFactory::getInstance();
