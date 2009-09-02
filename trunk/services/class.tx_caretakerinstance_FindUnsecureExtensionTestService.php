@@ -65,15 +65,18 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 
 		// Return error if insecure extensions are installed
 		if (count($errors) > 0) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0,  'ERRORS: '. implode(',', $errors).' WARNINGS: ' . implode(',', $warnings));
+			$message =  'ERRORS: ' . implode(", ",$errors);
+			if (count($warnings)>0) $message .= ' WARNINGS: '.implode(", ",$warnings);
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, $message);
 		}
 
 		// Return warning if insecure extensions are present
 		if (count($warnings) > 0) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, 0, 'WARNINGS: ' . implode(',', $warnings));
+			$message = 'WARNINGS: ' . implode(", ",$warnings);
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, 0, $message );
 		}
 
-		$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, '');
+		$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, 'No suspect Extensions are found');
 
 		return $testResult;
 	}
@@ -101,26 +104,40 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 			if ($ter_info['reviewstate'] > -1) {
 				return array(0, '');
 			}
-				
+			
+			// Ext is installed	
 			if ($ext_installed) {
 				$handling = $this->getInstalledExtensionErrorHandling();
-			} else {
-				$handling = $this->getUninstalledExtensionErrorHandling();
+				$message  =   'Insecure Extension ' . $ext_key . ' is installed in version ' . $ext_version;
+				switch ($handling) {
+					// Warning
+					case 1: 
+						$warnings[] = $message;
+						return;
+					// Error
+					case 2: 
+						$errors[]  = $message;
+						return;
+					// Ignore
+					default: return;
+				}
 			}
-			
-				// return result
-			switch ($handling) {
-				// Ignore
-				case 0:
-					return;
-				 // Warning
-				case 1:
-					$warnings[] = 'Extension '. $ext_key . ' is installed in version ' . $ext_version . ' and marked insecure.';
-					return;
-				// Error
-				case 2:
-					$errors[]  = 'Extension ' . $ext_key . ' is installed in version ' . $ext_version . ' and marked insecure.';
-					return;
+			// Ext is not installed
+			else {
+				$handling = $this->getUninstalledExtensionErrorHandling();
+				$message  = 'Insecure Extension ' . $ext_key . ' is present but not installed in version ' . $ext_version;
+				switch ($handling) {
+					// Warning
+					case 1: 
+						$warnings[] = $message;
+						return;
+					// Error
+					case 2: 
+						$errors[]  = $message;
+						return;
+					// Ignore
+					default: return;
+				}
 			}
 		}
 		// Ext is not in TER
@@ -132,19 +149,19 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 			}
 
 			$handling = $this->getCustomExtensionErrorHandling();
-
+			$message  = 'Unknown Extension ' . $ext_key . ' is installed in version ' . $ext_version;
+			
 			switch ($handling) {
-				// Ignore
-				case 0:
-					return;
-				// Warning
-				case 1:
-					$warnings[] = 'Extension ' . $ext_key . ' is installed in version ' . $ext_version;
+				// Warning	
+				case 1: 
+					$warnings[] = $message;
 					return;
 				// Error
-				case 2:
-					$errors[]  = 'Extension ' . $ext_key . ' is installed in version ' . $ext_version;
-					return;			
+				case 2: 
+					$errors[]  = $message;
+					return;
+				// Ignore
+				default: return;
 			}
 		}
 	}
