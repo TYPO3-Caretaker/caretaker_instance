@@ -4,9 +4,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandService.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_SecurityManager.php'));
 
-// FIXME: Do *not* use Base64CryptoManager. This is for demonstration/debugging only!
-// require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CryptoManager.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Base64CryptoManager.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OpenSSLCryptoManager.php'));
 
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_RemoteCommandConnector.php'));
 

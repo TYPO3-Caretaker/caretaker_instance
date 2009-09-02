@@ -32,22 +32,26 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @subpackage	tx_caretakerinstance
  */
 class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerinstance_IOperation {
+
+	protected $scopes = array('system', 'global', 'local');
+
 	/**
-	 * @param array $parameter None
-	 * @return The extension version
+	 * 
+	 * @param array $parameter Array of extension locations as string (system, global, local)
+	 * @return The extension list
 	 */
 	public function execute($parameter = array()) {
 		$locations = $parameter['locations'];
 		if (is_array($locations) && count($locations) > 0 ) {
 			$extensionList = array();
 			foreach ($locations as $scope) {
-				if (in_array($scope, array('system', 'global', 'local')) ) {
-					$extensionList = array_merge($extensionList, $this->getPathExtensionList($scope));
+				if (in_array($scope, $this->scopes)) {
+					$extensionList = array_merge($extensionList, $this->getExtensionListForScope($scope));
 				}
 			}
-			return new tx_caretakerinstance_OperationResult(TRUE, $extensionList );
+			return new tx_caretakerinstance_OperationResult(TRUE, $extensionList);
 		} else {
-			return new tx_caretakerinstance_OperationResult(FALSE, "No locations list given" );
+			return new tx_caretakerinstance_OperationResult(FALSE, 'No extension locations given');
 		}
 		
 	}
@@ -69,28 +73,28 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 		return $path;
 	}
 	
-	function getPathExtensionList($scope)	{
-		debug ($scope);
+	protected function getExtensionListForScope($scope) {
 		$path = $this->getPathForScope($scope);
 		$extensionInfo = array();
 		if (@is_dir($path))	{
 			$extensionFolders = t3lib_div::get_dirs($path);
-			if (is_array($extensionFolders))	{
-				//$old = $GLOBALS['_EXTKEY'];
-				foreach($extensionFolders as $extKey)	{
-						// key
+			if (is_array($extensionFolders)) {
+				foreach($extensionFolders as $extKey) {
 					$extensionInfo[$extKey]['ext_key'] = $extKey;					
-						// is installed
 					$extensionInfo[$extKey]['installed'] = (boolean)t3lib_extMgm::isLoaded($extKey);
-						// get Version
-					if (@is_file($path.$extKey.'/ext_emconf.php') )	{
+
+					if (@is_file($path . $extKey . '/ext_emconf.php'))	{
 						$_EXTKEY = $extKey;
-						@include($path.$extKey.'/ext_emconf.php');
-						if($EM_CONF[$extKey]['version']) {
-							$extensionInfo[$extKey]['version'] = $EM_CONF[$extKey]['version'];
-							$extensionInfo[$extKey]['scope'][$scope] = $EM_CONF[$extKey]['version'];
-						}
+						@include($path . $extKey . '/ext_emconf.php');
+						$extensionVersion = $EM_CONF[$extKey]['version']; 
+					} else {
+						$extensionVersion = FALSE;
 					}
+
+					if ($extensionVersion) {
+						$extensionInfo[$extKey]['version'] = $extensionVersion;
+						$extensionInfo[$extKey]['scope'][$scope] = $extensionVersion;
+					}					
 				}
 			}
 		}
