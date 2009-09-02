@@ -37,43 +37,42 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
 
 class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
 	
-	public function runTest() {
-		
+	public function runTest() {		
 		$location_list = $this->getLocationList();
 		
-		$operation = array('GetExtensionList', array('locations'=>$location_list));
+		$operation = array('GetExtensionList', array('locations' => $location_list));
 		$operations = array($operation);
 
 		$commandResult = $this->executeRemoteOperations($operations);
 		if (!$this->isCommandResultSuccessful($commandResult)) {
 			return $this->getFailedCommandResultTestResult($commandResult);
 		}
-		
+
 		$results = $commandResult->getOperationResults();
 		$operationResult = $results[0];
-		
+
 		if (!$operationResult->isSuccessful()) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 0, 'remote Operation failed');
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 0, 'Remote operation failed: ' . $operationResult->getValue());
 		} 
-	
+
 		$extensionList = $operationResult->getValue();
-				
+
 		$errors =  array();
 		$warnings = array();
-		foreach ($extensionList as $extension){
-			$this->checkExtension( $extension , &$errors, &$warnings);
+		foreach ($extensionList as $extension) {
+			$this->checkExtension($extension, $errors, $warnings);
 		}
-		
-			// throw error if insecure extensions are installed
-		if (count($errors)>0){
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0,  'ERRORS: '.implode(",",$errors).' WARNINGS: '.implode(",",$warnings));
+
+		// Return error if insecure extensions are installed
+		if (count($errors) > 0) {
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0,  'ERRORS: '. implode(',', $errors).' WARNINGS: ' . implode(',', $warnings));
 		}
-		
-			// throw warning if insecure extensions are present
-		if (count($warnings)>0){
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, 0, 'WARNINGS: '.implode(",",$warnings) );
+
+		// Return warning if insecure extensions are present
+		if (count($warnings) > 0) {
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, 0, 'WARNINGS: ' . implode(',', $warnings));
 		}
-		
+
 		$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, '');
 
 		return $testResult;
@@ -81,29 +80,29 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 	
 	
 	public function getLocationList(){
-		$location_code = (int)$this->getConfigValue('check_extension_locations');
-		$location_list = array();
-		if ($location_code & 1) $location_list[] = 'system';
-		if ($location_code & 2) $location_list[] = 'global';
-		if ($location_code & 4) $location_list[] = 'local';
-		return $location_list;
+		$locationCode = (int)$this->getConfigValue('check_extension_locations');
+		$locationList = array();
+		if ($locationCode & 1) $locationList[] = 'system';
+		if ($locationCode & 2) $locationList[] = 'global';
+		if ($locationCode & 4) $locationList[] = 'local';
+		return $locationList;
 	}
 	 
-	public function checkExtension( $extension , &$errors, &$warnings ){
-				
-		$ext_key       = $extension->ext_key;
-		$ext_version   = $extension->version;
+	public function checkExtension($extension, &$errors, &$warnings) {
+		$ext_key = $extension->ext_key;
+		$ext_version = $extension->version;
 		$ext_installed = $extension->installed; 
 		
-			// find extension in TER
+		// Find extension in TER
 		$ter_info = $this->getExtensionTerInfos($ext_key, $ext_version);
-		if ($ter_info){ 	
-				// ext is in TER
+		// Ext is in TER
+		if ($ter_info) { 	
+			// Ext is reviewed as secure or not reviewed at all
+			if ($ter_info['reviewstate'] > -1) {
+				return array(0, '');
+			}
 				
-				// ext is secure
-			if ($ter_info['reviewstate'] > -1 ) return array( 0, '' );
-				
-			if ($ext_installed){
+			if ($ext_installed) {
 				$handling = $this->getInstalledExtensionErrorHandling();
 			} else {
 				$handling = $this->getUninstalledExtensionErrorHandling();
@@ -111,34 +110,41 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 			
 				// return result
 			switch ($handling) {
-				case 0: #ignore
+				// Ignore
+				case 0:
 					return;
-				case 1: #warning
-					$warnings[] = 'Extension '.$ext_key.' is installed in version '.$ext_version;
+				 // Warning
+				case 1:
+					$warnings[] = 'Extension '. $ext_key . ' is installed in version ' . $ext_version . ' and marked insecure.';
 					return;
-				case 2: #error
-					$errors[]  = 'Extension '.$ext_key.' is installed in version '.$ext_version;
+				// Error
+				case 2:
+					$errors[]  = 'Extension ' . $ext_key . ' is installed in version ' . $ext_version . ' and marked insecure.';
 					return;
 			}
-		} else {
-				// ext is not in TER
-				
-				// check whitelist
+		}
+		// Ext is not in TER
+		else {
+			// Check whitelist
 			$ext_whitelist = $this->getCustomExtensionWhitelist();
-			if (in_array($ext_key, $ext_whitelist) ) return; 
-			
+			if (in_array($ext_key, $ext_whitelist)) {
+				return; 
+			}
+
 			$handling = $this->getCustomExtensionErrorHandling();
-				// return result
+
 			switch ($handling) {
-				case 0: #ignore
+				// Ignore
+				case 0:
 					return;
-				case 1: #warning
-					$warnings[] = 'Extension '.$ext_key.' is installed in version '.$ext_version;
+				// Warning
+				case 1:
+					$warnings[] = 'Extension ' . $ext_key . ' is installed in version ' . $ext_version;
 					return;
-				case 2: #error
-					$errors[]  = 'Extension '.$ext_key.' is installed in version '.$ext_version;
-					return;
-			
+				// Error
+				case 2:
+					$errors[]  = 'Extension ' . $ext_key . ' is installed in version ' . $ext_version;
+					return;			
 			}
 		}
 	}
@@ -165,7 +171,7 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 	}
 	
 	public function getCustomExtensionWhitelist(){
-		return explode( chr(10) ,$this->getConfigValue('custom_extkey_whitlelist') );
+		return explode(chr(10), $this->getConfigValue('custom_extkey_whitlelist'));
 	}
 	
 }
