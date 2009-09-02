@@ -26,12 +26,12 @@ require_once('class.tx_caretakerinstance_ICryptoManager.php');
 
 /**
  * A Crypt based Crypto Manager implementation
+ *
  * FIXME: Do *not* use Base64CryptoManager. This is for demonstration/debugging only!
  * 
- * 
  * @author Tobias Liebig <liebig@networkteam.com>
- * @package		TYPO3
- * @subpackage	tx_caretakerinstance
+ * @package TYPO3
+ * @subpackage tx_caretakerinstance
  */
 class tx_caretakerinstance_Base64CryptoManager implements tx_caretakerinstance_ICryptoManager {
 	

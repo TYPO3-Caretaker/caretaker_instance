@@ -29,15 +29,10 @@ require_once('class.tx_caretakerinstance_ICryptoManager.php');
 /**
  * A Crypt based Crypto Manager implementation
  * 
- * TODO: reimplement CryptoManager based on another Library
- * TODO: encrypt/decrypt is to slow on 'huge' data sets (> 2000 byte)
- * TODO: Crypt_RSA does not support PHP 5.3
- * TODO: after reimplementing the CryptoManager, remove the temporary Base64CryptoManager!
- * 
- * 
  * @author Christopher Hlubek <hlubek@networkteam.com>
- * @package		TYPO3
- * @subpackage	tx_caretakerinstance
+ * @package TYPO3
+ * @subpackage tx_caretakerinstance
+ * @deprecated Use OpenSSLCryptoManager instead!
  */
 class tx_caretakerinstance_CryptoManager implements tx_caretakerinstance_ICryptoManager {
 
