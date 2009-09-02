@@ -70,7 +70,8 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 			$minVersion,
 			$maxVersion);
 		if ($checkResult) {
-			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0);
+			$message = 'Extension check for [' . $extensionKey . '] passed';
+			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, $message);
 		} else {
 			$message = 'Extension check for [' . $extensionKey . '] failed';
 			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, $message);

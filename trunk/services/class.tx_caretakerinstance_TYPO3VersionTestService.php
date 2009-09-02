@@ -56,9 +56,10 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 			$minVersion,
 			$maxVersion);
 		if ($checkResult) {
-			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0);
+			$message = 'TYPO3 version ' . $version . ' is installed';
+			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, $message);
 		} else {
-			$message = 'TYPO3 version ' . $version . ' installed, but';
+			$message = 'TYPO3 version ' . $version . ' is installed, but';
 			if ($minVersion) {
 				$message .= ' >= ' . $minVersion; 
 			}
