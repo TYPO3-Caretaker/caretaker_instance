@@ -32,7 +32,7 @@ require_once('class.tx_caretakerinstance_AbstractCryptoManager.php');
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_OpenSSLCryptoManager implements tx_caretakerinstance_AbstractCryptoManager {
+class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_AbstractCryptoManager {
 	
 	/**
 	 * Encrypt data with the <em>public</em> key of the recipient.
