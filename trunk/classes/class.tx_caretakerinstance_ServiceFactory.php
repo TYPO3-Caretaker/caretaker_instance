@@ -81,9 +81,7 @@ class tx_caretakerinstance_ServiceFactory {
 	 */
 	public function getCryptoManager() {
 		if ($this->cryptoManager == null) {
-			// FIXME: Do *not* use Base64CryptoManager. This is for demonstration/debugging only!
-			// $this->cryptoManager = new tx_caretakerinstance_CryptoManager();
-			$this->cryptoManager = new tx_caretakerinstance_Base64CryptoManager();
+			$this->cryptoManager = new tx_caretakerinstance_OpenSSLCryptoManager();
 		}
 		return $this->cryptoManager;
 	}
