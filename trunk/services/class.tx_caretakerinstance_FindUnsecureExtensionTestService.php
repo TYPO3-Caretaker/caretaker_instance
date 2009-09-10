@@ -64,15 +64,16 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		}
 
 		// Return error if insecure extensions are installed
+		$seperator = chr(10). ' - ';
 		if (count($errors) > 0) {
-			$message =  'ERRORS: ' . implode(", ",$errors);
-			if (count($warnings)>0) $message .= ' WARNINGS: '.implode(", ",$warnings);
+			$message =  'ERRORS:' .$seperator. implode( $seperator,$errors);
+			if (count($warnings)>0) $message .= chr(10).'WARNINGS:' . $seperator . implode( $seperator ,$warnings);
 			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, $message);
 		}
 
 		// Return warning if insecure extensions are present
 		if (count($warnings) > 0) {
-			$message = 'WARNINGS: ' . implode(", ",$warnings);
+			$message = 'WARNINGS:' . $seperator . implode( $seperator ,$warnings);
 			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, 0, $message );
 		}
 
