@@ -98,7 +98,7 @@
 						<type>select</type>
 						<items>
 					    	<numIndex index="0">
-					    		<numIndex index="0">ignore</numIndex>
+					    		<numIndex index="0">OK</numIndex>
 								<numIndex index="1">0</numIndex>
 					    	</numIndex>
 					    	<numIndex index="1">
