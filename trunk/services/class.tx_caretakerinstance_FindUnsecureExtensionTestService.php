@@ -93,9 +93,9 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 	}
 	 
 	public function checkExtension($extension, &$errors, &$warnings) {
-		$ext_key = $extension->ext_key;
-		$ext_version = $extension->version;
-		$ext_installed = $extension->installed; 
+		$ext_key = $extension['ext_key'];
+		$ext_version = $extension['version'];
+		$ext_installed = $extension['installed']; 
 		
 		// Find extension in TER
 		$ter_info = $this->getExtensionTerInfos($ext_key, $ext_version);

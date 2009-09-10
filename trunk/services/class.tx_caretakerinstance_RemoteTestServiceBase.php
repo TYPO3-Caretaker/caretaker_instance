@@ -83,31 +83,27 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 		);
 	}
 	
-	protected function checkVersionRange($actualVersion, $minVersion, $maxVersion) {
-		if ($minVersion == '') {
-			$minVersion = '0.0.0';
+	public function checkVersionRange($actualVersion, $minVersion, $maxVersion, $versionParts = 3) {
+		$actualVersionCombined = $this->versionToInt($actualVersion, $versionParts);
+		if ($minVersion != '') {
+			$minVersionCombined = $this->versionToInt($minVersion, $versionParts);
+			if ($actualVersionCombined < $minVersionCombined) return FALSE;
 		}
-		if ($maxVersion == '') {
-			$maxVersion = '9999.9999.9999';
+		if ($maxVersion != '') {
+			$maxVersionCombined = $this->versionToInt($maxVersion, $versionParts);
+			if ($actualVersionCombined > $maxVersionCombined) return FALSE;
 		}
-		list($actualMajor, $actualMinor, $actualRelease) = explode('.', $actualVersion);
-		list($minMajor, $minMinor, $minRelease) = explode('.', $minVersion);
-		list($maxMajor, $maxMinor, $maxRelease) = explode('.', $maxVersion);
-
-		$actualMajor = intval($actualMajor);
-		$actualMinor = intval($actualMinor);
-		$actualRelease = intval($actualRelease);
-		$minMajor = intval($minMajor);
-		$minMinor = intval($minMinor);
-		$minRelease = intval($minRelease);
-		$maxMajor = intval($maxMajor);
-		$maxMinor = intval($maxMinor);
-		$maxRelease = intval($maxRelease);
 		
-		$b1 = $actualMajor >= $minMajor && $actualMajor <= $maxMajor;
-		$b2 = $actualMinor >= $minMinor && $actualMinor <= $maxMinor;
-		$b3 = $actualRelease >= $minRelease && $actualRelease <= $maxRelease;
-		return $b1 && $b2 && $b3;
+		return TRUE;
+	}
+	
+	protected function versionToInt($version, $versionParts = 3, $versionBase = 1000) {
+		$versionDigits = explode('.', $version, $versionParts);
+		$versionCombined = 0;
+		for ($i = 0; $i < $versionParts; $i++) {
+			$versionCombined = ($versionCombined * $versionBase) + $versionDigits[$i];
+		}
+		return $versionCombined;
 	}
 }
 

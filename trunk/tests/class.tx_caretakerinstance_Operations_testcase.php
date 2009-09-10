@@ -7,8 +7,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetTYPO3Version.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetExtensionVersion.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetExtensionList.php'));
-
-
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetRecord.php'));
 
 /**
  * Testcase for Operations
@@ -71,7 +70,7 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$this->assertFalse($result->isSuccessful());
 	}
 	
-	public function testOperation_getExtensionListFailsIfNoLocationListIsGiven(){
+	public function testOperation_GetExtensionListFailsIfNoLocationListIsGiven(){
 		$operation = new tx_caretakerinstance_Operation_GetExtensionList();
 		
 		$result = $operation->execute();
@@ -79,15 +78,29 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$this->assertFalse($result->isSuccessful());
 	}
 
-	public function testOperation_getExtensionListReturnsAnArrayOfExtensions(){
+	public function testOperation_GetExtensionListReturnsAnArrayOfExtensions(){
 		$operation = new tx_caretakerinstance_Operation_GetExtensionList();
 		
-		$result = $operation->execute(array('locations'=>array('global','local','system')));
+		$result = $operation->execute(array('locations' => array('global','local','system')));
 				
 		$this->assertTrue($result->isSuccessful());
 		$this->assertGreaterThan( 0 , count($result->getValue() ) );
-		
 	}
-	
+
+	public function testOperation_GetRecordFindsAndCleansARecord() {
+		$operation = new tx_caretakerinstance_Operation_GetRecord();
+		
+		// FIXME this test is tied to a specific record uid
+		
+		$result = $operation->execute(array('table' => 'be_users', 'field' => 'uid', 'value' => 1));
+		
+		$record = $result->getValue();
+		
+		$this->assertTrue($result->isSuccessful());
+		
+		$this->assertEquals($record['uid'], 1);
+
+		$this->assertTrue(!isset($record['password']));
+	}
 }
 ?>

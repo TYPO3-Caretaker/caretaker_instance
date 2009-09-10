@@ -30,6 +30,14 @@ class tx_caretakerinstance_ExtensionTestService_testcase extends tx_phpunit_test
 		$this->assertTrue($result);
 
 		$result = $service->checkVersionForRequirementAndVersionRange(
+			'2.0.1', // Actual version
+			'none', // Requirement mode
+			'1.8.9', // Minimal allowed version
+			'2.2.0' // Maximal allowed version
+		);
+		$this->assertTrue($result);
+
+		$result = $service->checkVersionForRequirementAndVersionRange(
 			'1.1.4', // Actual version
 			'none', // Requirement mode
 			'1.2.5', // Minimal allowed version

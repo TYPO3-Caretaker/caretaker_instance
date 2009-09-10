@@ -109,19 +109,17 @@ class tx_caretakerinstance_CommandResult {
 	 * @return tx_caretakerinstance_CommandResult
 	 */
 	public static function fromJson($json) {
-		$data = json_decode($json);
+		$data = json_decode($json, TRUE);
 		
-		if (is_object($data)) {
+		if (is_array($data)) {
 			$results = array();
-			foreach ($data->results as $key => $result) {
-				// TODO: can we cast the stdObject to tx_caretakerinstance_OperationResult?
-				$results[] = new tx_caretakerinstance_OperationResult($result->status, $result->value);
+			foreach ($data['results'] as $key => $result) {
+				$results[] = new tx_caretakerinstance_OperationResult($result['status'], $result['value']);
 			}
-			$data->results = $results;
 			
-			return new tx_caretakerinstance_CommandResult($data->status, $data->results, $data->message);
+			return new tx_caretakerinstance_CommandResult($data['status'], $results, $data['message']);
 		} else {
-			return false;
+			return FALSE;
 		}
 	}
 }
