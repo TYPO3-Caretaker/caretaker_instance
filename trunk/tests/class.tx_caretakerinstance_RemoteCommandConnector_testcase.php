@@ -84,7 +84,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 		$this->assertEquals('sessionToken', $request->getSessionToken());
 		$this->assertEquals('publicKey', $request->getServerKey());
 		$this->assertEquals('http://foo.barr/', $request->getServerUrl());
-		$this->assertEquals('rawData', $request->getRawData());
+		$this->assertEquals('{"encrypted":"encryptedString"}', $request->getRawData());
 		$this->assertEquals('{"encrypted":"encryptedString"}', $request->getData());
 	}
 	
