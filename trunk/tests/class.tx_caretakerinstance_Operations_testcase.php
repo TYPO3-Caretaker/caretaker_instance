@@ -38,7 +38,11 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$result = $operation->execute(array('path' => 'EXT:caretaker_instance/tests/fixtures/Operation_GetFilesystemChecksum.txt'));
 		
 		$this->assertTrue($result->isSuccessful());
-		$this->assertEquals('23d35ef1a611fc75561b0d71d8b3234b', $result->getValue());
+		$value = $result->getValue();
+		$this->assertType('array', $value);
+		$this->assertEquals('0', count($value['singleChecksums']));
+		$this->assertType('string', $value['checksum']);
+		$this->assertEquals('23d35ef1a611fc75561b0d71d8b3234b', $value['checksum']);
 	}
 	
 	public function testOperation_GetFilesystemChecksumReturnsExtendedResultForFolder() {

@@ -54,13 +54,11 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 			}
 		}
 		if (!empty($checksum)) {
+			$result = array(
+				'checksum' => $checksum,
+			);
 			if ($getSingleChecksums) {
-				$result = array(
-					'checksum' => $checksum,
-					'singleChecksums' => $md5s,
-				);
-			} else {
-				$result = $checksum;
+				$result['singleChecksums'] = $md5s;
 			}
 			return new tx_caretakerinstance_OperationResult(TRUE, $result);
 		} else {
