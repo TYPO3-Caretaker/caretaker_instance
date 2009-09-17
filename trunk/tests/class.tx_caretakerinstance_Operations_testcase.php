@@ -8,6 +8,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetExtensionVersion.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetExtensionList.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetRecord.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetFilesystemChecksum.php'));
 
 /**
  * Testcase for Operations
@@ -29,6 +30,37 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$value = $result->getValue();
 		// Value is always an string or array of strings or array of array of strings
 		$this->assertEquals('bar', $value);
+	}
+	
+	public function testOperation_GetFilesystemChecksumReturnsCorrectChecksumForFile() {
+		$operation = new tx_caretakerinstance_Operation_GetFilesystemChecksum();
+		
+		$result = $operation->execute(array('path' => 'EXT:caretaker_instance/tests/fixtures/Operation_GetFilesystemChecksum.txt'));
+		
+		$this->assertTrue($result->isSuccessful());
+		$this->assertEquals('23d35ef1a611fc75561b0d71d8b3234b', $result->getValue());
+	}
+	
+	public function testOperation_GetFilesystemChecksumReturnsExtendedResultForFolder() {
+		$operation = new tx_caretakerinstance_Operation_GetFilesystemChecksum();
+		
+		$result = $operation->execute(array('path' => 'EXT:caretaker_instance/tests/', 'getSingleChecksums' => true));
+		
+		$this->assertTrue($result->isSuccessful());
+		$value = $result->getValue();
+		
+		$this->assertType('array', $value);
+		$this->assertType('array', $value['singleChecksums']);
+		$this->assertType('string', $value['checksum']);
+		$this->assertEquals(32, strlen($value['checksum']));
+	}
+	
+	public function testOperation_GetFilesystemChecksumFailsIfPathIsNotAllowed() {
+		$operation = new tx_caretakerinstance_Operation_GetFilesystemChecksum();
+		
+		$result = $operation->execute(array('path' => PATH_site . '../../'));
+		
+		$this->assertFalse($result->isSuccessful());
 	}
 	
 	public function testOperation_GetPHPVersion() {

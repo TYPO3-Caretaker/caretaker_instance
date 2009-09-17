@@ -1,0 +1,1 @@
+This file contains some text. A test case will do a checksum on this file to verify if the Operation_GetFilesystemChecksum works.
