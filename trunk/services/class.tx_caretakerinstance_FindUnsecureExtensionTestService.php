@@ -52,7 +52,7 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$operationResult = $results[0];
 
 		if (!$operationResult->isSuccessful()) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 0, 'Remote operation failed: ' . $operationResult->getValue());
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, 'Remote operation failed: ' . $operationResult->getValue());
 		} 
 
 		$extensionList = $operationResult->getValue();
