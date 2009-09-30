@@ -77,7 +77,7 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 	 */
 	protected function getFailedOperationResultTestResult($operationResult) {
 		return tx_caretaker_TestResult::create(
-			TX_CARETAKER_STATE_UNDEFINED,
+			TX_CARETAKER_STATE_ERROR,
 			0,
 			'Operation execution failed: ' . $operationResult->getValue()
 		);
