@@ -1,11 +1,11 @@
-# cat=basic/enable; type=string; label=Public key for this instance
+# cat=basic/enable; type=string; label= Public key for this instance : Required for Secure Communication with the caretaker Server. If this field is empty use the Extesion Manager Update Function.
 crypto.instance.publicKey=
 
-# cat=basic/enable; type=string; label=Private key for this instance
+# cat=basic/enable; type=string; label= Private key for this instance :  Required for Secure Communication with the caretaker Server. If this field is empty use the Extesion Manager Update Function.
 crypto.instance.privateKey=
 
-# cat=basic/enable; type=string; label=Client public key: The public key of the caretaker server
+# cat=basic/enable; type=string; label= Public key of the caretaker server : Required for Secure Communication with the caretaker Server. This key will encrypt the answers to the Caretaker server to ensure Privacy.
 crypto.client.publicKey=
 
-# cat=basic/enable; type=string; label=Client host address: Restrict caretaker access to this IP address (should be the caretaker server address) 
+# cat=basic/enable; type=string; label= Optional - Caretaker Server Host host address : Restrict caretaker access to this IP address (should be the caretaker server address)
 security.clientHostAddressRestriction=
