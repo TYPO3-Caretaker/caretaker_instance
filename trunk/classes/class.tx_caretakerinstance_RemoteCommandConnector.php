@@ -248,7 +248,13 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		curl_setopt($curl, CURLOPT_URL, $requestUrl);
 		curl_setopt($curl, CURLOPT_HEADER, 0);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-		
+
+		$headers = array(
+            "Cache-Control: no-cache",
+            "Pragma: no-cache"
+        );
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+
 		if (is_array($postValues)) {
 			foreach($postValues as $key => $value) {
 				$postQuery .= urlencode($key) . '=' . urlencode($value) . '&';
