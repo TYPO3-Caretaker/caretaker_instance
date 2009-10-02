@@ -96,7 +96,13 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$ext_key = $extension['ext_key'];
 		$ext_version = $extension['version'];
 		$ext_installed = $extension['installed']; 
-		
+
+		// Check whitelist
+		$ext_whitelist = $this->getCustomExtensionWhitelist();
+		if (in_array($ext_key, $ext_whitelist)) {
+			return;
+		}
+
 		// Find extension in TER
 		$ter_info = $this->getExtensionTerInfos($ext_key, $ext_version);
 		// Ext is in TER
@@ -143,11 +149,6 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		}
 		// Ext is not in TER
 		else {
-			// Check whitelist
-			$ext_whitelist = $this->getCustomExtensionWhitelist();
-			if (in_array($ext_key, $ext_whitelist)) {
-				return; 
-			}
 
 			$handling = $this->getCustomExtensionErrorHandling();
 			$message  = 'Unknown Extension ' . $ext_key . ' is installed in version ' . $ext_version;
