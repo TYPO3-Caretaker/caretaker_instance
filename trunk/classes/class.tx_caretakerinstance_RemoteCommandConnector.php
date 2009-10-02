@@ -108,14 +108,18 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		
 		if (is_array($httpRequestResult)
 		  && $httpRequestResult['info']['http_code'] === 200) {
-			$json = $this->securityManager->decodeResult($httpRequestResult['response']);
-			// TODO: check if valid json
-			if ($json) {
-		  		return tx_caretakerinstance_CommandResult::fromJson($json);
+				$json = $this->securityManager->decodeResult($httpRequestResult['response']);
+				// TODO: check if valid json
+				if ($json) {
+					return tx_caretakerinstance_CommandResult::fromJson($json);
+				}
 			}
+
+		if (is_array($httpRequestResult) ){
+			return $this->getCommandResult(FALSE, NULL, 'Invalid result: ' .$httpRequestResult['response'] );
+		} else {
+			return $this->getCommandResult(FALSE, NULL, 'Invalid result request could not be executed');
 		}
-		
-		return $this->getCommandResult(FALSE, NULL, 'Invalid result');
 	}
 	
 	/**
