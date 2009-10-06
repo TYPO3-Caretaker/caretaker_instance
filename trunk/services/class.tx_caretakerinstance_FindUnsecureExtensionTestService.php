@@ -65,21 +65,30 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 
 		// Return error if insecure extensions are installed
 		$seperator = chr(10). ' - ';
-		if (count($errors) > 0) {
-			$message =  'ERRORS:' .$seperator. implode( $seperator, $errors);
-			if (count($warnings)>0) $message .= chr(10).'WARNINGS:' . $seperator . implode( $seperator ,$warnings);
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, (count($errors) + count($warnings)), $message);
+
+		if (count($errors) == 0 && count($warnings) == 0){
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_ok');
 		}
 
-		// Return warning if insecure extensions are present
-		if (count($warnings) > 0) {
-			$message = 'WARNINGS:' . $seperator . implode( $seperator, $warnings);
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, count($warnings), $message );
+		$num_errors   = count($errors);
+		$num_warnings = count($warnings);
+
+		if ( $num_errors > 0 )    array_unshift($errors,   'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_errors');
+		if ( $num_warnings > 0 )  array_unshift($warnings, 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_warnings');
+
+		$info_array = array(
+			'values' => array('num_errors' => $num_errors, 'num_warnings' => $num_warnings ),
+			'details' => array_merge($errors,$warnings)
+		);
+		
+		if ( $num_errors > 0 ) {
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, (count($errors) + count($warnings)), 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $info_array );
 		}
 
-		$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, 'No suspect Extensions are found');
-
-		return $testResult;
+		if ( $num_warnings > 0 ) {
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, count($warnings), 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $info_array );
+		}
+		
 	}
 	
 	
@@ -105,8 +114,9 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 
 		// Find extension in TER
 		$ter_info = $this->getExtensionTerInfos($ext_key, $ext_version);
+		
 		// Ext is in TER
-		if ($ter_info) { 	
+		if ($ter_info) {
 			// Ext is reviewed as secure or not reviewed at all
 			if ($ter_info['reviewstate'] > -1) {
 				return array(0, '');
@@ -115,15 +125,15 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 			// Ext is installed	
 			if ($ext_installed) {
 				$handling = $this->getInstalledExtensionErrorHandling();
-				$message  =   'Insecure Extension ' . $ext_key . ' is installed in version ' . $ext_version;
+				$message  =   'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_detail_installed';
 				switch ($handling) {
 					// Warning
 					case 1: 
-						$warnings[] = $message;
+						$warnings[] = array( 'message'=>$message , 'values'=>$extension );
 						return;
 					// Error
 					case 2: 
-						$errors[]  = $message;
+						$errors[] = array( 'message'=>$message , 'values'=>$extension );
 						return;
 					// Ignore
 					default: return;
@@ -132,15 +142,15 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 			// Ext is not installed
 			else {
 				$handling = $this->getUninstalledExtensionErrorHandling();
-				$message  = 'Insecure Extension ' . $ext_key . ' is present but not installed in version ' . $ext_version;
+				$message  =   'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_detail_present';
 				switch ($handling) {
 					// Warning
 					case 1: 
-						$warnings[] = $message;
+						$warnings[] = array( 'message'=>$message , 'values'=>$extension );
 						return;
 					// Error
 					case 2: 
-						$errors[]  = $message;
+						$errors[] = array( 'message'=>$message , 'values'=>$extension );
 						return;
 					// Ignore
 					default: return;
@@ -151,16 +161,16 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		else {
 
 			$handling = $this->getCustomExtensionErrorHandling();
-			$message  = 'Unknown Extension ' . $ext_key . ' is installed in version ' . $ext_version;
-			
+			$message  = 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_detail_unknown';
+
 			switch ($handling) {
 				// Warning	
 				case 1: 
-					$warnings[] = $message;
+					$warnings[] = array( 'message'=>$message , 'values'=>$extension );
 					return;
 				// Error
 				case 2: 
-					$errors[]  = $message;
+					$errors[] = array( 'message'=>$message , 'values'=>$extension );
 					return;
 				// Ignore
 				default: return;
