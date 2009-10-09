@@ -53,7 +53,7 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 	 * Template to display the test Configuration in human readable form.
 	 * @var string
 	 */
-	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xmlinsecure_extension_test_configuration';
+	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_configuration';
 	
 	public function runTest() {		
 		$location_list = $this->getLocationList();
