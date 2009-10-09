@@ -31,6 +31,17 @@
 			<label index="insecure_extension_test_errors">Errors:</label>
 			<label index="insecure_extension_test_warnings">Warnings:</label>
 
+
+			<label index="backend_user_test_description">Backend-user test</label>
+			<label index="backend_user_test_configuration"></label>
+
+			<label index="insecure_extension_test_description">TER insecure extension test</label>
+			<label index="insecure_extension_test_configuration"></label>
+
+			<label index="extension_test_description">Extension test</label>
+			<label index="extension_test_configuration"></label>
+
+
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="insecure_extension_test_ok">Es wurden keine problematischen Extensions gefunden</label>

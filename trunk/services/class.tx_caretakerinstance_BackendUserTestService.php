@@ -26,6 +26,25 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
 
 class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_RemoteTestServiceBase{
 	
+	/**
+	 * Value Description
+	 * @var string
+	 */
+	protected $valueDescription = '';
+
+	/**
+	 * Service type description in human readble form.
+	 * @var string
+	 */
+	protected $typeDescription = 'LLL:EXT:caretaker_instance/locallang.xml:backend_user_test_description';
+
+	/**
+	 * Template to display the test Configuration in human readable form.
+	 * @var string
+	 */
+	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:backend_user_test_configuration';
+	
+
 	public function runTest() {
 		$blacklistedUsernames = explode(chr(10), $this->getConfigValue('blacklist'));
 
