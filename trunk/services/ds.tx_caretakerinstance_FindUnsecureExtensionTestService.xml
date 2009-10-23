@@ -122,7 +122,14 @@
 					</config>
 				</TCEforms>
 			</custom_extkey_whitlelist>
-			
+			<ignore_extension_version_suffix>
+				<TCEforms>
+					<label>Should extension version suffixes (e.g. "_mod") be ignored?</label>
+					<config>
+						<type>check</type>
+					</config>
+				</TCEforms>
+			</ignore_extension_version_suffix>
 		</el>
 	</ROOT>
 </T3DataStructure>

@@ -53,5 +53,16 @@ class tx_caretakerinstance_ExtensionTestService_testcase extends tx_phpunit_test
 		);
 		$this->assertTrue($result !== TRUE);
 	}
+
+	public function testActualExtensionVersionSuffixIsIgnored() {
+		$service = new tx_caretakerinstance_ExtensionTestService();
+		$result = $service->checkVersionForRequirementAndVersionRange(
+			'1.5.7_mod', // Actual version
+			'none', // Requirement mode
+			'1.5.8', // Minimal allowed version
+			'1.6.0' // Maximal allowed version
+		);
+		$this->assertTrue($result !== TRUE);
+	}
 }
 ?>

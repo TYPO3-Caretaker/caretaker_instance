@@ -95,7 +95,7 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$this->assertTrue($result->isSuccessful());
 
 		// TODO This depends on the current caretaker_instance extension version! Better mock this up.
-		$this->assertEquals('0.0.0', $result->getValue());
+		$this->assertEquals('0.0.2', $result->getValue());
 	}
 	
 	public function testOperation_GetExtensionVersionReturnsFailureForNotLoadedExtension() {

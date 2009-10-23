@@ -84,26 +84,26 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		// Return error if insecure extensions are installed
 		$seperator = chr(10). ' - ';
 
-		if (count($errors) == 0 && count($warnings) == 0){
+		if (count($errors) == 0 && count($warnings) == 0) {
 			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_ok');
 		}
 
 		$num_errors   = count($errors);
 		$num_warnings = count($warnings);
 
-		if ( $num_errors > 0 )    array_unshift($errors,   'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_errors');
-		if ( $num_warnings > 0 )  array_unshift($warnings, 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_warnings');
+		if ($num_errors > 0)    array_unshift($errors,   'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_errors');
+		if ($num_warnings > 0)  array_unshift($warnings, 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_warnings');
 
 		$info_array = array(
 			'values' => array('num_errors' => $num_errors, 'num_warnings' => $num_warnings ),
-			'details' => array_merge($errors,$warnings)
+			'details' => array_merge($errors, $warnings)
 		);
 		
-		if ( $num_errors > 0 ) {
+		if ($num_errors > 0) {
 			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, (count($errors) + count($warnings)), 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $info_array );
 		}
 
-		if ( $num_warnings > 0 ) {
+		if ($num_warnings > 0) {
 			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, count($warnings), 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $info_array );
 		}
 		
@@ -123,6 +123,10 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$ext_key = $extension['ext_key'];
 		$ext_version = $extension['version'];
 		$ext_installed = $extension['installed']; 
+
+		if ($this->isExtensionVersionSuffixIgnored()) {
+			$ext_version = $this->clearExtensionVersionSuffix($ext_version);
+		}
 
 		// Check whitelist
 		$ext_whitelist = $this->getCustomExtensionWhitelist();
@@ -147,11 +151,11 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 				switch ($handling) {
 					// Warning
 					case 1: 
-						$warnings[] = array( 'message'=>$message , 'values'=>$extension );
+						$warnings[] = array('message' => $message , 'values' => $extension);
 						return;
 					// Error
 					case 2: 
-						$errors[] = array( 'message'=>$message , 'values'=>$extension );
+						$errors[] = array('message' => $message , 'values' => $extension);
 						return;
 					// Ignore
 					default: return;
@@ -164,11 +168,11 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 				switch ($handling) {
 					// Warning
 					case 1: 
-						$warnings[] = array( 'message'=>$message , 'values'=>$extension );
+						$warnings[] = array('message' => $message , 'values' => $extension);
 						return;
 					// Error
 					case 2: 
-						$errors[] = array( 'message'=>$message , 'values'=>$extension );
+						$errors[] = array('message' => $message , 'values' => $extension);
 						return;
 					// Ignore
 					default: return;
@@ -184,11 +188,11 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 			switch ($handling) {
 				// Warning	
 				case 1: 
-					$warnings[] = array( 'message'=>$message , 'values'=>$extension );
+					$warnings[] = array('message' => $message , 'values' => $extension);
 					return;
 				// Error
 				case 2: 
-					$errors[] = array( 'message'=>$message , 'values'=>$extension );
+					$errors[] = array('message' => $message , 'values' => $extension);
 					return;
 				// Ignore
 				default: return;
@@ -196,31 +200,42 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		}
 	}
 	
-	public function getExtensionTerInfos( $ext_key, $ext_version ){
-		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('extkey, version, reviewstate','cache_extensions','extkey = '.$GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key,'cache_extensions' ).' AND version = '.$GLOBALS['TYPO3_DB']->fullQuoteStr($ext_version,'cache_extensions'), '', '' , 1 );
-		if (count($ext_infos)==1){
+	public function getExtensionTerInfos($ext_key, $ext_version) {
+		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('extkey, version, reviewstate', 'cache_extensions', 'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') . ' AND version = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_version, 'cache_extensions'), '', '' , 1);
+		if (count($ext_infos) > 0) {
 			return $ext_infos[0];
 		} else {
 			return false;
 		}
 	}
 	
-	public function getInstalledExtensionErrorHandling(){
+	public function getInstalledExtensionErrorHandling() {
 		return (int)$this->getConfigValue('status_of_installed_insecure_extensions');
 	}
 	
-	public function getUninstalledExtensionErrorHandling(){
+	public function getUninstalledExtensionErrorHandling() {
 		return (int)$this->getConfigValue('status_of_uninstalled_insecure_extensions');
 	}
 	
-	public function getCustomExtensionErrorHandling(){
+	public function getCustomExtensionErrorHandling() {
 		return (int)$this->getConfigValue('status_of_custom_extensions');
 	}
 	
-	public function getCustomExtensionWhitelist(){
+	public function getCustomExtensionWhitelist() {
 		return explode(chr(10), $this->getConfigValue('custom_extkey_whitlelist'));
 	}
-	
+
+	protected function isExtensionVersionSuffixIgnored() {
+		return $this->getConfigValue('ignore_extension_version_suffix') == 1;
+	}
+
+	protected function clearExtensionVersionSuffix($extensionVersion) {
+		if (preg_match('/^([0-9]+\.[0-9]+\.[0-9]+)/', $extensionVersion, $matches)) {
+			return $matches[1];
+		}
+		// If not matched, return given version
+		return $extensionVersion;
+	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php'])	{
