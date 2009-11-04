@@ -31,10 +31,12 @@ $EM_CONF[$_EXTKEY] = array(
 	'author_company' => '',
 	'version' => '0.0.2',
 	'TYPO3_version' => '4.0.0-',
+	'PHP_version' => '5.0.0-',
 	'constraints' => array(
 		'depends' => array(
 			'cms' => '',
-			'typo3' => '4.0.0-'
+			'typo3' => '4.0.0-',
+			'php' => '5.0.0-'
 		),
 		'conflicts' => array(
 		),
