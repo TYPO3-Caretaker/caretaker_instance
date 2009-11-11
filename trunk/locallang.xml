@@ -47,7 +47,7 @@
 			<label index="insecure_extension_test_ok">Es wurden keine problematischen Extensions gefunden</label>
 			<label index="insecure_extension_test_problems">###VALUE_NUM_ERRORS### Fehler und ###VALUE_NUM_WARNINGS### Warnungen</label>
 
-			<label index="insecure_extension_detail_installed">Die unsicher Extension ###VALUE_EXT_KEY### ist in Version ###VALUE_VERSION### installiert</label>
+			<label index="insecure_extension_detail_installed">Die unsichere Extension ###VALUE_EXT_KEY### ist in Version ###VALUE_VERSION### installiert</label>
 			<label index="insecure_extension_detail_present">Die unsichere Extension ###VALUE_EXT_KEY### ist vorhanden aber nicht installiert in Version ###VALUE_VERSION###</label>
 			<label index="insecure_extension_detail_unknown">Die unbekannte Extension ###VALUE_EXT_KEY### ist in Version ###VALUE_VERSION### vorhanden</label>
 
