@@ -54,7 +54,11 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 	 * @var string
 	 */
 	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_configuration';
-	
+
+	/**
+	 * Execute the find unsecure extension test
+	 * @return tx_caretaker_TestResult
+	 */
 	public function runTest() {		
 		$location_list = $this->getLocationList();
 		
@@ -91,20 +95,37 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$num_errors   = count($errors);
 		$num_warnings = count($warnings);
 
-		if ($num_errors > 0)    array_unshift($errors,   'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_errors');
-		if ($num_warnings > 0)  array_unshift($warnings, 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_warnings');
+		$submessages  = array();
+		$values = array ('num_errors'=>$num_errors , 'num_warnings'=>$num_warnings);
 
-		$info_array = array(
-			'values' => array('num_errors' => $num_errors, 'num_warnings' => $num_warnings ),
-			'details' => array_merge($errors, $warnings)
-		);
-		
-		if ($num_errors > 0) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, (count($errors) + count($warnings)), 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $info_array );
+			// add error submessages
+		if ($num_errors > 0){
+			$submessages[] = new tx_caretaker_ResultMessage('LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_errors');
+			foreach ($errors as $error){
+				$submessages[] =  new tx_caretaker_ResultMessage( $error['message'] , $error['values']);
+			}
 		}
 
+			// add warning submessages
+		if ($num_warnings > 0){
+			$submessages[] = new tx_caretaker_ResultMessage('LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_warnings');
+			foreach ($warnings as $warning){
+				$submessages[] =  new tx_caretaker_ResultMessage( $warning['message'] , $warning['values']);
+			}
+		}
+
+			// return error
+		if ($num_errors > 0) {
+			$value   = (count($errors) + count($warnings));
+			$message = new tx_caretaker_ResultMessage( 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $values);
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, $value , $message , $submessages );
+		}
+
+			// return results
 		if ($num_warnings > 0) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, count($warnings), 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $info_array );
+			$value   = count($warnings);
+			$message = new tx_caretaker_ResultMessage( 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $values);
+			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, $value, $message , $submessages );
 		}
 		
 	}
