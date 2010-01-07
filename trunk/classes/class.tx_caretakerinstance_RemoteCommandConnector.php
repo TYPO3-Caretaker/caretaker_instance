@@ -72,10 +72,10 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		// FIXME hlubek: Setting this in a method seems like a unwanted side effect
 		$this->setInstanceURL($baseurl);
 
-		$sessionToken = $this->requestSessionToken();
-
-		if (!$sessionToken) {
-			return $this->getCommandResult(FALSE, NULL, 'Failed to request session token');
+		try {
+			$sessionToken = $this->requestSessionToken();
+		} catch ( Exception $e ) {
+			return $this->getCommandResult(FALSE, NULL, $e->getMessage() );
 		}
 		
 		$commandRequest = $this->getCommandRequest(
@@ -165,18 +165,19 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 * @return string
 	 */
 	public function requestSessionToken() {
-		$token = false;
-        $requestUrl = $this->getInstanceURL() . '&rst=1';
-        
+
+		$requestUrl = $this->getInstanceURL() . '&rst=1';
+
 		$httpRequestResult = $this->executeHttpRequest($requestUrl);
 		
 		if (is_array($httpRequestResult)
 		  && $httpRequestResult['info']['http_code'] === 200
 		  && preg_match('/^([0-9]{10}:[a-z0-9].*)$/', $httpRequestResult['response'], $matches)) {
 			return $matches[1];
+		} else {
+			throw new Exception('request Session Token failed.'.chr(10).var_export($httpRequestResult , true) );
 		}
-
-		return $token ? $token : false;
+		
 	}
 
 	/**

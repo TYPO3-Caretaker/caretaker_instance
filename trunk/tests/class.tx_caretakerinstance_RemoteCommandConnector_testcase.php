@@ -55,7 +55,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 			array($this->cryptoManager,$this->securityManager)
 		);
 		
-		$connector->expects($this->once())->method('requestSessionToken')->will($this->returnValue(false));
+		$connector->expects($this->once())->method('requestSessionToken')->will($this->throwException( new Exception ));
 		$connector->expects($this->never())->method('executeRequest');
 		
 		$result = $connector->executeOperations(array('foo'=>'bar'), 'http:://foo.bar/', 'publicKey');
@@ -111,8 +111,11 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 		
 		$this->assertEquals($fakeSessionToken, $sessionToken);
 	}
-	
-	function testRequestSessionTokenFailsWithInvalidToken() {
+
+	/**
+	 * @expectedException Exception
+	 */
+	function testRequestSessionTokenThrowsExceptionWithInvalidToken() {
 		$url = 'http://foo.bar/';
 		$fakeSessionToken = '==invalidtoken==';
 		
@@ -132,11 +135,12 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 		);
 		
 		$connector->setInstanceURL($url);
-		$sessionToken = $connector->requestSessionToken();
-		
-		$this->assertFalse($sessionToken);
+		$connector->requestSessionToken();
 	}
-	
+
+	/**
+	 * @expectedException Exception
+	 */
 	function testRequestSessionTokenFailsIfHTTPRequestFails() {
 		$url = 'http://foo.bar/';
 		$fakeSessionToken = '1242475687:d566026bfd3aa7d2d5de8a70ea525a0c4c578cdc45b8';
@@ -146,7 +150,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 			array('executeHttpRequest'),
 			array($this->cryptoManager,$this->securityManager)
 		);
-		
+
 		$connector->expects($this->once())->method('executeHttpRequest')
 			->with($this->equalTo($url . '?eID=tx_caretakerinstance&rst=1'))
 			->will($this->returnValue(array(
@@ -157,8 +161,6 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 		
 		$connector->setInstanceURL($url);
 		$sessionToken = $connector->requestSessionToken();
-		
-		$this->assertFalse($sessionToken);
 	}
 	
 	function testGetRequestSignature() {
@@ -167,7 +169,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 			array('getDataForSignature'),
 			array(array())
 		);
-		// FIXME: interface fŸr CommandResult?
+		// FIXME: interface fï¿½r CommandResult?
 		
 		$request->expects($this->once())->method('getDataForSignature')->will($this->returnValue('==SomeData=='));
 		$this->cryptoManager->expects($this->once())->method('createSignature')->with()->will($this->returnValue('==aSignature=='));
