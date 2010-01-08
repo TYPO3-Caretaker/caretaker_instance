@@ -23,7 +23,7 @@
 ***************************************************************/
 
 require_once('class.tx_caretakerinstance_CommandRequest.php');
-
+require_once('exceptions/class.tx_caretakerinstance_RequestSessionTokenFailedException.php');
 
 /**
  * @author Tobias Liebig <liebig@networkteam.com>
@@ -74,8 +74,10 @@ class tx_caretakerinstance_RemoteCommandConnector {
 
 		try {
 			$sessionToken = $this->requestSessionToken();
+		} catch (tx_caretakerinstance_RequestSessionTokenFailedException $e){
+			return $this->getCommandResult(FALSE, NULL, 'Request Session Token failed: ' . chr(10) . $e->getMessage() );
 		} catch ( Exception $e ) {
-			return $this->getCommandResult(FALSE, NULL, $e->getMessage() );
+			return $this->getCommandResult(FALSE, NULL, 'Unknown Exception:' . chr(10) . $e->getMessage() );
 		}
 		
 		$commandRequest = $this->getCommandRequest(
@@ -175,7 +177,7 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		  && preg_match('/^([0-9]{10}:[a-z0-9].*)$/', $httpRequestResult['response'], $matches)) {
 			return $matches[1];
 		} else {
-			throw new Exception('request Session Token failed.'.chr(10).var_export($httpRequestResult , true) );
+			throw new tx_caretakerinstance_RequestSessionTokenFailedException( var_export($httpRequestResult , true) );
 		}
 		
 	}

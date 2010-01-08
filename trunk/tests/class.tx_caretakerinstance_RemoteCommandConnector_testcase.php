@@ -55,7 +55,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 			array($this->cryptoManager,$this->securityManager)
 		);
 		
-		$connector->expects($this->once())->method('requestSessionToken')->will($this->throwException( new Exception ));
+		$connector->expects($this->once())->method('requestSessionToken')->will($this->throwException( new tx_caretakerinstance_RequestSessionTokenFailedException ));
 		$connector->expects($this->never())->method('executeRequest');
 		
 		$result = $connector->executeOperations(array('foo'=>'bar'), 'http:://foo.bar/', 'publicKey');
@@ -112,9 +112,6 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 		$this->assertEquals($fakeSessionToken, $sessionToken);
 	}
 
-	/**
-	 * @expectedException Exception
-	 */
 	function testRequestSessionTokenThrowsExceptionWithInvalidToken() {
 		$url = 'http://foo.bar/';
 		$fakeSessionToken = '==invalidtoken==';
@@ -135,13 +132,19 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 		);
 		
 		$connector->setInstanceURL($url);
-		$connector->requestSessionToken();
+		
+		try {
+			$connector->requestSessionToken();
+			$this->fail( "requestSessionToken should throw an tx_caretakerinstance_RequestSessionTokenFailedException exception" );
+		} catch (tx_caretakerinstance_RequestSessionTokenFailedException $e) {
+			// ok
+		} catch ( Exception $e) {
+			$this->fail(  "requestSessionToken should throw an tx_caretakerinstance_RequestSessionTokenFailedException exception"  );
+		}
 	}
 
-	/**
-	 * @expectedException Exception
-	 */
-	function testRequestSessionTokenFailsIfHTTPRequestFails() {
+	
+	function testRequestSessionTokenThrowsExceptionIfHttpRequestFails() {
 		$url = 'http://foo.bar/';
 		$fakeSessionToken = '1242475687:d566026bfd3aa7d2d5de8a70ea525a0c4c578cdc45b8';
 		
@@ -160,7 +163,15 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 		);
 		
 		$connector->setInstanceURL($url);
-		$sessionToken = $connector->requestSessionToken();
+
+		try {
+			$connector->requestSessionToken();
+			$this->fail( "requestSessionToken should throw an tx_caretakerinstance_RequestSessionTokenFailedException exception" );
+		} catch (tx_caretakerinstance_RequestSessionTokenFailedException $e) {
+			// ok
+		} catch ( Exception $e) {
+			$this->fail(  "requestSessionToken should throw an tx_caretakerinstance_RequestSessionTokenFailedException exception"  );
+		}
 	}
 	
 	function testGetRequestSignature() {
