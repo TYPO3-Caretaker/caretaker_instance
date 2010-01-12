@@ -45,6 +45,7 @@
 					</config>
 				</TCEforms>
 			</check_extension_locations>
+			
 			<status_of_installed_insecure_extensions>
 				<TCEforms>
 					<label>Status of installed insecure Extensions</label>
@@ -68,6 +69,7 @@
 					</config>
 				</TCEforms>
 			</status_of_installed_insecure_extensions>
+
 			<status_of_uninstalled_insecure_extensions>
 				<TCEforms>
 					<label>Status of present but uninstalled insecure extensions</label>
@@ -91,6 +93,7 @@
 					</config>
 				</TCEforms>
 			</status_of_uninstalled_insecure_extensions>
+
 			<status_of_custom_extensions>
 				<TCEforms>
 					<label>Status of Custom Extension wich are not found in TER</label>
@@ -114,6 +117,7 @@
 					</config>
 				</TCEforms>
 			</status_of_custom_extensions>
+			
 			<custom_extkey_whitlelist>
 				<TCEforms>
 					<label>Custom Extension Key Whitelist</label>
@@ -122,6 +126,16 @@
 					</config>
 				</TCEforms>
 			</custom_extkey_whitlelist>
+
+			<custom_extkey_blacklist>
+				<TCEforms>
+					<label>Custom Extension Key Blacklist</label>
+					<config>
+						<type>text</type>
+					</config>
+				</TCEforms>
+			</custom_extkey_blacklist>
+
 			<ignore_extension_version_suffix>
 				<TCEforms>
 					<label>Should extension version suffixes (e.g. "_mod") be ignored?</label>

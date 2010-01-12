@@ -28,6 +28,8 @@
 			<label index="insecure_extension_detail_present">Insecure Extension ###VALUE_EXT_KEY### is present but not installed in version ###VALUE_VERSION###</label>
 			<label index="insecure_extension_detail_unknown">Unknown Extension ###VALUE_EXT_KEY### is found in version ###VALUE_VERSION###</label>
 
+			<label index="blacklisted_extension_found">The Blacklisted Extension ###VALUE_EXT_KEY### is found on the server.</label>
+
 			<label index="insecure_extension_test_errors">Errors:</label>
 			<label index="insecure_extension_test_warnings">Warnings:</label>
 
@@ -50,9 +52,11 @@
 			<label index="insecure_extension_detail_installed">Die unsichere Extension ###VALUE_EXT_KEY### ist in Version ###VALUE_VERSION### installiert</label>
 			<label index="insecure_extension_detail_present">Die unsichere Extension ###VALUE_EXT_KEY### ist vorhanden aber nicht installiert in Version ###VALUE_VERSION###</label>
 			<label index="insecure_extension_detail_unknown">Die unbekannte Extension ###VALUE_EXT_KEY### ist in Version ###VALUE_VERSION### vorhanden</label>
+			<label index="blacklisted_extension_found">The unerwünschte Extension ###VALUE_EXT_KEY### wurde auf dem Webserver gefunden.</label>
 
 			<label index="insecure_extension_test_errors">Fehler:</label>
 			<label index="insecure_extension_test_warnings">Warnungen:</label>
+
 		</languageKey>
 	</data>
 </T3locallang>

@@ -1,40 +1,54 @@
 <?php
-/**
- * This is a file of the caretaker project.
- * Copyright 2008 by n@work Internet Informationssystem GmbH (www.work.de)
- * 
- * @Author	Thomas Hempel 		<thomas@work.de>
- * @Author	Martin Ficzel		<martin@work.de>
- * @Author	Patrick Kollodzik	<patrick@work.de>
- * 
- * $$Id: class.tx_caretaker_typo3_extensions.php 33 2008-06-13 14:00:38Z thomas $$
- */
 
 /***************************************************************
- *  Copyright notice
+* Copyright notice
+*
+* (c) 2009 by n@work GmbH and networkteam GmbH
+*
+* All rights reserved
+*
+* This script is part of the Caretaker project. The Caretaker project
+* is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
+*
+* The GNU General Public License can be found at
+* http://www.gnu.org/copyleft/gpl.html.
+*
+* This script is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* This copyright notice MUST APPEAR in all copies of the script!
+***************************************************************/
+
+/**
+ * This is a file of the caretaker project.
+ * http://forge.typo3.org/projects/show/extension-caretaker
  *
- *  (c) 2008 Patrick Kollodzik <patrick@work.de>
- *  All rights reserved
+ * Project sponsored by:
+ * n@work GmbH - http://www.work.de
+ * networkteam GmbH - http://www.networkteam.com/
  *
- *  This script is part of the TYPO3 project. The TYPO3 project is
- *  free software; you can redistribute it and/or modify
- *  it under the terms of the GNU General Public License as published by
- *  the Free Software Foundation; either version 2 of the License, or
- *  (at your option) any later version.
- *
- *  The GNU General Public License can be found at
- *  http://www.gnu.org/copyleft/gpl.html.
- *
- *  This script is distributed in the hope that it will be useful,
- *  but WITHOUT ANY WARRANTY; without even the implied warranty of
- *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *  GNU General Public License for more details.
- *
- *  This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * $Id: class.tx_caretaker_Cli.php 28420 2010-01-05 16:51:51Z martoro $
+ */
 
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
+
+/**
+ * The caretaker Find Unsesecure Extensuin Test Service
+ *
+ * @author Martin Ficzel <martin@work.de>
+ * @author Thomas Hempel <thomas@work.de>
+ * @author Christopher Hlubek <hlubek@networkteam.com>
+ * @author Tobias Liebig <liebig@networkteam.com>
+ *
+ * @package TYPO3
+ * @subpackage caretaker_instance
+ */
 class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
 
 	/**
@@ -155,6 +169,13 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 			return;
 		}
 
+		// Check blacklist
+		$ext_blacklist = $this->getCustomExtensionBlacklist();
+		if (in_array($ext_key, $ext_blacklist)) {
+			$errors[] = array('message' => 'LLL:EXT:caretaker_instance/locallang.xml:blacklisted_extension_found' , 'values' => $extension);
+			return;
+		}
+
 		// Find extension in TER
 		$ter_info = $this->getExtensionTerInfos($ext_key, $ext_version);
 		
@@ -244,6 +265,10 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 	
 	public function getCustomExtensionWhitelist() {
 		return explode(chr(10), $this->getConfigValue('custom_extkey_whitlelist'));
+	}
+
+	public function getCustomExtensionBlacklist() {
+		return explode(chr(10), $this->getConfigValue('custom_extkey_blacklist'));
 	}
 
 	protected function isExtensionVersionSuffixIgnored() {
