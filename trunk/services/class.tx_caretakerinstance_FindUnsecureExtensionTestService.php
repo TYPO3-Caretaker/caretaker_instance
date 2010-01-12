@@ -175,7 +175,7 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 			if ($ext_installed){
 				$errors[] = array('message' => 'LLL:EXT:caretaker_instance/locallang.xml:blacklisted_extension_installed' , 'values' => $extension);
 			} else {
-				$errors[] = array('message' => 'LLL:EXT:caretaker_instance/locallang.xml:blacklisted_extension_found' , 'values' => $extension);
+				$errors[] = array('message' => 'LLL:EXT:caretaker_instance/locallang.xml:blacklisted_extension_present' , 'values' => $extension);
 			}
 			return;
 		}
