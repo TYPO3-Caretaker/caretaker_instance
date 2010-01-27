@@ -31,7 +31,7 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		$maxVersion = $this->getConfigValue('max_version');
 		
 		if (!$minVersion && !$maxVersion) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 0, 'Cannot execute TYPO3 version test without min and max version');
+			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute TYPO3 version test without min and max version');
 		}
 		
 		$operation = array('GetTYPO3Version');
@@ -57,7 +57,7 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 			$maxVersion);
 		if ($checkResult) {
 			$message = 'TYPO3 version ' . $version . ' is installed';
-			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, $message);
+			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
 		} else {
 			$message = 'TYPO3 version ' . $version . ' is installed, but';
 			if ($minVersion) {
@@ -67,7 +67,7 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 				$message .= ' <= ' . $maxVersion; 
 			}
 			$message .= ' expected.';
-			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, $message);
+			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $message);
 		}
 
 		return $testResult;

@@ -75,11 +75,11 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 
 		foreach ($blacklistedUsernames as $username) {
 			if (in_array($username, $usernames)) {
-				return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, 'User [' . $username . '] is blacklisted and should not be active.');
+				return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'User [' . $username . '] is blacklisted and should not be active.');
 			}
 		}
 
-		return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, '');
+		return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, '');
 	}
 }
 

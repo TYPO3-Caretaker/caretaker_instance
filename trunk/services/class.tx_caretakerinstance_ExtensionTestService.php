@@ -62,7 +62,7 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 		$maxVersion = $this->getConfigValue('max_version');
 
 		if (!$extensionKey){
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_UNDEFINED, 0, 'Cannot execute extension test without extension key');
+			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute extension test without extension key');
 		}
 
 		$operation = array('GetExtensionVersion', array('extensionKey' => $extensionKey));
@@ -89,10 +89,10 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 			$maxVersion);
 		if ($checkResult) {
 			$message = 'Extension check for [' . $extensionKey . '] passed';
-			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, $message);
+			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
 		} else {
 			$message = 'Extension check for [' . $extensionKey . '] failed';
-			$testResult = tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, $message);
+			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $message);
 		}
 
 		return $testResult;

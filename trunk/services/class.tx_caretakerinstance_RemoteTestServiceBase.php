@@ -62,7 +62,7 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 	 */
 	protected function getFailedCommandResultTestResult($commandResult) {
 		return tx_caretaker_TestResult::create(
-			TX_CARETAKER_STATE_ERROR,
+			tx_caretaker_Constants::state_error,
 			0,
 			'Command execution failed: ' . (is_object($commandResult) ? $commandResult->getMessage() : 'undefined')
 		);
@@ -75,7 +75,7 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 	 */
 	protected function getFailedOperationResultTestResult($operationResult) {
 		return tx_caretaker_TestResult::create(
-			TX_CARETAKER_STATE_ERROR,
+			tx_caretaker_Constants::state_error,
 			0,
 			'Operation execution failed: ' . $operationResult->getValue()
 		);

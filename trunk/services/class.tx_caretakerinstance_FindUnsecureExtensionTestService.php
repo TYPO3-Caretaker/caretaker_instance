@@ -88,7 +88,7 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$operationResult = $results[0];
 
 		if (!$operationResult->isSuccessful()) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, 0, 'Remote operation failed: ' . $operationResult->getValue());
+			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Remote operation failed: ' . $operationResult->getValue());
 		} 
 
 		$extensionList = $operationResult->getValue();
@@ -103,7 +103,7 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		$seperator = chr(10). ' - ';
 
 		if (count($errors) == 0 && count($warnings) == 0) {
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_OK, 0, 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_ok');
+			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_ok');
 		}
 
 		$num_errors   = count($errors);
@@ -132,14 +132,14 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 		if ($num_errors > 0) {
 			$value   = (count($errors) + count($warnings));
 			$message = new tx_caretaker_ResultMessage( 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $values);
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_ERROR, $value , $message , $submessages );
+			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, $value , $message , $submessages );
 		}
 
 			// return results
 		if ($num_warnings > 0) {
 			$value   = count($warnings);
 			$message = new tx_caretaker_ResultMessage( 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $values);
-			return tx_caretaker_TestResult::create(TX_CARETAKER_STATE_WARNING, $value, $message , $submessages );
+			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, $value, $message , $submessages );
 		}
 		
 	}
