@@ -50,7 +50,10 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 
 		$operations = array();
 		foreach ($blacklistedUsernames as $username) {
-			$operations[] = array('GetRecord', array('table' => 'be_users', 'field' => 'username', 'value' => $username, 'checkEnableFields' => TRUE));
+			$username = trim( $username );
+			if ( strlen( $username) ) {
+				$operations[] = array('GetRecord', array('table' => 'be_users', 'field' => 'username', 'value' => $username, 'checkEnableFields' => TRUE));
+			}
 		}
 
 		$commandResult = $this->executeRemoteOperations($operations);
