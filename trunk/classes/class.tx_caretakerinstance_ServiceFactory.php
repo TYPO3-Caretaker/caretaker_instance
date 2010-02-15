@@ -90,7 +90,7 @@ class tx_caretakerinstance_ServiceFactory {
 	/**
 	 * @return tx_caretakerinstance_RemoteCommandConnector
 	 */
-	public function getRemoteCommandConnector() {
+	public function getRemoteCommandConnector($options) {
 		if ($this->remoteCommandConnector == null) {
 			$this->remoteCommandConnector = new tx_caretakerinstance_RemoteCommandConnector(
 				$this->getCryptoManager(),

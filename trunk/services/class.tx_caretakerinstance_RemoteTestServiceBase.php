@@ -39,11 +39,12 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 	protected function executeRemoteOperations($operations) {
 		$instanceUrl = $this->instance->getUrl();
 		$instancePublicKey = $this->instance->getPublicKey();
+		$curlOptions = $this->instance->getCurlOptions();
 
 		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
 		$connector = $factory->getRemoteCommandConnector();
 		
-		return $connector->executeOperations($operations, $instanceUrl, $instancePublicKey);
+		return $connector->executeOperations($operations, $instanceUrl, $instancePublicKey, $curlOptions);
 	}
 
 	/**

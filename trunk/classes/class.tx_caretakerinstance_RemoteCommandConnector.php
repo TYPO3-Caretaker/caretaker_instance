@@ -45,6 +45,8 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 * @var string url of the instance
 	 */
 	protected $instanceUrl;
+
+	protected $curlOptions;
 	
 	/**
 	 * @param $cryptoManager tx_caretakerinstance_ICryptoManager
@@ -64,13 +66,14 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 * @param $instancePublicKey string
 	 * @return tx_caretakerinstance_CommandResult
 	 */
-	public function executeOperations(array $operations, $baseurl, $instancePublicKey) {
+	public function executeOperations(array $operations, $baseurl, $instancePublicKey, $curlOptions = NULL) {
 		if (empty($baseurl) || empty($instancePublicKey)) {
 			return $this->getCommandResult(FALSE, NULL, 'No URL or publicKey of instance given');
 		}
 		
 		// FIXME hlubek: Setting this in a method seems like a unwanted side effect
 		$this->setInstanceURL($baseurl);
+		$this->setCurlOptions($curlOptions);
 
 		try {
 			$sessionToken = $this->requestSessionToken();
@@ -167,9 +170,7 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 * @return string
 	 */
 	public function requestSessionToken() {
-
 		$requestUrl = $this->getInstanceURL() . '&rst=1';
-
 		$httpRequestResult = $this->executeHttpRequest($requestUrl);
 		
 		if (is_array($httpRequestResult)
@@ -180,6 +181,14 @@ class tx_caretakerinstance_RemoteCommandConnector {
 			throw new tx_caretakerinstance_RequestSessionTokenFailedException( var_export($httpRequestResult , true) );
 		}
 		
+	}
+
+	public function setCurlOptions($curlOptions) {
+		$this->curlOptions = $curlOptions;
+	}
+
+	public function getCurlOptions() {
+		return $this->curlOptions;
 	}
 
 	/**
@@ -222,7 +231,8 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 * @return string encrypted json
 	 */
 	protected function getEncryptedDataFromOperations($operations, $publicKey) {
-		$encryptedData = $this->cryptoManager->encrypt($this->getDataFromOperations($rawdata), $publicKey);
+		// FIXME rawdata / $operations
+		$encryptedData = $this->cryptoManager->encrypt($this->getDataFromOperations($operations), $publicKey);
 		return $encryptedData;
 	}
 	
@@ -248,10 +258,17 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 */
 	protected function executeHttpRequest($requestUrl, $postValues = null) {
 		$curl = curl_init();
-        if (!$curl) {
-        	return false;
-        }
-        
+		if (!$curl) {
+			return false;
+		}
+
+		$additionalCurlOptions = $this->getCurlOptions();
+		if (is_array($additionalCurlOptions)) {
+			foreach ($additionalCurlOptions as $key => $value) {
+				curl_setopt($curl, $key, $value);
+			}
+		}
+
 		curl_setopt($curl, CURLOPT_URL, $requestUrl);
 		curl_setopt($curl, CURLOPT_HEADER, 0);
 		curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
@@ -259,9 +276,9 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		curl_setopt($curl, CURLOPT_TIMEOUT, 30);
 
 		$headers = array(
-            "Cache-Control: no-cache",
-            "Pragma: no-cache"
-        );
+		    "Cache-Control: no-cache",
+		    "Pragma: no-cache"
+		);
 		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
 		if (is_array($postValues)) {
@@ -269,18 +286,18 @@ class tx_caretakerinstance_RemoteCommandConnector {
 				$postQuery .= urlencode($key) . '=' . urlencode($value) . '&';
 			}
 			rtrim($postQuery, '&');
-			
+
 			curl_setopt($curl, CURLOPT_POST, count($postValues));
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $postQuery);
 		}
-		
+
 		$response = curl_exec($curl);
 		$info = curl_getinfo($curl);
 		curl_close($curl);
-		
+
 		return array(
-			'response' => $response,
-			'info' => $info
+		'response' => $response,
+		'info' => $info
 		);
 	}
 }
