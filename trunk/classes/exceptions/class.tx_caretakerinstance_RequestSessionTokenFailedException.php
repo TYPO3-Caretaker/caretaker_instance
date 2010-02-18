@@ -3,7 +3,7 @@
 /***************************************************************
 * Copyright notice
 *
-* (c) 2009 by n@work GmbH and networkteam GmbH
+* (c) 2009-2010 by n@work GmbH and networkteam GmbH
 *
 * All rights reserved
 *
@@ -32,7 +32,7 @@
  * n@work GmbH - http://www.work.de
  * networkteam GmbH - http://www.networkteam.com/
  *
- * $Id: class.tx_caretaker_Cli.php 28420 2010-01-05 16:51:51Z martoro $
+ * $Id$
  */
 
 /**
@@ -44,7 +44,7 @@
  * @author Tobias Liebig <liebig@networkteam.com>
  *
  * @package TYPO3
- * @subpackage caretaker_iinstance
+ * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_RequestSessionTokenFailedException extends Exception{
    

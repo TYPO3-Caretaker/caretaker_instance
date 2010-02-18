@@ -1,9 +1,10 @@
 <?php
 
+
 /***************************************************************
 * Copyright notice
 *
-* (c) 2009 by n@work GmbH and networkteam GmbH
+* (c) 2009-2010 by n@work GmbH and networkteam GmbH
 *
 * All rights reserved
 *
@@ -32,14 +33,14 @@
  * n@work GmbH - http://www.work.de
  * networkteam GmbH - http://www.networkteam.com/
  *
- * $Id: class.tx_caretaker_Cli.php 28420 2010-01-05 16:51:51Z martoro $
+ * $Id$
  */
+
 
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
-
 /**
- * The caretaker Find Unsesecure Extensuin Test Service
+ * Check unsecure extensions
  *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
