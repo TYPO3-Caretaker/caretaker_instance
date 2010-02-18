@@ -11,7 +11,8 @@ $operations = array(
 	'GetExtensionVersion',
 	'GetExtensionList',
 	'GetRecord',
-	'GetFilesystemChecksum'
+	'GetFilesystemChecksum',
+	'MatchPredefinedVariable',
 );
 foreach ($operations as $operationKey) {
 	$TYPO3_CONF_VARS['EXTCONF']['caretaker_instance']['operations'][$operationKey] =
