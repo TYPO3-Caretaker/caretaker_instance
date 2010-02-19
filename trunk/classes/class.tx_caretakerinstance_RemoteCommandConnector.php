@@ -35,8 +35,8 @@
  * $Id$
  */
 
-require_once('class.tx_caretakerinstance_CommandRequest.php');
-require_once('exceptions/class.tx_caretakerinstance_RequestSessionTokenFailedException.php');
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandRequest.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTokenFailedException.php'));
 
 /**
  * Connect to an Instance and execute a Commend (bunch of Operations)
