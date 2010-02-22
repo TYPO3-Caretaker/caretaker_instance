@@ -298,17 +298,18 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		    "Cache-Control: no-cache",
 		    "Pragma: no-cache"
 		);
-		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
 		if (is_array($postValues)) {
 			foreach($postValues as $key => $value) {
 				$postQuery .= urlencode($key) . '=' . urlencode($value) . '&';
 			}
 			rtrim($postQuery, '&');
-
+			$headers[] = 'Content-Length: '.strlen($postQuery);
 			curl_setopt($curl, CURLOPT_POST, count($postValues));
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $postQuery);
 		}
+
+		curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
 
 		$response = curl_exec($curl);
 		$info = curl_getinfo($curl);
