@@ -40,7 +40,7 @@
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
 /**
- * Check unsecure extensions
+ * Check insecure extensions
  *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
@@ -50,7 +50,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
+class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
 
 	/**
 	 * Value Description
@@ -71,7 +71,7 @@ class tx_caretakerinstance_FindUnsecureExtensionTestService extends tx_caretaker
 	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_configuration';
 
 	/**
-	 * Execute the find unsecure extension test
+	 * Execute the find insecure extension test
 	 * @return tx_caretaker_TestResult
 	 */
 	public function runTest() {		

@@ -1,6 +1,6 @@
 <?php
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_FindUnsecureExtensionTestService.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_FindInsecureExtensionTestService.php'));
 
 /**
  * Testcase for the ServiceFactory
@@ -11,10 +11,10 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  */
 class tx_caretakerinstance_Services_testcase extends tx_phpunit_testcase {
 
-	public function testFindUnsecureExtensionCommand (){
+	public function testFindInsecureExtensionCommand (){
 		
 		$stub = $this->getMock(
-			'tx_caretakerinstance_FindUnsecureExtensionTestService', 
+			'tx_caretakerinstance_FindInsecureExtensionTestService',
 			array('getLocationList','executeRemoteOperations','checkExtension')
 		);
 		
@@ -51,7 +51,7 @@ class tx_caretakerinstance_Services_testcase extends tx_phpunit_testcase {
 		
 	}
 	
-	public function providerFindUnsecureExtensionGetLocationList (){
+	public function providerFindInsecureExtensionGetLocationList (){
 		return array(
 			array( 1, array('system') ),
 			array( 2, array('global') ),
@@ -62,12 +62,12 @@ class tx_caretakerinstance_Services_testcase extends tx_phpunit_testcase {
 	}
 	
 	/** 
-     * @dataProvider providerFindUnsecureExtensionGetLocationList 
+     * @dataProvider providerFindInsecureExtensionGetLocationList
      */ 
-	public function testFindUnsecureExtensionGetLocationList ($input, $output){
+	public function testFindInsecureExtensionGetLocationList ($input, $output){
 		
 		$stub = $this->getMock(
-			'tx_caretakerinstance_FindUnsecureExtensionTestService', 
+			'tx_caretakerinstance_FindInsecureExtensionTestService',
 			array('getConfigValue')
 		);
 		
