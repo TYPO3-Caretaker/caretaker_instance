@@ -305,6 +305,7 @@ class tx_caretakerinstance_RemoteCommandConnector {
 			}
 			rtrim($postQuery, '&');
 			$headers[] = 'Content-Length: '.strlen($postQuery);
+			$headers[] = 'Expect: '.strlen($postQuery); // fix Problem with lighthttp 
 			curl_setopt($curl, CURLOPT_POST, count($postValues));
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $postQuery);
 		}
@@ -313,8 +314,6 @@ class tx_caretakerinstance_RemoteCommandConnector {
 
 		$response = curl_exec($curl);
 		$info = curl_getinfo($curl);
-		$info['request_headers'] = $headers;
-		if ($postQuery) $info['post_query'] = $postQuery;
 
 		curl_close($curl);
 
