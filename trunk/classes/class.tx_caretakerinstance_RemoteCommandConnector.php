@@ -313,6 +313,9 @@ class tx_caretakerinstance_RemoteCommandConnector {
 
 		$response = curl_exec($curl);
 		$info = curl_getinfo($curl);
+		$info['request_headers'] = $headers;
+		if ($postQuery) $info['post_query'] = $postQuery;
+
 		curl_close($curl);
 
 		return array(
