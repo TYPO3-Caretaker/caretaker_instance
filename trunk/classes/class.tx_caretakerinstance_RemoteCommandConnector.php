@@ -140,9 +140,9 @@ class tx_caretakerinstance_RemoteCommandConnector {
 			}
 
 		if (is_array($httpRequestResult) ){
-			return $this->getCommandResult(FALSE, NULL, 'Invalid result: ' .$httpRequestResult['response'] );
+			return $this->getCommandResult(FALSE, NULL, 'Invalid result: ' . $httpRequestResult['response'] . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
 		} else {
-			return $this->getCommandResult(FALSE, NULL, 'Invalid result request could not be executed');
+			return $this->getCommandResult(FALSE, NULL, 'Invalid result request could not be executed' . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
 		}
 	}
 	
