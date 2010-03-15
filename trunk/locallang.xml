@@ -37,6 +37,9 @@
 
 			<label index="backend_user_test_description">Backend-user test</label>
 			<label index="backend_user_test_configuration"></label>
+			
+			<label index="check_path_description">Check-path test</label>
+			<label index="check_path_test_configuration"></label>
 
 			<label index="insecure_extension_test_description">TER insecure extension test</label>
 			<label index="insecure_extension_test_configuration"></label>

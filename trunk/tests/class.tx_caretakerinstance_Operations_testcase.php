@@ -10,6 +10,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetRecord.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_GetFilesystemChecksum.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_MatchPredefinedVariable.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_Operation_CheckPathExists.php'));
 
 /**
  * Testcase for Operations
@@ -177,6 +178,28 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$result = $operation->execute(array(
 			'key' => $key,
 			'match' => 'an other value',
+			)
+		);
+
+		$this->assertFalse($result->isSuccessful());
+	}
+	
+	public function testOperation_CheckPathExistsReturnsTrueIfPathExists() {		
+		$operation = new tx_caretakerinstance_Operation_CheckPathExists();
+
+		$result = $operation->execute(array(
+			'path' => 'EXT:caretaker_instance/tests/fixtures/Operation_CheckPathExists.txt',
+			)
+		);
+
+		$this->assertTrue($result->isSuccessful());
+	}
+	
+	public function testOperation_CheckPathExistsReturnsFalseIfPathNotExists() {		
+		$operation = new tx_caretakerinstance_Operation_CheckPathExists();
+
+		$result = $operation->execute(array(
+			'path' => 'EXT:caretaker_instance/tests/fixtures/Operation_CheckPathExists_notExisting.txt',
 			)
 		);
 
