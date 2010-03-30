@@ -78,6 +78,12 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 		foreach ($checkConfVars as $checkConfVar) {
 			
 			$checkConfVar = trim($checkConfVar);
+
+				// ignore empty and comment lines
+			if ( $checkConfVar = '' || strpos($checkConfVar, '#' ) === 0 || strpos($checkConfVar, '//' ) === 0 ){
+				continue;
+			}
+			
 				// compare direct =
 			if ( strpos( $checkConfVar , '=' ) > 0 ){
 				list($path,$value) = explode('=',$checkConfVar);
