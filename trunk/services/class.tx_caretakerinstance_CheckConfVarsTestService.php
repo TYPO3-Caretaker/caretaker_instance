@@ -80,7 +80,7 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 			$checkConfVar = trim($checkConfVar);
 
 				// ignore empty and comment lines
-			if ( $checkConfVar = '' || strpos($checkConfVar, '#' ) === 0 || strpos($checkConfVar, '//' ) === 0 ){
+			if ( $checkConfVar == '' || strpos($checkConfVar, '#' ) === 0 || strpos($checkConfVar, '//' ) === 0 ){
 				continue;
 			}
 			
