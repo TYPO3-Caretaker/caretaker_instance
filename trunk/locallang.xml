@@ -34,6 +34,8 @@
 			<label index="insecure_extension_test_errors">Errors:</label>
 			<label index="insecure_extension_test_warnings">Warnings:</label>
 
+			<label index="typo3_conf_vars_test_description">TYPO3_CONF_VARS test</label>
+			<label index="typo3_conf_vars_test_configuration"></label>
 
 			<label index="backend_user_test_description">Backend-user test</label>
 			<label index="backend_user_test_configuration"></label>
