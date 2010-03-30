@@ -11,7 +11,7 @@
 		<el>
 			<checkConfVars>
 				<TCEforms>
-					<label>Check TYPO3_CONF_VARS : key_pipe_subkey... = extectation (reglar) /expectation/(regex) </label>
+					<label>Check TYPO3_CONF_VARS : key_pipe_subkey... = expectation (reglar) /expectation/(regex) </label>
 					<config>
 						<type>text</type>
 					</config>
