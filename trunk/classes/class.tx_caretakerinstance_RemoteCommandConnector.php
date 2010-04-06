@@ -197,7 +197,10 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		  && preg_match('/^([0-9]{10}:[a-z0-9].*)$/', $httpRequestResult['response'], $matches)) {
 			return $matches[1];
 		} else {
-			throw new tx_caretakerinstance_RequestSessionTokenFailedException( var_export($httpRequestResult , true) );
+			$msg  =          '- HTTP-URL: ' . $httpRequestResult['info']['url'];
+			$msg .= chr(10). '- HTTP-Status: ' . $httpRequestResult['info']['http_code'];
+			$msg .= chr(10). '- HTTP-Response: ' . $httpRequestResult['response'];
+			throw new tx_caretakerinstance_RequestSessionTokenFailedException( $msg );
 		}
 		
 	}
