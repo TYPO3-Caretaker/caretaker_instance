@@ -127,7 +127,7 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 			if ($operationResult->isSuccessful()) {
 				$sucess[]   = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched expectation ' .  $operations[$key][1]['match'];
 			} else {
-				$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did match expectation ' . $operations[$key][1]['match'];
+				$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the expectation ' . $operations[$key][1]['match'];
 			}
 		}
 
