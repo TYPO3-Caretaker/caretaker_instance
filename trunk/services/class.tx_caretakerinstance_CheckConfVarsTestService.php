@@ -84,7 +84,7 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 				continue;
 			}
 			
-				// compare direct =
+				// compare direct on =
 			if ( strpos( $checkConfVar , '=' ) > 0 ){
 				list($path,$value) = explode('=',$checkConfVar);
 				$path = trim($path);
@@ -95,19 +95,30 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 				if ( is_numeric( $value ) && intval($value) == $value ) {
 					$value = intval($value);
 				}
-					// regex comparison
-				if (preg_match( '/^\/.*\/[a-z]*$/' , $value) ){
-					$regex = true;
-				}
 				
 				if ( $path && $value ) {
 					$operations[] = array('MatchPredefinedVariable', array(
 						'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
-						'usingRegexp' => $regex,
+						'usingRegexp' => false,
 						'match' => $value,
 					));
 				}
-			}  
+			}
+				// compare regex on :regex:
+			if ( strpos( $checkConfVar , ':regex:' ) > 0 ){
+				list($path,$value) = explode(':regex:',$checkConfVar);
+				$path = trim($path);
+				$value = trim($value);
+				$regex = false;
+
+				if ( $path && $value ) {
+					$operations[] = array('MatchPredefinedVariable', array(
+						'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
+						'usingRegexp' => true,
+						'match' => $value,
+					));
+				}
+			}
 			
 		}
 
