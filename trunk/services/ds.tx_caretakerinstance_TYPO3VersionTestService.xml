@@ -20,7 +20,7 @@
 		<el>
 			<min_version>
 				<TCEforms>
-					<label>Minimal allowed Version</label>
+					<label>Minimal allowed Version (e.g. '4.3.2' or '4.3.latest')</label>
 					<config>
 						<type>input</type>
 						<size>30</size>
@@ -29,7 +29,7 @@
 			</min_version>
 			<max_version>
 				<TCEforms>
-					<label>Maximal allowed Version</label>
+					<label>Maximal allowed Version (e.g. '4.3.2' or '4.3.latest')</label>
 					<config>
 						<type>input</type>
 						<size>30</size>
