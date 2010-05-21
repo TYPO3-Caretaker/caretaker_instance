@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3DataStructure>
+	<meta>
+		<langDisable>1</langDisable>
+	</meta>
+	<ROOT>
+		<TCEforms> 
+			<sheetTitle>Default</sheetTitle> 
+		</TCEforms> 
+		<type>array</type>
+		<el>
+			<blacklist>
+				<TCEforms>
+					<label>Blacklisted usernames</label>
+					<config>
+						<type>text</type>
+					</config>
+				</TCEforms>
+			</blacklist>
+		</el>
+	</ROOT>
+</T3DataStructure>

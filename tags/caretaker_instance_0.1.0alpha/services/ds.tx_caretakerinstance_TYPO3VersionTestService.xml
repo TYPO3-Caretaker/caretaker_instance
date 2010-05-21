@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<!-- 
+/**
+ * This is a file of the caretaker project.
+ * 
+ * @author	Christopher Hlubek	<hlubek@networkteam.com>
+ * 
+ * $$Id: ds.tx_caretaker_typo3_extensions.xml 33 2008-06-13 14:00:38Z thomas $$
+ */
+-->
+<T3DataStructure>
+	<meta>
+		<langDisable>1</langDisable>
+	</meta>
+	<ROOT>
+		<TCEforms> 
+			<sheetTitle>Default</sheetTitle> 
+		</TCEforms> 
+		<type>array</type>
+		<el>
+			<min_version>
+				<TCEforms>
+					<label>Minimal allowed Version (e.g. '4.3.2' or '4.3.latest')</label>
+					<config>
+						<type>input</type>
+						<size>30</size>
+					</config>
+				</TCEforms>
+			</min_version>
+			<max_version>
+				<TCEforms>
+					<label>Maximal allowed Version (e.g. '4.3.2' or '4.3.latest')</label>
+					<config>
+						<type>input</type>
+						<size>30</size>
+					</config>
+				</TCEforms>
+			</max_version>
+		</el>
+	</ROOT>
+</T3DataStructure>
