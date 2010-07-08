@@ -102,10 +102,17 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 			$minVersion,
 			$maxVersion);
 		if ($checkResult) {
-			$message = 'Extension check for [' . $extensionKey . '] passed';
+			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is installed';
 			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
 		} else {
-			$message = 'Extension check for [' . $extensionKey . '] failed';
+			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is installed, but ';
+			if ($minVersion) {
+				$message .= ' >= ' . $minVersion; 
+			}
+			if ($maxVersion) {
+				$message .= ' <= ' . $maxVersion; 
+			}
+			$message .= ' expected';
 			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $message);
 		}
 
