@@ -49,7 +49,15 @@
 			<label index="extension_test_description">Extension test</label>
 			<label index="extension_test_configuration"></label>
 
-
+			<label index="find_extension_updates_test_description">Find Extension Updates</label>
+			<label index="find_extension_updates_test_configuration"></label>
+			<label index="find_extension_updates_test_ok">All Extensions are up to date</label>
+			<label index="find_extension_updates_test_problems">###VALUE_NUM_ERRORS### Errors and ###VALUE_NUM_WARNINGS### Warnings</label>
+			<label index="find_extension_updates_test_detailinfo">Extension ###VALUE_EXT_KEY### is installed in Version ###VALUE_EXT_VERSION###. Latest is ###VALUE_TER_VERSION###.</label>
+			<label index="find_extension_updates_test_detail_error">Errors:</label>
+			<label index="find_extension_updates_test_detail_warning">Warnings:</label>
+			<label index="find_extension_updates_test_detail_ok">Ok:</label>
+			
 		</languageKey>
 		<languageKey index="de" type="array">
 			<label index="insecure_extension_test_ok">Es wurden keine problematischen Extensions gefunden</label>

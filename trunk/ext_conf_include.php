@@ -43,14 +43,15 @@ if (!defined ('TYPO3_MODE')) {
 // Register Caretaker Services
 if (t3lib_extMgm::isLoaded('caretaker') ){
 	include_once(t3lib_extMgm::extPath('caretaker') . 'classes/helpers/class.tx_caretaker_ServiceHelper.php');
-	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_Extension',  'TYPO3 -> Extension', 'Check for a specific Extension');
-	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_TYPO3Version',  'TYPO3 -> Version', 'Check for the TYPO3 version');
-	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_FindInsecureExtension',  'TYPO3 -> Find insecure Extenions', 'Find Extensions wich are marked insecure in TER');
-	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_BackendUser',  'TYPO3 -> Check backend user accounts', 'Find unwanted backend user accounts');
-	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_FindBlacklistedBePassword',  'TYPO3 -> Check be-password blacklist', 'Find backend user accounts with blacklisted passwords.');
-	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_CheckConfVars',  'TYPO3 -> Check TYPO3_CONV_VARS', 'Check Settings of TYPO3_CONF_VARS');
-	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_CheckPath',  'FILE -> Check path', 'Checks for some path stats');
-
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_Extension',                 'TYPO3 -> Extension', 'Check for a specific Extension');
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_TYPO3Version',              'TYPO3 -> Version', 'Check for the TYPO3 version');
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_FindInsecureExtension',     'TYPO3 -> Find insecure Extenions', 'Find Extensions wich are marked insecure in TER');
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_FindExtensionUpdates',      'TYPO3 -> Find Extension Updates', 'Find available Updates for installed Extensions');
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_BackendUser',               'TYPO3 -> Check backend user accounts', 'Find unwanted backend user accounts');
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_FindBlacklistedBePassword', 'TYPO3 -> Check be-password blacklist', 'Find backend user accounts with blacklisted passwords.');
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_CheckConfVars',             'TYPO3 -> Check TYPO3_CONV_VARS', 'Check Settings of TYPO3_CONF_VARS');
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_CheckPath',                 'FILE -> Check path', 'Checks for some path stats');
+	
 }
 
 ?>
