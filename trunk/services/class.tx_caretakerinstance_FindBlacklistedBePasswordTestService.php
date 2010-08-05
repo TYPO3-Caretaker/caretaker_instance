@@ -94,7 +94,6 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 			if ($operationResult->isSuccessful()) {
 
 				$user = $operationResult->getValue();
-				print_r ($user);
 				if ($user !== FALSE) {
 					$careless_users[] = $user;
 				}
@@ -106,7 +105,6 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 		if ( count($careless_users) > 0){
 			$submessages = array();
 			foreach ( $careless_users as $user){
-				print_r ($user['username'] );
 				$submessages[] = new tx_caretaker_ResultMessage( $user['username'] );
 			}
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'The following accounts have blacklisted passwords:' , $submessages );
