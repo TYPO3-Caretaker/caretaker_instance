@@ -235,8 +235,9 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 			'cache_extensions',
 			'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') . ' AND reviewstate > -1 ',
 			'',
-			'lastuploaddate DESC' ,
-			1);
+			'lastuploaddate DESC',
+			1
+		);
 		$result  = false;
 		$latestVersion = 0;
 		foreach ( $ext_infos  as  $ext_info){
