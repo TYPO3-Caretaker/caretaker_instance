@@ -230,7 +230,13 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 	}
 	
 	public function getLatestExtensionTerInfos($ext_key, $ext_version) {
-		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('extkey, version', 'cache_extensions', 'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') . ' AND reviewstate > -1 ', '', '' , 1);
+		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'extkey, version',
+			'cache_extensions',
+			'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') . ' AND reviewstate > -1 ',
+			'',
+			'lastuploaddate DESC' ,
+			1);
 		$result  = false;
 		$latestVersion = 0;
 		foreach ( $ext_infos  as  $ext_info){
