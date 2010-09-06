@@ -24,7 +24,7 @@
 			
 			<check_extension_locations>
 				<TCEforms>
-					<label>Wich extension-locations should be checked</label>
+					<label>Which extension-locations should be checked</label>
 					<config>
 						<type>check</type>
 					    <items>
@@ -49,7 +49,7 @@
 			
 			<status_of_updateable_extensions>
 				<TCEforms>
-					<label>Status of Custom Extension wich are not found in TER</label>
+					<label>Status of Custom Extension with newer version in TER</label>
 					<config>
 						<type>select</type>
 						<items>
@@ -66,7 +66,7 @@
 								<numIndex index="1">2</numIndex>
 					    	</numIndex>
 						</items>
-						<default>0</default>
+						<default>1</default>
 					</config>
 				</TCEforms>
 			</status_of_updateable_extensions>

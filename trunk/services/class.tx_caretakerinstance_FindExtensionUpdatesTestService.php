@@ -204,7 +204,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 					// handle error
 				$handling = $this->getStatusOfUpdatableExtensions();
 				switch ($handling) {
-						// Warning
+					// Warning
 					case 1: 
 						$warnings[] = array('message' => $message , 'values' => $value);
 						return;
@@ -212,21 +212,22 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 					case 2: 
 						$errors[] = array('message' => $message , 'values' => $value);
 						return;
-					// Ignore
-					default: return;
+					// OK
+					default: 
+						$oks[] = array('message' => $message , 'values' => $value);
+						return;
 				}
 			}; 
 			
 		} else {
-			$value    = array(
+			$value = array(
 				'ext_key' =>  $extension['ext_key'],
 			 	'ext_version' =>  $extension['version'],
 				'ter_version' =>  'unknown'
 			);
-			$message  =   'LLL:EXT:caretaker_instance/locallang.xml:find_extension_updates_test_detailinfo';
+			$message = 'LLL:EXT:caretaker_instance/locallang.xml:find_extension_updates_test_detailinfo';
 			$oks[] = array('message' => $message , 'values' => $value);
 		}
-		
 	}
 	
 	public function getLatestExtensionTerInfos($ext_key, $ext_version) {
