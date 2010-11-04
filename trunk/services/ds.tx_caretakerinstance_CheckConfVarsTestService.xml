@@ -27,15 +27,15 @@
 						<items>
 							<numIndex index="0">
 					    		<numIndex index="0">OK</numIndex>
-								<numIndex index="1">1</numIndex>
+								<numIndex index="1">0</numIndex>
 					    	</numIndex>
 					    	<numIndex index="1">
 					    		<numIndex index="0">Warning</numIndex>
-								<numIndex index="1">0</numIndex>
+								<numIndex index="1">1</numIndex>
 					    	</numIndex>
 					    	<numIndex index="2">
 					    		<numIndex index="0">Error</numIndex>
-								<numIndex index="1">1</numIndex>
+								<numIndex index="1">2</numIndex>
 					    	</numIndex>
 						</items>
 						<default>2</default>
@@ -50,15 +50,15 @@
 						<items>
 							<numIndex index="0">
 					    		<numIndex index="0">OK</numIndex>
-								<numIndex index="1">1</numIndex>
+								<numIndex index="1">0</numIndex>
 					    	</numIndex>
 					    	<numIndex index="1">
 					    		<numIndex index="0">Warning</numIndex>
-								<numIndex index="1">0</numIndex>
+								<numIndex index="1">1</numIndex>
 					    	</numIndex>
 					    	<numIndex index="2">
 					    		<numIndex index="0">Error</numIndex>
-								<numIndex index="1">1</numIndex>
+								<numIndex index="1">2</numIndex>
 					    	</numIndex>
 						</items>
 						<default>0</default>
