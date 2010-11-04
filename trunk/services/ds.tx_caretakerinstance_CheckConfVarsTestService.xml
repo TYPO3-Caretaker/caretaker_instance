@@ -17,25 +17,52 @@
 					</config>
 				</TCEforms>
 			</checkConfVars>
-			<warningLevel>
+			<resultMatch>
 				<TCEforms>
-					<label>Warning Level:</label>
+					<label>Result if conditions match</label>
 					<config>
 						<type>select</type>
 						<items>
-					    	<numIndex index="0">
-					    		<numIndex index="0">Error</numIndex>
-								<numIndex index="1">0</numIndex>
+							<numIndex index="0">
+					    		<numIndex index="0">OK</numIndex>
+								<numIndex index="1">1</numIndex>
 					    	</numIndex>
 					    	<numIndex index="1">
 					    		<numIndex index="0">Warning</numIndex>
+								<numIndex index="1">0</numIndex>
+					    	</numIndex>
+					    	<numIndex index="2">
+					    		<numIndex index="0">Error</numIndex>
+								<numIndex index="1">1</numIndex>
+					    	</numIndex>
+						</items>
+						<default>2</default>
+					</config>
+				</TCEforms>
+			</resultMatch>
+			<resultNoMatch>
+				<TCEforms>
+					<label>Result ic condition do'nt match:</label>
+					<config>
+						<type>select</type>
+						<items>
+							<numIndex index="0">
+					    		<numIndex index="0">OK</numIndex>
+								<numIndex index="1">1</numIndex>
+					    	</numIndex>
+					    	<numIndex index="1">
+					    		<numIndex index="0">Warning</numIndex>
+								<numIndex index="1">0</numIndex>
+					    	</numIndex>
+					    	<numIndex index="2">
+					    		<numIndex index="0">Error</numIndex>
 								<numIndex index="1">1</numIndex>
 					    	</numIndex>
 						</items>
 						<default>0</default>
 					</config>
 				</TCEforms>
-			</warningLevel>
+			</resultNoMatch>
 		</el>
 	</ROOT>
 </T3DataStructure>

@@ -146,18 +146,22 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 		$msg_success  = '';
 
 		if ( count($sucess) ) {
-			$msg_success .= chr(10) . 'Success .' . chr(10) . implode( chr(10) , $sucess );
+			$msg_success .= chr(10) . 'Matched Conditions: ' . chr(10) . implode( chr(10) , $sucess );
 		}
 		
-		if ( count($failures) ) {
-			$msg_failures .= chr(10) . 'Failures .' . chr(10) . implode( chr(10) , $failures );
-			if ($this->getConfigValue('warningLevel') == 1) {
-				return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, 0, $msg_failures . chr(10) . $msg_success);
-			}
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $msg_failures . chr(10) . $msg_success);
-		}
+		
+		$resultMatch   = $this->getConfigValue('resultMatch');	
+		$resultNoMatch = $this->getConfigValue('resultNoMatch');
 
-		return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $msg_success );
+		if ( $resultMatch == NULL ) $resultMatch = tx_caretaker_Constants::state_error;
+		if ( $resultNoMatch == NULL ) $resultNoMatch = tx_caretaker_Constants::state_ok;
+		
+		if ( count($failures) ) {
+			$msg_failures .= chr(10) . 'Not Matched Conditions: ' . chr(10) . implode( chr(10) , $failures );
+			return tx_caretaker_TestResult::create( intval($resultNoMatch) , 0, $msg_failures . chr(10) . $msg_success);
+		} else {
+			return tx_caretaker_TestResult::create( intval($resultMatch) , 0, $msg_success );
+		}
 	}
 }
 
