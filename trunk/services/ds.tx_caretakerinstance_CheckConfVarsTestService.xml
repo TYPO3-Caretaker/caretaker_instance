@@ -14,6 +14,8 @@
 					<label>Check TYPO3_CONF_VARS : key_pipe_subkey... = expectation OR key_pipe_subkey ... :regex: regular expression</label>
 					<config>
 						<type>text</type>
+						<cols>80</cols>
+						<rows>3</rows>
 					</config>
 				</TCEforms>
 			</checkConfVars>
