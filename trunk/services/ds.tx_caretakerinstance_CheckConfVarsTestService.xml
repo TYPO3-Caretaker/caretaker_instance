@@ -17,6 +17,25 @@
 					</config>
 				</TCEforms>
 			</checkConfVars>
+			<warningLevel>
+				<TCEforms>
+					<label>Warning Level:</label>
+					<config>
+						<type>select</type>
+						<items>
+					    	<numIndex index="0">
+					    		<numIndex index="0">Error</numIndex>
+								<numIndex index="1">0</numIndex>
+					    	</numIndex>
+					    	<numIndex index="1">
+					    		<numIndex index="0">Warning</numIndex>
+								<numIndex index="1">1</numIndex>
+					    	</numIndex>
+						</items>
+						<default>0</default>
+					</config>
+				</TCEforms>
+			</warningLevel>
 		</el>
 	</ROOT>
 </T3DataStructure>

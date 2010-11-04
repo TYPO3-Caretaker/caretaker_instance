@@ -151,6 +151,9 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 		
 		if ( count($failures) ) {
 			$msg_failures .= chr(10) . 'Failures .' . chr(10) . implode( chr(10) , $failures );
+			if ($this->getConfigValue('warningLevel') == 1) {
+				return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, 0, $msg_failures . chr(10) . $msg_success);
+			}
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $msg_failures . chr(10) . $msg_success);
 		}
 
