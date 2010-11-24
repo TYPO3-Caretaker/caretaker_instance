@@ -88,7 +88,7 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 			$matches = array();
 			preg_match( '/([a-zA-Z0-9\|]+)[\s]*([\=\!\<\>]{1,2})[\s]*(.*)/', $checkConfVar, $matches );
 
-			if ( $matches[1] && $matches[2] && $matches[3] ){
+			if ( $matches[1] && $matches[2] && isset($matches[3]) ){
 
 				$path     = trim($matches[1]);
 				$operator = trim($matches[2]);
