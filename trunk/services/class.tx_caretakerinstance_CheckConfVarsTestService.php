@@ -75,6 +75,7 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 		$checkConfVars = explode(chr(10), $this->getConfigValue('checkConfVars'));
 
 		$operations = array();
+		
 		foreach ($checkConfVars as $checkConfVar) {
 			
 			$checkConfVar = trim($checkConfVar);
@@ -108,27 +109,6 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 					));
 				}
 			}
-			/*
-			else if ( strpos( $checkConfVar , '=' ) > 0 ){
-				list($path,$value) = explode('=',$checkConfVar);
-				$path = trim($path);
-				$value = trim($value);
-				$regex = false;
-
-					// numeric comparison
-				if ( is_numeric( $value ) && intval($value) == $value ) {
-					$value = intval($value);
-				}
-
-				if ( $path && $value ) {
-					$operations[] = array('MatchPredefinedVariable', array(
-						'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
-						'usingRegexp' => false,
-						'match' => $value,
-					));
-				}			
-			}
-			 */
 				// compare regex on :regex:
 			else if ( strpos( $checkConfVar , ':regex:' ) > 0 ){
 				list($path,$value) = explode(':regex:',$checkConfVar);
@@ -141,12 +121,17 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 						'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
 						'usingRegexp' => true,
 						'match' => $value,
+						'comparisonOperator' => false
 					));
 				}
 			}
 			
 		}
 
+		if (count($operations)==0){
+			return tx_caretaker_TestResult::create(  tx_caretaker_Constants::state_warning , 0, $msg_failures . chr(10) . $msg_success);
+		}
+		
 		$commandResult = $this->executeRemoteOperations($operations);
 
 		if (!$this->isCommandResultSuccessful($commandResult)) {
@@ -163,7 +148,11 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 			if ($operationResult->isSuccessful()) {
 				$sucess[]   = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched expectation ' .  $operations[$key][1]['match'];
 			} else {
-				$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the expectation ' . $operations[$key][1]['match'];
+				if ( $operations[$key][1]['usingRegexp'] ){
+					$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the regular expression ' . $operations[$key][1]['match'];
+				} else {
+					$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the expectation ' . $operations[$key][1]['comparisonOperator'] . ' ' . $operations[$key][1]['match'];
+				}
 			}
 		}
 
