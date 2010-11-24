@@ -129,7 +129,7 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 		}
 
 		if (count($operations)==0){
-			return tx_caretaker_TestResult::create(  tx_caretaker_Constants::state_warning , 0, $msg_failures . chr(10) . $msg_success);
+			return tx_caretaker_TestResult::create(  tx_caretaker_Constants::state_warning , 0, 'No conditions found');
 		}
 		
 		$commandResult = $this->executeRemoteOperations($operations);
@@ -146,9 +146,13 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 		
 		foreach ($results as $key => $operationResult) {
 			if ($operationResult->isSuccessful()) {
-				$sucess[]   = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched expectation ' .  $operations[$key][1]['match'];
+				if ( $operations[$key][1]['usingRegexp'] == true ){
+					$sucess[]   = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched the regular expression ' .  $operations[$key][1]['match'];
+				} else {
+					$sucess[]   = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched the expectation ' . $operations[$key][1]['comparisonOperator'] . ' ' .  $operations[$key][1]['match'];
+				}
 			} else {
-				if ( $operations[$key][1]['usingRegexp'] ){
+				if ( $operations[$key][1]['usingRegexp'] == true ){
 					$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the regular expression ' . $operations[$key][1]['match'];
 				} else {
 					$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the expectation ' . $operations[$key][1]['comparisonOperator'] . ' ' . $operations[$key][1]['match'];
