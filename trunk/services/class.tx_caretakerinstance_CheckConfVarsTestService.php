@@ -84,8 +84,32 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 				continue;
 			}
 			
-				// compare direct on =
-			if ( strpos( $checkConfVar , '=' ) > 0 ){
+				// detect comparison Opertor by regex
+			$matches = array();
+			preg_match( '/([a-zA-Z0-9\|]+)[\s]*([\=\!\<\>]{1,2})[\s]*(.*)/', $checkConfVar, $matches );
+
+			if ( $matches[1] && $matches[2] && $matches[3] ){
+
+				$path     = trim($matches[1]);
+				$operator = trim($matches[2]);
+				$value    = trim($matches[3]);
+
+					// numeric comparison
+				if ( is_numeric( $value ) && intval($value) == $value ) {
+					$value = intval($value);
+				}
+
+				if ( $path && $value && $operator ) {
+					$operations[] = array('MatchPredefinedVariable', array(
+						'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
+						'usingRegexp' => false,
+						'match' => $value,
+						'comparisonOperator' => $operator
+					));
+				}
+			}
+			/*
+			else if ( strpos( $checkConfVar , '=' ) > 0 ){
 				list($path,$value) = explode('=',$checkConfVar);
 				$path = trim($path);
 				$value = trim($value);
@@ -95,17 +119,18 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 				if ( is_numeric( $value ) && intval($value) == $value ) {
 					$value = intval($value);
 				}
-				
+
 				if ( $path && $value ) {
 					$operations[] = array('MatchPredefinedVariable', array(
 						'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
 						'usingRegexp' => false,
 						'match' => $value,
 					));
-				}
+				}			
 			}
+			 */
 				// compare regex on :regex:
-			if ( strpos( $checkConfVar , ':regex:' ) > 0 ){
+			else if ( strpos( $checkConfVar , ':regex:' ) > 0 ){
 				list($path,$value) = explode(':regex:',$checkConfVar);
 				$path = trim($path);
 				$value = trim($value);

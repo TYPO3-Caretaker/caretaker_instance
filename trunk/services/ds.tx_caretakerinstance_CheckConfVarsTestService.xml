@@ -44,7 +44,7 @@
 			</resultMatch>
 			<resultNoMatch>
 				<TCEforms>
-					<label>Result ic condition do'nt match:</label>
+					<label>Result if conditions do'nt match:</label>
 					<config>
 						<type>select</type>
 						<items>

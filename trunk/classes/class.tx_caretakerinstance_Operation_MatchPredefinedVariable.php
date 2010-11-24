@@ -63,7 +63,33 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 		if ($parameter['usingRegexp']) {
 			$success = (preg_match($parameter['match'], $value) >= 1);
 		} else {
-			$success = ($value == $parameter['match']);
+
+			switch ($parameter['comparisonOperator']){
+				case ':regex:' :
+					$success = (preg_match($parameter['match'], $value) >= 1);
+					break;
+				case '>=' :
+					$success = ( $parameter['match'] >= $value );
+					break;
+				case '<=' :
+					$success = ( $parameter['match'] <= $value);
+					break;
+				case '>' :
+					$success = ( $parameter['match'] > $value);
+					break;
+				case '<' :
+					$success = ( $parameter['match'] < $value);
+					break;
+				case '!=':
+					$success = ( $parameter['match'] != $value );
+					break;
+				default:
+				case '=':
+				case '==':
+					$success = ( $parameter['match'] == $value);
+					break;
+			}
+		
 		}
 
 		return new tx_caretakerinstance_OperationResult($success, '');
