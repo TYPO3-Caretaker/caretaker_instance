@@ -99,7 +99,7 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 					$value = intval($value);
 				}
 
-				if ( $path && $value && $operator ) {
+				if ( $path && $operator ) {
 					$operations[] = array('MatchPredefinedVariable', array(
 						'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
 						'usingRegexp' => false,
