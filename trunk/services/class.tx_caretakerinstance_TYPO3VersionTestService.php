@@ -57,6 +57,10 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		if (!$minVersion && !$maxVersion) {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute TYPO3 version test without min and max version');
 		}
+
+		if ($maxVersion === FALSE) {
+			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'No TYPO3 version information available. Please add "TYPO3 Versionnumbers Update" to your scheduler queue.');
+		}
 		
 		$operation = array('GetTYPO3Version');
 		$operations = array($operation);
@@ -79,6 +83,7 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 			$version,
 			$minVersion,
 			$maxVersion);
+
 		if ($checkResult) {
 			$message = 'TYPO3 version ' . $version . ' is installed';
 			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
@@ -102,11 +107,16 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 			$versionDigits = explode('.', $versionString, 3);
 			$latestVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', 'TYPO3versions');
 			$newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
+
 			if (!empty($newVersionString)) {
 				$versionString = $newVersionString;
+			} else {
+					// if we reach this point, no "current version was "latest" was found. This can be caused by a not running TYPO3 Version update task.
+				return FALSE;
 			}
-                }
-                return $versionString;
+		}
+
+		return $versionString;
 	}
 }
 
