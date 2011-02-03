@@ -75,11 +75,11 @@ if($_SERVER['REQUEST_METHOD'] == 'GET') {
 	$request = new tx_caretakerinstance_CommandRequest(
 		array(
 			'session_token' => $sessionToken,
-			array('client_info' =>
+			'client_info' =>
 				array(
 					'host_address' => $remoteAddress
 				)
-			),
+			,
 			'data' => array(),
 			'raw' => stripslashes($data),
 			'signature' => $signature

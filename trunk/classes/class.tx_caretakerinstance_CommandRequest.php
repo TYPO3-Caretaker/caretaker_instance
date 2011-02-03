@@ -92,7 +92,7 @@ class tx_caretakerinstance_CommandRequest {
 		// If we have client infos, we are recieving a command
 		if (is_array($options['client_info'])) {
 			$this->clientKey = $options['client_info']['client_key'];
-			$this->clientHostAdress = $options['client_info']['host_address'];
+			$this->clientHostAddress = $options['client_info']['host_address'];
 		}
 		
 		// If we have server infos, we are going to send this Request
