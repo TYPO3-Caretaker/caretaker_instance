@@ -131,7 +131,7 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$this->assertTrue($result->isSuccessful());
 
 		// TODO This depends on the current caretaker_instance extension version! Better mock this up.
-		$this->assertEquals('0.0.2', $result->getValue());
+		$this->assertEquals('0.3.3', $result->getValue());
 	}
 	
 	public function testOperation_GetExtensionVersionReturnsFailureForNotLoadedExtension() {
@@ -221,10 +221,7 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 	public function testOperation_CheckPathExistsReturnsTrueIfPathExists() {		
 		$operation = new tx_caretakerinstance_Operation_CheckPathExists();
 
-		$result = $operation->execute(array(
-			'path' => 'EXT:caretaker_instance/tests/fixtures/Operation_CheckPathExists.txt',
-			)
-		);
+		$result = $operation->execute('EXT:caretaker_instance/tests/fixtures/Operation_CheckPathExists.txt');
 
 		$this->assertTrue($result->isSuccessful());
 	}
@@ -232,10 +229,7 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 	public function testOperation_CheckPathExistsReturnsFalseIfPathNotExists() {		
 		$operation = new tx_caretakerinstance_Operation_CheckPathExists();
 
-		$result = $operation->execute(array(
-			'path' => 'EXT:caretaker_instance/tests/fixtures/Operation_CheckPathExists_notExisting.txt',
-			)
-		);
+		$result = $operation->execute('EXT:caretaker_instance/tests/fixtures/Operation_CheckPathExists_notExisting.txt');
 
 		$this->assertFalse($result->isSuccessful());
 	}

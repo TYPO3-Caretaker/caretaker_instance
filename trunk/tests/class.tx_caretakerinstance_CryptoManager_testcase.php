@@ -34,7 +34,7 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CryptoManager.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OpenSSLCryptoManager.php'));
 
 /**
  * Testcase for the CryptoManager
@@ -47,7 +47,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 class tx_caretakerinstance_CryptoManager_testcase extends tx_phpunit_testcase {
 	
 	/**
-	 * @var tx_caretakerinstance_CryptoManager
+	 * @var tx_caretakerinstance_OpenSSLCryptoManager
 	 */
 	protected $cryptoManager;
 	
@@ -63,11 +63,10 @@ class tx_caretakerinstance_CryptoManager_testcase extends tx_phpunit_testcase {
 	
 	
 	function setUp() {		
-		$this->cryptoManager = new tx_caretakerinstance_CryptoManager();
+		$this->cryptoManager = new tx_caretakerinstance_OpenSSLCryptoManager();
 		
-		$this->privateKey = 'YTozOntpOjA7czoxMjg6IuMO6w7voRTIkooxGDtQe8W+Yv59YYHyoA4TLYCszfmyH0oPyhh/2oYhlWZqIGeaxewVMMGteAU0H0uU4El3K/sWqt3tAPtTLK27ksNCjPi9bv0PW0SySL52FFqavmjETVuHof2CzKltAJTOlMet3zrVfcWEo5/PGGIpxRoRHqWLIjtpOjE7czoxMjg6IlEXhW1Ue6+YYynk8YSaiDfxua/u8KilxlTHiZWcXV4VkgOg1WPIfeOFKj6FyNLu0kifCP44touR/4X11MToQQP/13IWy16ZQKHPeL50a5ItrjskuJFthW/8HMgmrFj8ZEZQyAkndv1LosPTtMT3xNOHqdF5+lkj8MBHZw3jFRUeIjtpOjI7czo3OiJwcml2YXRlIjt9';
-		
-		$this->publicKey = 'YTozOntpOjA7czoxMjg6IuMO6w7voRTIkooxGDtQe8W+Yv59YYHyoA4TLYCszfmyH0oPyhh/2oYhlWZqIGeaxewVMMGteAU0H0uU4El3K/sWqt3tAPtTLK27ksNCjPi9bv0PW0SySL52FFqavmjETVuHof2CzKltAJTOlMet3zrVfcWEo5/PGGIpxRoRHqWLIjtpOjE7czozOiIBAAEiO2k6MjtzOjY6InB1YmxpYyI7fQ==';
+		$this->publicKey = '-----BEGIN PUBLIC KEY-----|MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDIykCszT87/DU5CVZSjW2KVLvt|zAMtkNKCYG2nWGQ1qRpotgiqVb2Bh+kYSQM7melGnBvD/w0tURTNV+s1ikTtiFuV|upHpigDNW6CdxYPjaTWl156I8t+siU9wcEBDJP3pb5UYjqwmtfrau4c7giDPiBjJ|ffIGIQAH9PalIQ38BwIDAQAB|-----END PUBLIC KEY-----|';
+		$this->privateKey = '-----BEGIN PRIVATE KEY-----|MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMjKQKzNPzv8NTkJ|VlKNbYpUu+3MAy2Q0oJgbadYZDWpGmi2CKpVvYGH6RhJAzuZ6UacG8P/DS1RFM1X|6zWKRO2IW5W6kemKAM1boJ3Fg+NpNaXXnojy36yJT3BwQEMk/elvlRiOrCa1+tq7|hzuCIM+IGMl98gYhAAf09qUhDfwHAgMBAAECgYAn8HMk7D6jw+siSUUubotXdLtc|9bO8II5++IdXPjHQqq5iHbNjjmJ/nXU0K3HFLTxFm0+6kMUiOnqUzeQvZi2HZ9dB|Xgd7UWMXZY2IJhiTBOFwX+LUC2fgjvXbsjjXirTh2nKFVM2/z/ne7M0wiAS0rCUt|rbYAuAosy7pt6k3DQQJBAOnHTLgFPsVbsvTiZl9d9LrO8Zev6f0UWJjGokINInd0|1qTy/HdJTB6WBfsWYb5oGR/CuAF+lKcg6Hf4WomDZQ8CQQDb4DiRQuFsTjWlaLf+|1qbbPsZynRXsDi0UTnfFowd4vYjyS2Sbm1II3jcLxQgqNQva6CN/DKZhOmI4Rprv|mqmJAkAbftFLI3LKi4p0utwHg2lxPz2y9YGzvlzdOx+CXUEcg6VrKRkAfqJxRnvV|mEBOwLeTwLcbleOt9HTjB1a+rbGJAkEAqgHfmymcRPLf9epXQfrUfvc1187v8Vow|rt/RKgZZM5lRNw7mVo6symCPLVGGc6Qaa4NMVuMADnNnGF43VAZBCQJBAKKQrh9k|KcwFtKTrewsccZ/JBPRBdOMS+Wj/7jF67hGpxjiQgMslGflGg33NIThRHPj/WEEc|zrTgmvPlLrhkTa8=|-----END PRIVATE KEY-----|';
 	}
 	
 	function testGenerateSessionTokenAndverifySignature() {
@@ -101,7 +100,7 @@ class tx_caretakerinstance_CryptoManager_testcase extends tx_phpunit_testcase {
 	}
 
 	function testSignAndVerifySignature() {
-		$this->markTestSkipped('Skip RSA test for performance reasons');
+		// $this->markTestSkipped('Skip RSA test for performance reasons');
 		
 		$data = "this has to be signed";
 		$signature = $this->cryptoManager->createSignature($data, $this->privateKey);
@@ -109,7 +108,7 @@ class tx_caretakerinstance_CryptoManager_testcase extends tx_phpunit_testcase {
 	}
 
 	function testModifiedDocumentDoesntVerifySignature() {
-		$this->markTestSkipped('Skip RSA test for performance reasons');
+		// $this->markTestSkipped('Skip RSA test for performance reasons');
 		
 		$data = "this has to be signed";
 		$signature = $this->cryptoManager->createSignature($data, $this->privateKey);
@@ -118,7 +117,7 @@ class tx_caretakerinstance_CryptoManager_testcase extends tx_phpunit_testcase {
 	}
 	
 	function testEncryptDecrypt() {
-		$this->markTestSkipped('Skip RSA test for performance reasons');
+		// $this->markTestSkipped('Skip RSA test for performance reasons');
 		
 		$data = "top-secret";
 		$crypt = $this->cryptoManager->encrypt($data, $this->publicKey);
@@ -127,20 +126,25 @@ class tx_caretakerinstance_CryptoManager_testcase extends tx_phpunit_testcase {
 	}
 	
 	function testEncryptAJson() {
+		$this->markTestSkipped('Skip encryption test because open SSL salts the data and the result is always different.');
+
 		$crypt = $this->cryptoManager->encrypt(
 			'{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}', 
 			$this->publicKey
 		);
+		
 		$this->assertEquals(
-			'UKrckK7W6mUFuQOJbjvYays0k1i70envRfJOAx3SYcyFvnURuSpuC1aeat8gc2/rRi+GN0BEWUJQ8687FPpB3prkE6BjekMN7hMO1UVNalzj48vL9BCbQ2ZTuQX6GC9dhglWgADq3CjNjWWV4gEh5HsBMM+tPkdTz9cgEzmACwI=', 
+			'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
 			$crypt
 		);
 		// t3lib_div::debug($crypt);
 	}
 	
 	function testDecryptAString() {
+		$this->markTestSkipped('Skip encryption test because open SSL salts the data and the result is always different.');
+
 		$plain = $this->cryptoManager->decrypt(
-			'UKrckK7W6mUFuQOJbjvYays0k1i70envRfJOAx3SYcyFvnURuSpuC1aeat8gc2/rRi+GN0BEWUJQ8687FPpB3prkE6BjekMN7hMO1UVNalzj48vL9BCbQ2ZTuQX6GC9dhglWgADq3CjNjWWV4gEh5HsBMM+tPkdTz9cgEzmACwI=', 
+			'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
 			$this->privateKey
 		);
 	

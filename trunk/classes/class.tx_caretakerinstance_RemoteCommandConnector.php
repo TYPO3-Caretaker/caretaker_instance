@@ -50,7 +50,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/cla
  */
 class tx_caretakerinstance_RemoteCommandConnector {
 	/**
-	 * @var tx_caretakerinstance_CryptoManager
+	 * @var tx_caretakerinstance_OpenSSLCryptoManager
 	 */
 	protected $cryptoManager;
 	

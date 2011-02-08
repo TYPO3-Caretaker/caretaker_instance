@@ -85,7 +85,7 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 	protected $clientHostAddressRestriction;
 	
 	/**
-	 * @var tx_caretakerinstance_CryptoManager
+	 * @var tx_caretakerinstance_OpenSSLCryptoManager
 	 */
 	protected $cryptoManager;
 	

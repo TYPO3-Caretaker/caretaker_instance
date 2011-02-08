@@ -120,7 +120,7 @@ class tx_caretakerinstance_ServiceFactory {
 	}
 
 	/**
-	 * @return tx_caretakerinstance_CryptoManager
+	 * @return tx_caretakerinstance_OpenSSLCryptoManager
 	 */
 	public function getCryptoManager() {
 		if ($this->cryptoManager == null) {

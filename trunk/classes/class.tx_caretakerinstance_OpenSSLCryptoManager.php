@@ -62,7 +62,7 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 		$publicKey = $this->decodeKey($publicKey);
 
 		openssl_seal($data, $cryptedData, $envelopeKeys, array($publicKey));
-		
+
 		$envelopeKey = $envelopeKeys[0];
 
 		$crypted = base64_encode($envelopeKey) . ':' . base64_encode($cryptedData);
