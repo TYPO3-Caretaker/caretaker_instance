@@ -50,6 +50,42 @@
 					</config>
 				</TCEforms>
 			</cpinverse>
+
+			<cptimeflag>
+				<TCEforms>
+					<label>should be young/older</label>
+					<config>
+						<type>select</type>
+						<items>
+							<numIndex index="0">
+								<numIndex index="0">does not matter</numIndex>
+								<numIndex index="1"></numIndex>
+							</numIndex>
+							<numIndex index="1">
+								<numIndex index="0">error, if younger than...</numIndex>
+								<numIndex index="1">younger</numIndex>
+							</numIndex>
+							<numIndex index="2">
+								<numIndex index="0">error, if older than...</numIndex>
+								<numIndex index="1">older</numIndex>
+							</numIndex>
+							</items>
+							<default>0</default>
+					</config>
+				</TCEforms>
+			</cptimeflag>
+
+			<cptime>
+				<TCEforms>
+					<label>age compare seconds</label>
+					<config>
+						<type>input</type>
+						<size>5</size>
+						<default>0</default>
+						<eval>int</eval>
+					</config>
+				</TCEforms>
+			</cptime>
 		</el>
 	</ROOT>
 </T3DataStructure>
