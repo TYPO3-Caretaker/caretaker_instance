@@ -129,7 +129,7 @@ class tx_caretakerinstance_CryptoManager_testcase extends tx_phpunit_testcase {
 		$this->markTestSkipped('Skip encryption test because open SSL salts the data and the result is always different.');
 
 		$crypt = $this->cryptoManager->encrypt(
-			'{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}', 
+			'{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
 			$this->publicKey
 		);
 		

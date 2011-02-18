@@ -56,10 +56,14 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 	
 
 	function testExecuteOperationsReturnsValidCommandResult() {
+		$instance = $this->getMock('tx_caretaker_InstanceNode', array('getUrl', 'getPublicKey'), array(), '', FALSE);
+		$instance->expects($this->atLeastOnce())->method('getUrl')->will($this->returnValue('http:://foo.bar/'));
+		$instance->expects($this->atLeastOnce())->method('getPublicKey')->will($this->returnValue('publicKey'));
+
 		// Mock the http/curl request
 		$connector = $this->getMock(
 			'tx_caretakerinstance_RemoteCommandConnector',
-			array('requestSessionToken','getCommandRequest','executeRequest'),
+			array('requestSessionToken','buildCommandRequest','executeRequest'),
 			array($this->cryptoManager,$this->securityManager)
 		);
 		$request = $this->getMock(
@@ -68,40 +72,51 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 			array(array())
 		);
 		$exceptedResult = new tx_caretakerinstance_CommandResult(true, array('foo' => 'bar'), 'foobar');
-		
+
 		$connector->expects($this->once())->method('requestSessionToken')->will($this->returnValue('SessionToken'));
-		$connector->expects($this->once())->method('getCommandRequest')->will($this->returnValue($request));
+		$connector->expects($this->once())->method('buildCommandRequest')->will($this->returnValue($request));
 		$connector->expects($this->once())->method('executeRequest')->with($this->isInstanceOf('tx_caretakerinstance_CommandRequest'))->will($this->returnValue($exceptedResult));
 		$request->expects($this->once())->method('setSignature');
-		
-		$result = $connector->executeOperations(array('foo'=>'bar'), 'http:://foo.bar/', 'publicKey');
-		
+
+		$connector->setInstance($instance);
+		$result = $connector->executeOperations(array('foo'=>'bar'));
+
 		$this->assertType('tx_caretakerinstance_CommandResult', $result);
 		$this->assertTrue($result->isSuccessful());
 		$this->assertEquals($exceptedResult, $result);
 	}
 	
 	function testExecuteOperationsReturnsFalseResultIfSessionTokenIsInvalid() {
+		$instance = $this->getMock('tx_caretaker_InstanceNode');
+		$instance->expects($this->any())->method('getUrl')->will($this->returnValue('http:://foo.bar/'));
+		$instance->expects($this->any())->method('getPublicKey')->will($this->returnValue('publicKey'));
+		
 		// Mock the http/curl request
 		$connector = $this->getMock(
 			'tx_caretakerinstance_RemoteCommandConnector',
 			array('requestSessionToken','executeRequest'),
 			array($this->cryptoManager,$this->securityManager)
 		);
-		
+
+		$connector->setInstance($instance);
 		$connector->expects($this->once())->method('requestSessionToken')->will($this->throwException( new tx_caretakerinstance_RequestSessionTokenFailedException ));
 		$connector->expects($this->never())->method('executeRequest');
 		
-		$result = $connector->executeOperations(array('foo'=>'bar'), 'http:://foo.bar/', 'publicKey');
+		$result = $connector->executeOperations(array('foo'=>'bar'));
 		
 		$this->assertType('tx_caretakerinstance_CommandResult', $result);
 		$this->assertFalse($result->isSuccessful());
 	}
 	
 	function testExecuteOperationsReturnsFalseResultIfURLMissing() {
-		$connector = new tx_caretakerinstance_RemoteCommandConnector($this->cryptoManager, $this->securityManager);
+		$instance = $this->getMock('tx_caretaker_InstanceNode');
+		$instance->expects($this->any())->method('getUrl')->will($this->returnValue(''));
+		$instance->expects($this->any())->method('getPublicKey')->will($this->returnValue('publicKey'));
 		
-		$result = $connector->executeOperations(array('foo'=>'bar'), '', 'publicKey');
+		$connector = new tx_caretakerinstance_RemoteCommandConnector($this->cryptoManager, $this->securityManager);
+		$connector->setInstance($instance);
+		
+		$result = $connector->executeOperations(array('foo'=>'bar'));
 		
 		$this->assertType('tx_caretakerinstance_CommandResult', $result);
 		$this->assertFalse($result->isSuccessful());
@@ -112,7 +127,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 		
 		$this->cryptoManager->expects($this->once())->method('encrypt')->will($this->returnValue('encryptedString'));
 		
-		$request = $connector->getCommandRequest('sessionToken', 'publicKey', 'http://foo.barr/', 'rawData');
+		$request = $connector->buildCommandRequest('sessionToken', 'publicKey', 'http://foo.barr/', 'rawData');
 		
 		$this->assertType('tx_caretakerinstance_CommandRequest', $request);
 		$this->assertEquals('sessionToken', $request->getSessionToken());
@@ -125,7 +140,11 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 	function testRequestSessionTokenReturnsValidToken() {
 		$url = 'http://foo.bar/';
 		$fakeSessionToken = '1242475687:d566026bfd3aa7d2d5de8a70ea525a0c4c578cdc45b8';
-		
+
+		$instance = $this->getMock('tx_caretaker_InstanceNode');
+		$instance->expects($this->any())->method('getUrl')->will($this->returnValue($url));
+		$instance->expects($this->any())->method('getPublicKey')->will($this->returnValue('publicKey'));
+
 		$connector = $this->getMock(
 			'tx_caretakerinstance_RemoteCommandConnector',
 			array('executeHttpRequest'),
@@ -140,7 +159,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 			))
 		);
 		
-		$connector->setInstanceURL($url);
+		$connector->setInstance($instance);
 		$sessionToken = $connector->requestSessionToken();
 		
 		$this->assertEquals($fakeSessionToken, $sessionToken);
@@ -149,6 +168,10 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 	function testRequestSessionTokenThrowsExceptionWithInvalidToken() {
 		$url = 'http://foo.bar/';
 		$fakeSessionToken = '==invalidtoken==';
+
+		$instance = $this->getMock('tx_caretaker_InstanceNode');
+		$instance->expects($this->any())->method('getUrl')->will($this->returnValue($url));
+		$instance->expects($this->any())->method('getPublicKey')->will($this->returnValue('publicKey'));
 		
 		$connector = $this->getMock(
 			'tx_caretakerinstance_RemoteCommandConnector',
@@ -165,7 +188,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 			))
 		);
 		
-		$connector->setInstanceURL($url);
+		$connector->setInstance($instance);
 		
 		try {
 			$connector->requestSessionToken();
@@ -181,7 +204,11 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 	function testRequestSessionTokenThrowsExceptionIfHttpRequestFails() {
 		$url = 'http://foo.bar/';
 		$fakeSessionToken = '1242475687:d566026bfd3aa7d2d5de8a70ea525a0c4c578cdc45b8';
-		
+
+		$instance = $this->getMock('tx_caretaker_InstanceNode');
+		$instance->expects($this->any())->method('getUrl')->will($this->returnValue($url));
+		$instance->expects($this->any())->method('getPublicKey')->will($this->returnValue('publicKey'));
+
 		$connector = $this->getMock(
 			'tx_caretakerinstance_RemoteCommandConnector',
 			array('executeHttpRequest'),
@@ -196,7 +223,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 			))
 		);
 		
-		$connector->setInstanceURL($url);
+		$connector->setInstance($instance);
 
 		try {
 			$connector->requestSessionToken();

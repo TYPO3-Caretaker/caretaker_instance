@@ -160,6 +160,8 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 	}
 
 	public function testOperation_GetRecordFindsAndCleansARecord() {
+		$this->markTestIncomplete('FIXME this test is tied to a specific record uid');
+
 		$operation = new tx_caretakerinstance_Operation_GetRecord();
 		
 		// FIXME this test is tied to a specific record uid

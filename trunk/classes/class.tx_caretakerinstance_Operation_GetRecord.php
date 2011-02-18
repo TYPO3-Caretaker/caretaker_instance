@@ -118,7 +118,7 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 
 				// Make new instance of TSFE object for initializing user:
 			$temp_TSFEclassName = t3lib_div::makeInstanceClassName('tslib_fe');
-			$GLOBALS['TSFE'] = new $temp_TSFEclassName($TYPO3_CONF_VARS,0,0);
+			$GLOBALS['TSFE'] = new $temp_TSFEclassName($GLOBALS['TYPO3_CONF_VARS'], 0, 0);
 			$GLOBALS['TSFE']->includeTCA();
 		}
 	}

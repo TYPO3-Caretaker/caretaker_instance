@@ -54,7 +54,15 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 class tx_caretakerinstance_ServiceFactory {
 
 	protected static $instance;
-	
+
+	public function __construct() {
+		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance']);
+	}
+
+	/**
+	 * @static
+	 * @return tx_caretakerinstance_ServiceFactory
+	 */
 	public static function getInstance() {
 		if(tx_caretakerinstance_ServiceFactory::$instance == null) {
 			tx_caretakerinstance_ServiceFactory::$instance = new tx_caretakerinstance_ServiceFactory();
@@ -62,11 +70,7 @@ class tx_caretakerinstance_ServiceFactory {
 		}
 		return tx_caretakerinstance_ServiceFactory::$instance;
 	}
-	
-	public function __construct() {
-		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance']);
-	}
-	
+
 	/**
 	 * @return tx_caretakerinstance_CommandService
 	 */

@@ -35,6 +35,7 @@
  */
 
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandRequest.php'));
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTimeoutException.php'));
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTokenFailedException.php'));
 
 /**
@@ -50,21 +51,19 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/cla
  */
 class tx_caretakerinstance_RemoteCommandConnector {
 	/**
-	 * @var tx_caretakerinstance_OpenSSLCryptoManager
+	 * @var tx_caretakerinstance_ICryptoManager
 	 */
 	protected $cryptoManager;
 	
 	/**
-	 * @var tx_caretakerinstance_SecurityManager
+	 * @var tx_caretakerinstance_ISecurityManager
 	 */
 	protected $securityManager;
-	
-	/**
-	 * @var string url of the instance
-	 */
-	protected $instanceUrl;
 
-	protected $curlOptions;
+	/**
+	 * @var tx_caretaker_InstanceNode
+	 */
+	protected $instance;
 	
 	/**
 	 * @param $cryptoManager tx_caretakerinstance_ICryptoManager
@@ -84,39 +83,40 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 * @param $instancePublicKey string
 	 * @return tx_caretakerinstance_CommandResult
 	 */
-	public function executeOperations(array $operations, $baseurl, $instancePublicKey, $curlOptions = NULL) {
-		if (empty($baseurl) || empty($instancePublicKey)) {
-			return $this->getCommandResult(FALSE, NULL, 'No URL or publicKey of instance given');
+	public function executeOperations(array $operations) {
+		if (!$this->getInstanceURL() || !$this->getInstancePublicKey()) {
+			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'No URL or PublicKey of instance given');
 		}
-		
-		// FIXME hlubek: Setting this in a method seems like a unwanted side effect
-		$this->setInstanceURL($baseurl);
-		$this->setCurlOptions($curlOptions);
 
 		try {
 			$sessionToken = $this->requestSessionToken();
+
+		} catch (tx_caretakerinstance_RequestSessionTimeoutException $e){
+			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Request Session Token failed: ' . $e->getMessage());
+
 		} catch (tx_caretakerinstance_RequestSessionTokenFailedException $e){
-			return $this->getCommandResult(FALSE, NULL, 'Request Session Token failed: ' . chr(10) . $e->getMessage() );
+			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Request Session Token failed: ' . chr(10) . $e->getMessage());
+
 		} catch ( Exception $e ) {
-			return $this->getCommandResult(FALSE, NULL, 'Unknown Exception:' . chr(10) . $e->getMessage() );
+			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Unknown Exception:' . chr(10) . $e->getMessage());
 		}
-		
-		$commandRequest = $this->getCommandRequest(
+
+		$commandRequest = $this->buildCommandRequest(
 			$sessionToken, 
-			$instancePublicKey, 
+			$this->getInstancePublicKey(),
 			$this->getInstanceURL(), 
 			$this->getDataFromOperations($operations)
 		);
 		$commandRequest->setSignature(
 			$this->getRequestSignature($commandRequest)
 		);
-		
+
 		return $this->executeRequest($commandRequest);
 	}
 	
 	
 	/**
-	 * @param $commandRequest tx_caretakerinstance_CommandRequest
+	 * @param tx_caretakerinstance_CommandRequest $commandRequest
 	 * @return tx_caretakerinstance_CommandResult
 	 */
 	public function executeRequest($commandRequest) {
@@ -128,34 +128,37 @@ class tx_caretakerinstance_RemoteCommandConnector {
 				's' => $commandRequest->getSignature()
 			)
 		);
-		
-		if (is_array($httpRequestResult)
-		  && $httpRequestResult['info']['http_code'] === 200) {
+
+		if (is_array($httpRequestResult) ){
+			if ($httpRequestResult['info']['http_code'] === 200) {
 				$json = $this->securityManager->decodeResult($httpRequestResult['response']);
 				// TODO: check if valid json
 				if ($json) {
 					return tx_caretakerinstance_CommandResult::fromJson($json);
 				}
-			}
 
-		if (is_array($httpRequestResult) ){
-			return $this->getCommandResult(FALSE, NULL, 'Invalid result: ' . $httpRequestResult['response'] . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
+			} else if ($httpRequestResult['info']['http_code'] === 0) {
+				// seems to be a timeout
+				return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'No Response/Timeout (Total-Time: ' . $httpRequestResult['info']['total_time'] . ')' );
+				
+			} else {
+				return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Invalid result: ' . $httpRequestResult['response'] . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
+			}
 		} else {
-			return $this->getCommandResult(FALSE, NULL, 'Invalid result request could not be executed' . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
+			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Invalid result request could not be executed' . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
 		}
 	}
 	
 	/**
 	 * Build a CommandRequest
 	 *
-	 * @param $sessionToken string
-	 * @param $instancePublicKey string
-	 * @param $url string
-	 * @param $rawData array
+	 * @param string $sessionToken
+	 * @param string $instancePublicKey
+	 * @param string $url
+	 * @param array $rawData
 	 * @return tx_caretakerinstance_CommandRequest
-	 * @todo Refactor name to buildCommandRequest
 	 */
-	public function getCommandRequest($sessionToken, $instancePublicKey, $url, $rawData) {
+	public function buildCommandRequest($sessionToken, $instancePublicKey, $url, $rawData) {
 		$encryptedData = json_encode(array(
 			'encrypted' => $this->cryptoManager->encrypt($rawData, $instancePublicKey),
 		));		
@@ -174,9 +177,9 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	
 	/**
 	 * create a CommandResult
-	 * @param $status boolean
-	 * @param $operationResults array null
-	 * @param $message string
+	 * @param boolean|int $status
+	 * @param array $operationResults
+	 * @param string $message
 	 * @return tx_caretakerinstance_CommandResult
 	 */
 	protected function getCommandResult($status, $operationResults, $message) {
@@ -184,7 +187,7 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	}
 	
 	/**
-	 * request a session token from a remote instance
+	 * Request a session token from a remote instance
 	 * @return string
 	 */
 	public function requestSessionToken() {
@@ -195,45 +198,65 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		  && $httpRequestResult['info']['http_code'] === 200
 		  && preg_match('/^([0-9]{10}:[a-z0-9].*)$/', $httpRequestResult['response'], $matches)) {
 			return $matches[1];
+
+		} else if ($httpRequestResult['info']['http_code'] === 0) {
+			throw new tx_caretakerinstance_RequestSessionTimeoutException('No Response/Timeout (Total-Time: ' . $httpRequestResult['info']['total_time'] . ')');
+
 		} else {
-			$msg  =          '- HTTP-URL: ' . $httpRequestResult['info']['url'];
-			$msg .= chr(10). '- HTTP-Status: ' . $httpRequestResult['info']['http_code'];
-			$msg .= chr(10). '- HTTP-Response: ' . $httpRequestResult['response'];
-			throw new tx_caretakerinstance_RequestSessionTokenFailedException( $msg );
+			$msg = '- HTTP-URL: ' . $httpRequestResult['info']['url'] . chr(10) .
+				'- HTTP-Status: ' . $httpRequestResult['info']['http_code'] . chr(10) .
+				'- HTTP-Response: ' . $httpRequestResult['response'];
+			throw new tx_caretakerinstance_RequestSessionTokenFailedException($msg);
 		}
-		
-	}
-
-	public function setCurlOptions($curlOptions) {
-		$this->curlOptions = $curlOptions;
-	}
-
-	public function getCurlOptions() {
-		return $this->curlOptions;
 	}
 
 	/**
-	 * set the base url for the current instance
-	 * @param $baseurl
+	 * @return array
 	 */
-	public function setInstanceURL($baseurl) {
-		$this->instanceUrl = $baseurl . 
-			(substr($baseurl, -1) != '/' ? '/' : '') .
-			'?eID=tx_caretakerinstance';
+	public function getCurlOptions() {
+		return $this->instance->getCurlOptions();
 	}
-	
+
 	/**
-	 * get base url for current instance
+	 * get url for current instance
+	 * 
 	 * @return string
 	 */
 	public function getInstanceURL() {
-		return $this->instanceUrl;
+		if ($this->instance === NULL || $this->instance->getUrl() === "") {
+			return FALSE;
+		}
+		$baseUrl = $this->instance->getUrl();
+		return $baseUrl .
+			(substr($baseUrl, -1) !== '/' ? '/' : '') .
+			'?eID=tx_caretakerinstance';
+	}
+
+	/**
+	 * get public key for current instance
+	 *
+	 * @return string
+	 */
+	public function getInstancePublicKey() {
+		if ($this->instance === NULL || $this->instance->getPublicKey() === "") {
+			return FALSE;
+		}
+		return $this->instance->getPublicKey();
+	}
+
+
+	/**
+	 * @param tx_caretaker_InstanceNode $instance
+	 * @return void
+	 */
+	public function setInstance($instance) {
+		$this->instance = $instance;
 	}
 	
 	/**
 	 * create a json string of operations
 	 * 
-	 * @param $operations array
+	 * @param array $operations
 	 * @return string json
 	 */
 	protected function getDataFromOperations($operations) {
@@ -247,8 +270,8 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	/**
 	 * get encrypted json string of operations
 	 * 
-	 * @param $operations array
-	 * @param $publicKey string
+	 * @param array $operations
+	 * @param string $publicKey
 	 * @return string encrypted json
 	 */
 	protected function getEncryptedDataFromOperations($operations, $publicKey) {
@@ -260,7 +283,7 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	/**
 	 * get a signature for given request
 	 * 
-	 * @param $commandRequest tx_caretakerinstance_CommandRequest
+	 * @param tx_caretakerinstance_CommandRequest $commandRequest
 	 * @return string
 	 */
 	public function getRequestSignature($commandRequest) {
@@ -273,8 +296,8 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	/**
 	 * Execute a HTTP request for the POST values via CURL
 	 *
-	 * @param $requestUrl string The URL for the HTTP request 
-	 * @param $postValues array POST values with key / value
+	 * @param string $requestUrl The URL for the HTTP request
+	 * @param array $postValues POST values with key / value
 	 * @return array info/response
 	 */
 	protected function executeHttpRequest($requestUrl, $postValues = null) {

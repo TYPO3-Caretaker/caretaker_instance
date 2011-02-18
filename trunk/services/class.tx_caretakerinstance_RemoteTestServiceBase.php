@@ -60,35 +60,32 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 	 * @return tx_caretakerinstance_CommandResult|boolean
 	 */
 	protected function executeRemoteOperations($operations) {
-		$instanceUrl = $this->instance->getUrl();
-		$instancePublicKey = $this->instance->getPublicKey();
-		$curlOptions = $this->instance->getCurlOptions();
-
 		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
 		$connector = $factory->getRemoteCommandConnector();
+		$connector->setInstance($this->instance);
 		
-		return $connector->executeOperations($operations, $instanceUrl, $instancePublicKey, $curlOptions);
+		return $connector->executeOperations($operations);
 	}
 
 	/**
 	 * Is the command result successful
-	 * @param $commandResult
-	 * @return tx_caretakerinstance_CommandResult|boolean
+	 * @param tx_caretakerinstance_CommandResult $commandResult
+	 * @return boolean
 	 */
 	protected function isCommandResultSuccessful($commandResult) {
-		return is_object($commandResult) && $commandResult->isSuccessful();
+		return $commandResult instanceof tx_caretakerinstance_CommandResult && $commandResult->isSuccessful();
 	}
 
 	/**
 	 * Get the test result for a failed command result
-	 * @param $commandResult
+	 * @param tx_caretakerinstance_CommandResult $commandResult
 	 * @return tx_caretaker_TestResult
 	 */
 	protected function getFailedCommandResultTestResult($commandResult) {
 		return tx_caretaker_TestResult::create(
-			tx_caretaker_Constants::state_error,
+			($commandResult instanceof tx_caretakerinstance_CommandResult ? $commandResult->getStatus() : tx_caretaker_Constants::state_error),
 			0,
-			'Command execution failed: ' . (is_object($commandResult) ? $commandResult->getMessage() : 'undefined')
+			'Command execution failed: ' . ($commandResult instanceof tx_caretakerinstance_CommandResult ? $commandResult->getMessage() : 'undefined')
 		);
 	}
 

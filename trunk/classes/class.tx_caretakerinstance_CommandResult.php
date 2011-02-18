@@ -48,9 +48,19 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CommandResult {
-	
+
 	/**
-	 * @var boolean Status of the Command execution
+	 * @const int
+	 * @see tx_caretaker_Constants
+	 */
+	const status_ok = 0;
+	const status_warning = 1;
+	const status_error = 2;
+	const status_undefined = -1;
+
+	/**
+	 * @var int Status of the Command execution
+	 * @see tx_caretakerinstance_CommandResult::status_ok
 	 */
 	protected $status;
 	
@@ -67,21 +77,27 @@ class tx_caretakerinstance_CommandResult {
 	/**
 	 * Create a new Command Result object
 	 *
-	 * @param boolean $status TRUE iff exection was successful
+	 * @param int|bool $status tx_caretakerinstance_CommandResult::status_ok or TRUE if execution was successful
 	 * @param array of tx_caretakerinstance_OperationResult $operationResults The results of the executed operations
 	 * @param string $message An optional message for errors
 	 */
 	public function __construct($status, $operationResults = array(), $message = '') {
 		$this->status = $status;
+		if ($status === TRUE) {
+			$this->status = self::status_ok;
+		} else if ($status === FALSE) {
+			$this->status = self::status_error;
+		}
+
 		$this->operationResults = $operationResults;
 		$this->message = $message;
 	}
 	
 	/**
-	 * @return TRUE iff the execution of the whole command was successful
+	 * @return TRUE if the execution of the whole command was successful
 	 */
 	public function isSuccessful() {
-		return $this->status === TRUE;
+		return $this->status === self::status_ok;
 	}
 	
 	/**
@@ -97,9 +113,16 @@ class tx_caretakerinstance_CommandResult {
 	public function getMessage() {
 		return $this->message;
 	}
-	
+
 	/**
-	 * @return string JSON represantion of the Command Result
+	 * @return int
+	 */
+	public function getStatus() {
+		return $this->status;
+	}
+
+	/**
+	 * @return string JSON representation of the Command Result
 	 */
 	public function toJson() {
 		$results = array();
@@ -119,7 +142,7 @@ class tx_caretakerinstance_CommandResult {
 	}
 	
 	/**
-	 * create a new CommandResult from a Json-String (e.g. recieved by http-call)
+	 * create a new CommandResult from a Json-String (e.g. receive by http-call)
 	 * 
 	 * @param $json string
 	 * @return tx_caretakerinstance_CommandResult
@@ -135,7 +158,7 @@ class tx_caretakerinstance_CommandResult {
 			
 			return new tx_caretakerinstance_CommandResult($data['status'], $results, $data['message']);
 		} else {
-			return FALSE;
+			return new tx_caretakerinstance_CommandResult(self::status_undefined, NULL, 'Cannot decode command result');
 		}
 	}
 }

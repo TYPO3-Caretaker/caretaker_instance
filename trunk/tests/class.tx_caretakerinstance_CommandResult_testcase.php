@@ -54,11 +54,11 @@ class tx_caretakerinstance_CommandResult_testcase extends tx_phpunit_testcase {
 		
 		$json = $result->toJson();
 		
-		$this->assertEquals('{"status":true,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}', $json);
+		$this->assertEquals('{"status":0,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}', $json);
 	}
 	
 	function testCommandResultFromJson() {
-		$json = '{"status":true,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}';
+		$json = '{"status":0,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}';
 		$result = tx_caretakerinstance_CommandResult::fromJson($json);
 		
 		$this->assertType('tx_caretakerinstance_CommandResult', $result);

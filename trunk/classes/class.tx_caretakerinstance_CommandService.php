@@ -92,12 +92,12 @@ class tx_caretakerinstance_CommandService {
 				foreach($operations as $operation) {
 					$results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
 				}
-				return new tx_caretakerinstance_CommandResult(TRUE, $results);
+				return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_ok, $results);
 			} else {
-				return new tx_caretakerinstance_CommandResult(FALSE, NULL, 'The request could not be decrypted');
+				return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'The request could not be decrypted');
 			}
 		} else {
-			return new tx_caretakerinstance_CommandResult(FALSE, NULL, 'The request could not be certified');
+			return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'The request could not be certified');
 		}
 	}
 	
