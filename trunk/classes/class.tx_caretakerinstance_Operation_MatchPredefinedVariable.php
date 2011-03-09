@@ -141,7 +141,12 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 				break;
 		}
 		foreach ($keyPath as $key) {
-			$value = $value[$key];
+			if ( isset( $value[$key] ) ){
+				$value = $value[$key];
+			} else {
+				$value = false;
+				break;
+			}
 		}
 		
 		return $value;

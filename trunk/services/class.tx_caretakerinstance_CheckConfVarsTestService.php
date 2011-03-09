@@ -148,13 +148,13 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 				if ( $operations[$key][1]['usingRegexp'] == true ){
 					$sucess[]   = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched the regular expression ' .  $operations[$key][1]['match'];
 				} else {
-					$sucess[]   = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched the expectation ' . $operations[$key][1]['comparisonOperator'] . ' ' .  $operations[$key][1]['match'];
+					$sucess[]   = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched the expectation ' . $operations[$key][1]['comparisonOperator'] . ' "' .  $operations[$key][1]['match'] .'"';
 				}
 			} else {
 				if ( $operations[$key][1]['usingRegexp'] == true ){
 					$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the regular expression ' . $operations[$key][1]['match'];
 				} else {
-					$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the expectation ' . $operations[$key][1]['comparisonOperator'] . ' ' . $operations[$key][1]['match'];
+					$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the expectation ' . $operations[$key][1]['comparisonOperator'] . ' "' . $operations[$key][1]['match'] .'"';
 				}
 			}
 		}
