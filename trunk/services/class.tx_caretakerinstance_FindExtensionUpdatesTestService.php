@@ -72,9 +72,9 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 	 * Execute the find insecure extension test
 	 * @return tx_caretaker_TestResult
 	 */
-	public function runTest() {		
+	public function runTest() {
 		$location_list = $this->getLocationList();
-		
+
 		$operation = array('GetExtensionList', array('locations' => $location_list));
 		$operations = array($operation);
 
@@ -88,7 +88,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 
 		if (!$operationResult->isSuccessful()) {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Remote operation failed: ' . $operationResult->getValue());
-		} 
+		}
 
 		$extensionList = $operationResult->getValue();
 
@@ -102,7 +102,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 		// Return error if insecure extensions are installed
 		$seperator = chr(10). ' - ';
 
-		
+
 		$num_errors   = count($errors);
 		$num_warnings = count($warnings);
 		$num_oks      = count($oks);
@@ -125,7 +125,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 				$submessages[] =  new tx_caretaker_ResultMessage( $warning['message'] , $warning['values']);
 			}
 		}
-		
+
 		// add ok submessages
 		if ($num_oks > 0){
 			$submessages[] = new tx_caretaker_ResultMessage('LLL:EXT:caretaker_instance/locallang.xml:find_extension_updates_test_detail_ok');
@@ -147,15 +147,15 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 			$message = new tx_caretaker_ResultMessage( 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_problems' , $values);
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, $value, $message , $submessages );
 		}
-		
+
 			// return ok
 		$value   = 0;
 		$message = new tx_caretaker_ResultMessage( 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_test_ok' , $values);
 		return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, $value, $message , $submessages );
-		
+
 	}
-	
-	
+
+
 	public function getLocationList(){
 		$locationCode = (int)$this->getConfigValue('check_extension_locations');
 		$locationList = array();
@@ -164,31 +164,31 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 		if ($locationCode & 4) $locationList[] = 'local';
 		return $locationList;
 	}
-	 
+
 	public function checkExtension($extension, &$errors, &$warnings, &$oks) {
 		$ext_key = $extension['ext_key'];
 		$ext_version = $extension['version'];
-		$ext_installed = $extension['installed']; 
+		$ext_installed = $extension['installed'];
 
 		if ( !$ext_installed )  return;
-		 
+
 		if ($this->isExtensionVersionSuffixIgnored()) {
 			$ext_version = $this->clearExtensionVersionSuffix($ext_version);
 		}
 
 			// Find extension in TER
 		$ter_info = $this->getLatestExtensionTerInfos($ext_key, $ext_version);
-		
+
 			// Ext is in TER
 		if ($ter_info) {
-			
+
 			$message  =   'LLL:EXT:caretaker_instance/locallang.xml:find_extension_updates_test_detailinfo';
 			$value    = array(
 				'ext_key' =>  $extension['ext_key'],
 			 	'ext_version' =>  $extension['version'],
 				'ter_version' =>  $ter_info['version']
 			);
-			
+
 			if ( $this->checkVersionRange($ext_version, $ter_info['version'], '' ) ){
 				$oks[] = array('message' => $message , 'values' => $value);
 				return;
@@ -203,20 +203,20 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 				$handling = $this->getStatusOfUpdatableExtensions();
 				switch ($handling) {
 					// Warning
-					case 1: 
+					case 1:
 						$warnings[] = array('message' => $message , 'values' => $value);
 						return;
 					// Error
-					case 2: 
+					case 2:
 						$errors[] = array('message' => $message , 'values' => $value);
 						return;
 					// OK
-					default: 
+					default:
 						$oks[] = array('message' => $message , 'values' => $value);
 						return;
 				}
-			}; 
-			
+			};
+
 		} else {
 			$value = array(
 				'ext_key' =>  $extension['ext_key'],
@@ -227,7 +227,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 			$oks[] = array('message' => $message , 'values' => $value);
 		}
 	}
-	
+
 	public function getLatestExtensionTerInfos($ext_key, $ext_version) {
 		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'extkey, version',
@@ -240,20 +240,20 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 		$result  = false;
 		$latestVersion = 0;
 		foreach ( $ext_infos  as  $ext_info){
-			$foundVersion = $this->versionToInt( $ext_info['version'] ); 
+			$foundVersion = $this->versionToInt( $ext_info['version'] );
 			if ( $foundVersion >  $latestVersion ){
 				$latestVersion = $foundVersion;
 				$result = $ext_info;
-			} 				
+			}
 		}
 		return $result;
-		
+
 	}
-	
+
 	public function getStatusOfUpdatableExtensions() {
 		return (int)$this->getConfigValue('status_of_updateable_extensions');
 	}
-		
+
 	public function getCustomExtensionWhitelist() {
 		return explode(chr(10), $this->getConfigValue('custom_extkey_whitlelist'));
 	}

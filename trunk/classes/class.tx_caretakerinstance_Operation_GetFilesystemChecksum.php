@@ -51,17 +51,18 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretakerinstance_IOperation {
 
 	/**
-	 * execute operation (getFilsystemChecksum)
-	 * @param array $parameter a path 'path' to a file or folder
-	 * @return a checksum of the given folder or file
+	 * Get the file / folder checksum of a given path
+	 *
+	 * @param array $parameter Path to a file or folder
+	 * @return The checksum of the given folder or file
 	 */
 	public function execute($parameter = array()) {
 		$path = $this->getPath($parameter['path']);
 		$getSingleChecksums = $this->getPath($parameter['getSingleChecksums']);
-		
+
 		$checksum = '';
-		
-		if ($path !== false) {
+
+		if ($path !== FALSE) {
 			if (is_dir($path)) {
 				list($checksum, $md5s) = $this->getFolderChecksum($path);
 			} else {
@@ -80,52 +81,52 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Error: can\'t calculate checksum for file or folder');
 		}
 	}
-	
+
 	/**
-	 * prepare path, resolve relative path and resolve EXT: path
+	 * Prepare path, resolve relative path and resolve EXT: path
 	 * check if path is allowed
-	 * 
+	 *
 	 * @param $path absolute or relative path or EXT:foobar/
-	 * @return string/bool false if path is invalid, else the absolute path
+	 * @return string/bool FALSE if path is invalid, else the absolute path
 	 */
 	protected function getPath($path) {
 		if (substr($path, -1) === '/') {
 			$path = substr($path, 0, -1);
 		}
-		
+
 		// FIXME remove this hacky part
 		// skip path checks for CLI mode
 		if (defined('TYPO3_cliMode')) {
 			return $path;
 		}
-		
+
 		// getFileAbsFileName can't handle directory path with trailing / correctly
-		
+
 		$path = t3lib_div::getFileAbsFileName($path);
 		if (t3lib_div::isAllowedAbsPath($path)) {
 			return $path;
 		} else {
-			return false;
+			return FALSE;
 		}
 	}
 
 	/**
-	 * get a md5 checksum of a given file
-	 * 
+	 * Get a md5 checksum of a given file
+	 *
 	 * @param $path file path
-	 * @return string/bool false if path is not a file or md5 checksum of given file
+	 * @return string/bool FALSE if path is not a file or md5 checksum of given file
 	 */
 	protected function getFileChecksum($path) {
 		if (!is_file($path)) {
-			return false;
+			return FALSE;
 		}
 		$md5 = md5_file($path);
 		return $md5;
 	}
-	
+
 	/**
-	 * get a md5 checksum of a given folder recursivly
-	 * 
+	 * Get a md5 checksum of a given folder recursivly
+	 *
 	 * @param $path path of folder
 	 * @return string checksum
 	 */
@@ -135,7 +136,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		}
 		$md5s = array();
 		$d = dir($path);
-		while(false !== ($entry = $d->read())) {
+		while(FALSE !== ($entry = $d->read())) {
 			if ($entry === '.' || $entry === '..' || $entry === '.svn') {
 				continue;
 			}
@@ -147,13 +148,14 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 				$md5s[$relPath] = $this->getFileChecksum($path . '/' . $entry);
 			}
 		}
-		
+
 		asort($md5s);
-		
+
 		return array(
 			md5(implode(',', $md5s)),
 			$md5s
 		);
 	}
+
 }
 ?>

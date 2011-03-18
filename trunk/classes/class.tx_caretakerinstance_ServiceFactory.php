@@ -41,7 +41,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_RemoteCommandConnector.php'));
 
 /**
- * Factory
+ * Singleton factory as a dependency injection container
  *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
@@ -53,8 +53,14 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  */
 class tx_caretakerinstance_ServiceFactory {
 
+	/**
+	 * @var tx_caretakerinstance_ServiceFactory
+	 */
 	protected static $instance;
 
+	/**
+	 * Constructor
+	 */
 	public function __construct() {
 		$this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance']);
 	}
@@ -89,9 +95,7 @@ class tx_caretakerinstance_ServiceFactory {
 	 */
 	public function getSecurityManager() {
 		if($this->securityManager == null) {
-			$this->securityManager = new tx_caretakerinstance_SecurityManager(
-				$this->getCryptoManager()
-			);
+			$this->securityManager = new tx_caretakerinstance_SecurityManager($this->getCryptoManager());
 			$this->securityManager->setPublicKey($this->extConf['crypto.']['instance.']['publicKey']);
 			$this->securityManager->setPrivateKey($this->extConf['crypto.']['instance.']['privateKey']);
 			$this->securityManager->setClientPublicKey($this->extConf['crypto.']['client.']['publicKey']);
@@ -99,14 +103,14 @@ class tx_caretakerinstance_ServiceFactory {
 		}
 		return $this->securityManager;
 	}
-	
+
 	/**
 	 * @return tx_caretakerinstance_OperationManager
 	 */
 	public function getOperationManager() {
 		if ($this->operationManager == null) {
 			$this->operationManager = new tx_caretakerinstance_OperationManager();
-			
+
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'])) {
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] as $key => $operationRef) {
 					if(is_string($operationRef)) {
@@ -132,8 +136,7 @@ class tx_caretakerinstance_ServiceFactory {
 		}
 		return $this->cryptoManager;
 	}
-	
-	
+
 	/**
 	 * @return tx_caretakerinstance_RemoteCommandConnector
 	 */
@@ -146,9 +149,13 @@ class tx_caretakerinstance_ServiceFactory {
 		}
 		return $this->remoteCommandConnector;
 	}
-	
+
+	/**
+	 * Destroy the factory instance
+	 */
 	public function destroy() {
 		self::$instance = null;
 	}
+
 }
 ?>

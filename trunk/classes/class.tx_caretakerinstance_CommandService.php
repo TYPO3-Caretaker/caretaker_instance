@@ -40,7 +40,7 @@ require_once('class.tx_caretakerinstance_CommandResult.php');
 /**
  * The Command Service can execute Commands and
  * is a coarse front service for the caretaker instance.
- * 
+ *
  * It uses the Security Manager and the Operation Manager
  * to verify and authenticate Command Requests and
  * execute them.
@@ -54,6 +54,7 @@ require_once('class.tx_caretakerinstance_CommandResult.php');
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CommandService {
+
 	/**
 	 * @var tx_caretakerinstance_ISecurityManager
 	 */
@@ -65,7 +66,7 @@ class tx_caretakerinstance_CommandService {
 	protected $operationManager;
 
 	/**
-	 * Create a new Command Service
+	 * Construct a new Command Service
 	 *
 	 * @param tx_caretakerinstance_OperationManager $operationManager
 	 * @param tx_caretakerinstance_ISecurityManager $securityManager
@@ -77,7 +78,7 @@ class tx_caretakerinstance_CommandService {
 
 	/**
 	 * Execute a Command Request (which consists of multiple Operation keys and parameters).
-	 * 
+	 *
 	 * The Command Request is validated, decoded and then executed.
 	 *
 	 * @param tx_caretakerinstance_CommandRequest $commandRequest
@@ -87,7 +88,7 @@ class tx_caretakerinstance_CommandService {
 		if($this->securityManager->validateRequest($commandRequest)) {
 			if($this->securityManager->decodeRequest($commandRequest)) {
 				$operations = $commandRequest->getData('operations');
-				
+
 				$results = array();
 				foreach($operations as $operation) {
 					$results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
@@ -100,15 +101,27 @@ class tx_caretakerinstance_CommandService {
 			return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'The request could not be certified');
 		}
 	}
-	
+
+	/**
+	 * Create / request a new session token from the server
+	 *
+	 * @param string $clientHostAddress
+	 * @return string
+	 */
 	public function requestSessionToken($clientHostAddress) {
 		return $this->securityManager->createSessionToken($clientHostAddress);
 	}
-	
+
+	/**
+	 * Encode / encrypt the command result with the security manager
+	 *
+	 * @param tx_caretakerinstance_CommandResult $commandResult
+	 * @return string
+	 */
 	public function wrapCommandResult(tx_caretakerinstance_CommandResult $commandResult) {
 		$json = $commandResult->toJson();
-		
 		return $this->securityManager->encodeResult($json);
 	}
+
 }
 ?>

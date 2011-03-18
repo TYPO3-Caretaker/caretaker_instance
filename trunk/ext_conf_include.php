@@ -49,7 +49,7 @@ if (t3lib_extMgm::isLoaded('caretaker') ){
 	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_FindBlacklistedBePassword', 'TYPO3 -> Check be-password blacklist', 'Find backend user accounts with blacklisted passwords.');
 	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_CheckConfVars',             'TYPO3 -> Check TYPO3_CONF_VARS', 'Check Settings of TYPO3_CONF_VARS');
 	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_CheckPath',                 'FILE -> Check path', 'Checks for some path stats');
-	
+
 }
 
 ?>

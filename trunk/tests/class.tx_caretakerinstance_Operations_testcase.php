@@ -60,19 +60,19 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$operation = new tx_caretakerinstance_DummyOperation();
 		$result = $operation->execute($parameter);
 		$this->assertType("tx_caretakerinstance_OperationResult", $result);
-		
+
 		$status = $result->isSuccessful();
 		$this->assertTrue($status);
 		$value = $result->getValue();
 		// Value is always an string or array of strings or array of array of strings
 		$this->assertEquals('bar', $value);
 	}
-	
+
 	public function testOperation_GetFilesystemChecksumReturnsCorrectChecksumForFile() {
 		$operation = new tx_caretakerinstance_Operation_GetFilesystemChecksum();
-		
+
 		$result = $operation->execute(array('path' => 'EXT:caretaker_instance/tests/fixtures/Operation_GetFilesystemChecksum.txt'));
-		
+
 		$this->assertTrue($result->isSuccessful());
 		$value = $result->getValue();
 		$this->assertType('array', $value);
@@ -80,81 +80,81 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$this->assertType('string', $value['checksum']);
 		$this->assertEquals('23d35ef1a611fc75561b0d71d8b3234b', $value['checksum']);
 	}
-	
+
 	public function testOperation_GetFilesystemChecksumReturnsExtendedResultForFolder() {
 		$operation = new tx_caretakerinstance_Operation_GetFilesystemChecksum();
-		
+
 		$result = $operation->execute(array('path' => 'EXT:caretaker_instance/tests/', 'getSingleChecksums' => true));
-		
+
 		$this->assertTrue($result->isSuccessful());
 		$value = $result->getValue();
-		
+
 		$this->assertType('array', $value);
 		$this->assertType('array', $value['singleChecksums']);
 		$this->assertType('string', $value['checksum']);
 		$this->assertEquals(32, strlen($value['checksum']));
 	}
-	
+
 	public function testOperation_GetFilesystemChecksumFailsIfPathIsNotAllowed() {
 		$operation = new tx_caretakerinstance_Operation_GetFilesystemChecksum();
-		
+
 		$result = $operation->execute(array('path' => PATH_site . '../../'));
-		
+
 		$this->assertFalse($result->isSuccessful());
 	}
-	
+
 	public function testOperation_GetPHPVersion() {
 		$operation = new tx_caretakerinstance_Operation_GetPHPVersion();
-		
+
 		$result = $operation->execute();
-		
+
 		$this->assertTrue($result->isSuccessful());
-		
+
 		$this->assertEquals(phpversion(), $result->getValue());
 	}
-	
+
 	public function testOperation_GetTYPO3Version() {
 		$operation = new tx_caretakerinstance_Operation_GetTYPO3Version();
-		
+
 		$result = $operation->execute();
-		
+
 		$this->assertTrue($result->isSuccessful());
 
 		$this->assertEquals(TYPO3_version, $result->getValue());
 	}
-	
+
 	public function testOperation_GetExtensionVersionReturnsExtensionVersionForInstalledExtension() {
 		$operation = new tx_caretakerinstance_Operation_GetExtensionVersion();
-		
+
 		$result = $operation->execute(array('extensionKey' => 'caretaker_instance'));
-		
+
 		$this->assertTrue($result->isSuccessful());
 
 		// TODO This depends on the current caretaker_instance extension version! Better mock this up.
 		$this->assertEquals('0.3.3', $result->getValue());
 	}
-	
+
 	public function testOperation_GetExtensionVersionReturnsFailureForNotLoadedExtension() {
 		$operation = new tx_caretakerinstance_Operation_GetExtensionVersion();
-		
+
 		$result = $operation->execute(array('extensionKey' => 'not_loaded_extension'));
-		
+
 		$this->assertFalse($result->isSuccessful());
 	}
-	
+
 	public function testOperation_GetExtensionListFailsIfNoLocationListIsGiven(){
 		$operation = new tx_caretakerinstance_Operation_GetExtensionList();
-		
+
 		$result = $operation->execute();
-		
+
 		$this->assertFalse($result->isSuccessful());
 	}
 
 	public function testOperation_GetExtensionListReturnsAnArrayOfExtensions(){
 		$operation = new tx_caretakerinstance_Operation_GetExtensionList();
-		
+
 		$result = $operation->execute(array('locations' => array('global','local','system')));
-				
+
 		$this->assertTrue($result->isSuccessful());
 		$this->assertGreaterThan( 0 , count($result->getValue() ) );
 	}
@@ -163,15 +163,15 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$this->markTestIncomplete('FIXME this test is tied to a specific record uid');
 
 		$operation = new tx_caretakerinstance_Operation_GetRecord();
-		
+
 		// FIXME this test is tied to a specific record uid
-		
+
 		$result = $operation->execute(array('table' => 'be_users', 'field' => 'uid', 'value' => 1));
-		
+
 		$record = $result->getValue();
-		
+
 		$this->assertTrue($result->isSuccessful());
-		
+
 		$this->assertEquals($record['uid'], 1);
 
 		$this->assertTrue(!isset($record['password']));
@@ -219,16 +219,16 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 
 		$this->assertFalse($result->isSuccessful());
 	}
-	
-	public function testOperation_CheckPathExistsReturnsTrueIfPathExists() {		
+
+	public function testOperation_CheckPathExistsReturnsTrueIfPathExists() {
 		$operation = new tx_caretakerinstance_Operation_CheckPathExists();
 
 		$result = $operation->execute('EXT:caretaker_instance/tests/fixtures/Operation_CheckPathExists.txt');
 
 		$this->assertTrue($result->isSuccessful());
 	}
-	
-	public function testOperation_CheckPathExistsReturnsFalseIfPathNotExists() {		
+
+	public function testOperation_CheckPathExistsReturnsFalseIfPathNotExists() {
 		$operation = new tx_caretakerinstance_Operation_CheckPathExists();
 
 		$result = $operation->execute('EXT:caretaker_instance/tests/fixtures/Operation_CheckPathExists_notExisting.txt');

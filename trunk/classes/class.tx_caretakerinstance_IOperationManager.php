@@ -38,7 +38,7 @@
  * The Operation manager is responsible for registering and
  * executing Operations. An Operation is registered with
  * a unique key either as a class name or instance.
- * 
+ *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
  * @author Christopher Hlubek <hlubek@networkteam.com>
@@ -48,14 +48,15 @@
  * @subpackage caretaker_instance
  */
 interface tx_caretakerinstance_IOperationManager {
+
 	/**
 	 * Register a new operation with the given key.
-	 * 
+	 *
 	 * @param string $operationKey The key of the operation (All lowercase, underscores)
-	 * @param string|object $operation Operation instance or class 
+	 * @param string|object $operation Operation instance or class
 	 */
 	function registerOperation($operationKey, $operation);
-	
+
 	/**
 	 * Get a registered operation as instance by key
 	 *
@@ -72,5 +73,6 @@ interface tx_caretakerinstance_IOperationManager {
 	 * @return tx_caretakerinstance_OperationResult
 	 */
 	function executeOperation($operationKey, $parameter = array());
+
 }
 ?>

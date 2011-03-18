@@ -64,13 +64,13 @@ class tx_caretakerinstance_OperationManager_testcase extends tx_phpunit_testcase
 		$operation = $operationManager->getOperation('get_php_version');
 		$this->assertType('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
 	}
-	
+
 	public function testGetOperationForUnknownOperation() {
 		$operationManager = new tx_caretakerinstance_OperationManager();
 		$operation = $operationManager->getOperation('me_no_operation');
 		$this->assertFalse($operation);
 	}
-	
+
 	public function testExecuteUnknownOperation() {
 		$operationManager = new tx_caretakerinstance_OperationManager();
 		$result = $operationManager->executeOperation('me_no_operation');
@@ -80,15 +80,15 @@ class tx_caretakerinstance_OperationManager_testcase extends tx_phpunit_testcase
 
 	public function testExecuteOperation() {
 		$operationManager = new tx_caretakerinstance_OperationManager();
-		
+
 		$operation = $this->getMock('tx_caretakerinstance_IOperation', array('execute'));
 		$operation->expects($this->once())
 			->method('execute')
 			->with($this->equalTo(array('foo' => 'bar')))
 			->will($this->returnValue(new tx_caretakerinstance_OperationResult(true, 'bar')));
-		
+
 		$operationManager->registerOperation('mock', $operation);
-		
+
 		$result = $operationManager->executeOperation('mock', array('foo' => 'bar'));
 		$this->assertTrue($result->isSuccessful());
 		$this->assertEquals('bar', $result->getValue());

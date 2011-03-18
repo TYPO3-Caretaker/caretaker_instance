@@ -37,7 +37,7 @@
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
 /**
- * An Operation that returns the version of an installed extension 
+ * An Operation that returns the version of an installed extension
  *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
@@ -48,18 +48,21 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretakerinstance_IOperation {
+
 	/**
+	 * Get the extension version of the given extension by extension key
+	 *
 	 * @param array $parameter None
 	 * @return The extension version
 	 */
 	public function execute($parameter = array()) {
 		$extensionKey = $parameter['extensionKey'];
-		
+
 		if (!t3lib_extMgm::isLoaded($extensionKey)) {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Extension [' . $extensionKey . '] is not loaded');
 		}
-		
-		$_EXTKEY = $extensionKey;		
+
+		$_EXTKEY = $extensionKey;
 		@include(t3lib_extMgm::extPath($extensionKey, 'ext_emconf.php'));
 
 		if (is_array($EM_CONF[$extensionKey])) {
@@ -68,5 +71,6 @@ class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretaker
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Cannot read EM_CONF for extension [' . $extensionKey . ']');
 		}
 	}
+
 }
 ?>

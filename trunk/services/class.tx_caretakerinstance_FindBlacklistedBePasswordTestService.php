@@ -49,7 +49,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caretakerinstance_RemoteTestServiceBase{
-	
+
 	/**
 	 * Value Description
 	 * @var string
@@ -67,7 +67,7 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 	 * @var string
 	 */
 	protected $configurationInfoTemplate = '';
-	
+
 
 	public function runTest() {
 		$blacklistedPasswords = explode(chr(10), $this->getConfigValue('blacklist'));
@@ -87,7 +87,7 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 		}
 
 		$careless_users = array();
-		
+
 		$results = $commandResult->getOperationResults();
 		foreach ($results as $operationResult) {
 			if ($operationResult->isSuccessful()) {

@@ -34,12 +34,11 @@
  * $Id$
  */
 
-
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
 /**
- * A Operation which checks if a Predefined Variable (liek $GLOBALS['foo']['bar']) has a certain value
- * 
+ * A Operation which checks if a Predefined Variable (like $GLOBALS['foo']['bar']) has a certain value
+ *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
  * @author Christopher Hlubek <hlubek@networkteam.com>
@@ -49,8 +48,13 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caretakerinstance_IOperation {
+
 	/**
-	 * @param array $parameter key, match, usingRegexp
+	 * Check if the key matches the variable. Nested keys can be given
+	 * using the | separator. To prevent information disclosure, the key
+	 * value will not be returned.
+	 *
+	 * @param array $parameter key, match, usingRegexp, comparisonOperator
 	 * @return the current PHP version
 	 */
 	public function execute($parameter = array()) {
@@ -88,24 +92,29 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 					$success = ( $parameter['match'] == $value);
 					break;
 			}
-		
+
 		}
 
 		return new tx_caretakerinstance_OperationResult($success, '');
 	}
 
+	/**
+	 *
+	 * @param array $keyPath
+	 * @return boolean
+	 */
 	protected function getValueForKeyPath(array $keyPath) {
 		$key = array_shift($keyPath);
 		switch ($key) {
 			case 'GLOBALS':
 				$value = $GLOBALS;
-				
+
 					// decode TYPO3_CONF_VARS->EXT->extConf children if requested
 				if ( $keyPath[0] == 'TYPO3_CONF_VARS' && $keyPath[1] == 'EXT' && $keyPath[2] == 'extConf' && $keyPath[3] ) {
 					$serializedValue = $value[ $keyPath[0] ][ $keyPath[1] ][ $keyPath[2] ][ $keyPath[3] ];
 					$value[ $keyPath[0] ][ $keyPath[1] ][ $keyPath[2] ][ $keyPath[3] ] = unserialize($serializedValue);
 				}
-				
+
 				break;
 
 			case '_POST':
@@ -148,8 +157,9 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 				break;
 			}
 		}
-		
+
 		return $value;
 	}
+
 }
 ?>

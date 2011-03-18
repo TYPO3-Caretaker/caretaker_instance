@@ -52,12 +52,12 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
 		$type = $this->getConfigValue('cptype');
 		$time = intval($this->getConfigValue('cptime'));
 		$fileAgeShouldBe = $this->getConfigValue('cptimeflag');
-		
+
 			// catch required fields
 		if (!$paths) {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot test without path.');
 		}
-		
+
 			// prepare tests
 		$paths = explode(chr(10), $paths);
 		foreach ($paths AS $path) {
@@ -70,12 +70,12 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
 		if (!$this->isCommandResultSuccessful($commandResult)) {
 		 	return $this->getFailedCommandResultTestResult($commandResult);
 		}
-	
+
 			// process resultset
 		$resultset = $commandResult->getOperationResults();
 		foreach ($resultset AS $result) {
 			$resValue = $result->getValue();
-			
+
 			if (!$result->isSuccessful() && !$inverse) {
 				$msg[] = $resValue['path'] . ' does not exist';
 				$resultState = tx_caretaker_Constants::state_error;

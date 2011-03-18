@@ -38,7 +38,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 
 /**
  * A sample Operation which returns the installed PHP version
- * 
+ *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
  * @author Christopher Hlubek <hlubek@networkteam.com>
@@ -48,12 +48,16 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetPHPVersion implements tx_caretakerinstance_IOperation {
+
 	/**
+	 * Get the current PHP version
+	 *
 	 * @param array $parameter None
 	 * @return the current PHP version
 	 */
 	public function execute($parameter = array()) {
 		return new tx_caretakerinstance_OperationResult(true, phpversion());
 	}
+
 }
 ?>

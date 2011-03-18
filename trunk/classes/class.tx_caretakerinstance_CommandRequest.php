@@ -39,7 +39,7 @@
  * session token and the raw data (encrypted). For signature
  * verification the Command Request computes the
  * signature relevant data (session token + raw data).
- * 
+ *
  * Before executing the Commands in a Command Request the
  * Command Service verifies and decrypts the data of the Request.
  *
@@ -52,12 +52,12 @@
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CommandRequest {
-	
+
 	/**
 	 * @var string The client public key when receiving a command
 	 */
 	protected $clientKey;
-	
+
 	/**
 	 * @var string The client host address (IP) when receiving a command
 	 */
@@ -77,66 +77,66 @@ class tx_caretakerinstance_CommandRequest {
 	 * @var array
 	 */
 	protected $data = array();
-	
+
 	/**
-	 * Create a new Command Request 
+	 * Create a new Command Request
 	 *
 	 * @param array $options Options of the Command Request object
 	 */
 	public function __construct($options) {
 		$this->sessionToken = $options['session_token'];
-		$this->data = $options['data'];		
+		$this->data = $options['data'];
 		$this->rawData = $options['raw'];
 		$this->signature = $options['signature'];
-		
+
 		// If we have client infos, we are recieving a command
 		if (is_array($options['client_info'])) {
 			$this->clientKey = $options['client_info']['client_key'];
 			$this->clientHostAddress = $options['client_info']['host_address'];
 		}
-		
+
 		// If we have server infos, we are going to send this Request
 		if (is_array($options['server_info'])) {
 			$this->serverKey = $options['server_info']['server_key'];
 			$this->serverUrl = $options['server_info']['server_url'];
 		}
 	}
-	
+
 	/**
 	 * @return string The client public key
 	 */
 	public function getClientKey() {
 		return $this->clientKey;
 	}
-	
+
 	/**
 	 * @return string The session token
 	 */
 	public function getSessionToken() {
 		return $this->sessionToken;
 	}
-	
+
 	/**
 	 * @return string The client host address
 	 */
 	public function getClientHostAddress() {
 		return $this->clientHostAddress;
 	}
-	
+
 	/**
 	 * @return string The Server's (read: instance) URL
 	 */
 	public function getServerUrl() {
 		return $this->serverUrl;
 	}
-	
+
 	/**
 	 * @return string The Server's (read: instance) public key
 	 */
 	public function getServerKey() {
 		return $this->serverKey;
 	}
-	
+
 	/**
 	 * @return string The raw data (encrypted)
 	 */
@@ -150,14 +150,15 @@ class tx_caretakerinstance_CommandRequest {
 	public function getSignature() {
 		return $this->signature;
 	}
-	
+
 	/**
 	 * @param string The signature
+	 * @return void
 	 */
 	public function setSignature($signature) {
 		$this->signature = $signature;
 	}
-	
+
 	/**
 	 * @param string $key A key for the data entry to fetch
 	 * @return mixed The entry for the key in the Command Request data
@@ -169,16 +170,17 @@ class tx_caretakerinstance_CommandRequest {
 			return $this->data;
 		}
 	}
-	
+
 	/**
-	 * Merge data from another array
+	 * Merge data from another array onto the data
 	 *
 	 * @param array $array
+	 * @return void
 	 */
 	public function mergeData(&$array) {
 		$this->data = array_merge($this->data, $array);
 	}
-	
+
 	/**
 	 * @return string The relevant data for signature verification
 	 */

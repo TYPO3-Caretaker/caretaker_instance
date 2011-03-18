@@ -34,7 +34,7 @@
  * $Id$
  */
 
-if (t3lib_extMgm::isLoaded('caretaker_instance') == true){
+if (t3lib_extMgm::isLoaded('caretaker_instance')) {
 	require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_ServiceFactory.php'));
 }
 
@@ -46,6 +46,7 @@ if (t3lib_extMgm::isLoaded('caretaker_instance') == true){
  * @subpackage	tx_caretakerinstance
  */
 class ext_update {
+
 	/**
 	 * @var tx_caretakerinstance_ServiceFactory
 	 */
@@ -55,9 +56,9 @@ class ext_update {
 	 * @return boolean Whether the update should be shown / allowed
 	 */
 	public function access() {
-		
+
 		$extConf = $this->getExtConf();
-		
+
 		$show = !strlen($extConf['crypto.']['instance.']['publicKey']) ||
 			!strlen($extConf['crypto.']['instance.']['privateKey']);
 		return $show;
@@ -70,10 +71,10 @@ class ext_update {
 	 */
 	public function main() {
 		$extConf = $this->getExtConf();
-		
+
 		$this->factory = tx_caretakerinstance_ServiceFactory::getInstance();
 		list($publicKey, $privateKey) = $this->factory->getCryptoManager()->generateKeyPair();
-		
+
 		$extConf['crypto.']['instance.']['publicKey'] = $publicKey;
 		$extConf['crypto.']['instance.']['privateKey'] = $privateKey;
 
@@ -93,12 +94,12 @@ class ext_update {
 		$install = new t3lib_install();
 		$install->allowUpdateLocalConf = 1;
 		$install->updateIdentity = 'Caretaker Instance installation';
-		
+
 		$lines = $install->writeToLocalconf_control();
 		$install->setValueInLocalconfFile($lines, '$TYPO3_CONF_VARS[\'EXT\'][\'extConf\'][\'caretaker_instance\']', serialize($extConf));
 		$install->writeToLocalconf_control($lines);
 
-		t3lib_extMgm::removeCacheFiles();	
+		t3lib_extMgm::removeCacheFiles();
 	}
 
 	/**
@@ -113,5 +114,6 @@ class ext_update {
 		}
 		return $extConf;
 	}
+
 }
 ?>

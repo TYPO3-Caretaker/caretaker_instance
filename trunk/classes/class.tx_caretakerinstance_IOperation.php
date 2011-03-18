@@ -34,20 +34,19 @@
  * $Id$
  */
 
-
 /**
  * An Operation is an atomic, executable and SAFE action with optional parameters that returns a value
  * wrapped in the Operation Result.
  * A Command can combine several Operations with different parameters.
- * 
+ *
  * Operations should be as modular as possible, as they are the basic building blocks of
  * Checks on the caretaker server. Operations are executed on remote hosts via the caretaker
  * instance and should NEVER modify any data or allow for remote execution of arbitrary code.
- * 
+ *
  * An example operation execution could be:
- * 
+ *
  * "GetPHPVersion" returns OperationResult("5.2.0")
- * 
+ *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
  * @author Christopher Hlubek <hlubek@networkteam.com>
@@ -57,15 +56,17 @@
  * @subpackage caretaker_instance
  */
 interface tx_caretakerinstance_IOperation {
+
 	/**
 	 * Execute this Operation. The execution should not rely
 	 * on the execution of previous Operations. The execution
 	 * of the Operation MUST NOT modify any data (database, file)
 	 * on the instance.
-	 * 
+	 *
 	 * @param array $parameter Parameters for the operation
 	 * @return tx_caretakerinstance_OperationResult The operation result
 	 */
 	function execute($parameter = array());
+
 }
 ?>

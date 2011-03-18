@@ -67,7 +67,7 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 	 * @var string
 	 */
 	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:extension_test_configuration';
-	
+
 	public function runTest() {
 		$extensionKey = $this->getConfigValue('extension_key');
 		$requirementMode = $this->getConfigValue('requirement_mode');
@@ -86,7 +86,7 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 		if (!$this->isCommandResultSuccessful($commandResult)) {
 			return $this->getFailedCommandResultTestResult($commandResult);
 		}
-		
+
 		$results = $commandResult->getOperationResults();
 		$operationResult = $results[0];
 		if ($operationResult->isSuccessful()) {
@@ -94,24 +94,24 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 		} else {
 			$extensionVersion = FALSE;
 		}
-		
+
 		$checkResult = $this->checkVersionForRequirementAndVersionRange(
 			$extensionVersion,
 			$requirementMode,
 			$minVersion,
 			$maxVersion
 		);
-			
+
 		if ($checkResult) {
 			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ( $extensionVersion === false ? 'not ' : '' ) . 'installed';
 			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
 		} else {
 			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ( $extensionVersion === false ? 'not ' : '' ) . 'installed, but ';
 			if ($minVersion) {
-				$message .= ' >= ' . $minVersion; 
+				$message .= ' >= ' . $minVersion;
 			}
 			if ($maxVersion) {
-				$message .= ' <= ' . $maxVersion; 
+				$message .= ' <= ' . $maxVersion;
 			}
 			$message .= ' expected';
 			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $message);
@@ -119,7 +119,7 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 
 		return $testResult;
 	}
-	
+
 	public function checkVersionForRequirementAndVersionRange($actualValue, $requirement, $minVersion, $maxVersion) {
 		if ($requirement == 'none') {
 			if ($actualValue) {

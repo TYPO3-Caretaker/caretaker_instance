@@ -35,7 +35,7 @@
  */
 
 /**
- * The Security Manager 
+ * The Security Manager
  *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
@@ -46,7 +46,7 @@
  * @subpackage caretaker_instance
  */
 interface tx_caretakerinstance_ISecurityManager {
-	
+
 	/**
 	 * Decode a Command Request (decrypt, merge data)
 	 *
@@ -60,24 +60,34 @@ interface tx_caretakerinstance_ISecurityManager {
 	 * @param tx_caretakerinstance_CommandRequest $commandRequest
 	 */
 	function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest);
-	
+
 	/**
 	 * Create a new session token for allowed hosts
 	 *
 	 * @param unknown_type $clientHostAddress
 	 */
 	function createSessionToken($clientHostAddress);
-	
+
 	/**
 	 * Encode the result data
 	 *
 	 * @param string $resultData The Command Result data (e.g. JSON)
-	 * @return string The encrypted Command Result data 
+	 * @return string The encrypted Command Result data
 	 */
 	function encodeResult($resultData);
-	
+
+	/**
+	 * Decode the result data
+	 *
+	 * @param string $encryptedString
+	 * @return string
+	 */
 	function decodeResult($encryptedString);
-	
+
+	/**
+	 * @return string
+	 */
 	function getPrivateKey();
+
 }
 ?>

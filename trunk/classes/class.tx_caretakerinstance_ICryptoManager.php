@@ -34,9 +34,8 @@
  * $Id$
  */
 
-
 /**
- * The Crypto Manager encrypts, decrypts and verifies data.
+ * The Crypto Manager encrypts, decrypts and verifies data
  *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
@@ -47,23 +46,68 @@
  * @subpackage caretaker_instance
  */
 interface tx_caretakerinstance_ICryptoManager {
+
+	/**
+	 * Create a session token that can be verified with the given secret
+	 *
+	 * @param string $data
+	 * @param string $secret
+	 * @return string
+	 */
 	function createSessionToken($data, $secret);
-	
+
+	/**
+	 * Verify that the given token was created with the given secret
+	 *
+	 * @param string $token
+	 * @param string $secret
+	 * @return boolean
+	 */
 	function verifySessionToken($token, $secret);
-	
+
+	/**
+	 * Sign the data with the given private key
+	 *
+	 * @param string $data
+	 * @param string $privateKey The private key
+	 * @return string
+	 */
 	function createSignature($data, $privateKey);
-	
+
+	/**
+	 * Verify the signature of data with the given public key
+	 *
+	 * @param string $data
+	 * @param string $signature
+	 * @param string $publicKey The private key
+	 * @return string
+	 */
 	function verifySignature($data, $signature, $publicKey);
-	
-	function encrypt($data, $key);
-	
-	function decrypt($data, $key);
+
+	/**
+	 * Encrypt data with the given public key
+	 *
+	 * @param $data string The data to encrypt
+	 * @param $key string The public key for encryption
+	 * @return string The encrypted data
+	 */
+	function encrypt($data, $publicKey);
+
+	/**
+	 * Decrypt data with the given private key
+	 *
+	 * @param $data string The data to decrypt
+	 * @param $key string The private key for decryption
+	 * @return string The decrypted data
+	 */
+	function decrypt($data, $privateKey);
 
 	/**
 	 * Generate a new key pair
 	 *
-	 * @return array with public and private key as string
+	 * @return array Public and private key as string
 	 */
 	function generateKeyPair();
+
 }
 ?>

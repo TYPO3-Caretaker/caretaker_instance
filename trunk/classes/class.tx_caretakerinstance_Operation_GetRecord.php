@@ -34,13 +34,12 @@
  * $Id$
  */
 
-
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
 /**
  * An Operation that returns the first record matched by a field name and value as an array (excluding protected record details like be_user password).
  * This operation should be SQL injection safe. The table has to be mapped in the TCA.
- * 
+ *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
  * @author Christopher Hlubek <hlubek@networkteam.com>
@@ -52,8 +51,8 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
 class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_IOperation {
 
 	/**
-	 * An array of tables and table fields that should be cleared before
-	 * sending.
+	 * An array of tables and table fields that should be cleared before sending.
+	 *
 	 * @var array
 	 */
 	protected $protectedFieldsByTable = array(
@@ -62,10 +61,11 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	);
 
 	protected $implicitFields = array('uid', 'pid', 'deleted', 'hidden');
-	
+
 	/**
-	 * 
-	 * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record 
+	 * Get record data from the given table and uid
+	 *
+	 * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
 	 * @return The first found record as an array or FALSE if no record was found
 	 */
 	public function execute($parameter = array()) {
@@ -73,9 +73,9 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		$field = $parameter['field'];
 		$value = $parameter['value'];
 		$checkEnableFields = $parameter['checkEnableFields'] == TRUE;
-		
+
 		$this->includeTCA();
-		
+
 		if (!isset($GLOBALS['TCA'][$table])) {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Table [' . $table . '] not found in the TCA');
 		}
@@ -83,12 +83,12 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		if (!isset($GLOBALS['TCA'][$table]['columns'][$field]) && !in_array($field, $this->implicitFields)) {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Field [' . $field . '] of table [' . $table . '] not found in the TCA');
 		}
-		
+
 		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
 			'*',
 			$table,
 			$field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
-		
+
 		if ($result) {
 			$record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result);
 			if ($record !== FALSE) {
@@ -107,6 +107,11 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		}
 	}
 
+	/**
+	 * Include TCA to load table definitions
+	 *
+	 * @return void
+	 */
 	protected function includeTCA() {
 		if (!$GLOBALS['TSFE']) {
 			require_once(PATH_tslib.'class.tslib_fe.php');
@@ -122,12 +127,12 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 			$GLOBALS['TSFE']->includeTCA();
 		}
 	}
-	
+
 	/**
 	 * A simplified enableFields function (partially copied from sys_page) that
 	 * can be used without a full TSFE environment. It doesn't / can't check
 	 * fe_group constraints or custom hooks.
-	 * 
+	 *
 	 * @param $table
 	 * @return string The query to append
 	 */
@@ -163,5 +168,6 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		}
 		return $query;
 	}
+
 }
 ?>

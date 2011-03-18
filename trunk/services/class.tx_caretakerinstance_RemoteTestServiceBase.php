@@ -48,14 +48,15 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @subpackage caretaker_instance
  */
 abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_TestServiceBase {
+
 	/**
 	 * Execute a list of operations on the configured instance.
-	 * 
+	 *
 	 * The operations must be of the form
 	 * <code>
 	 * array(array("SomeOperationWithParams", array("foo" => "bar")), array("OperationWithoutParams"))
 	 * </code>
-	 * 
+	 *
 	 * @param $operations Array of array of operations
 	 * @return tx_caretakerinstance_CommandResult|boolean
 	 */
@@ -63,7 +64,7 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
 		$connector = $factory->getRemoteCommandConnector();
 		$connector->setInstance($this->instance);
-		
+
 		return $connector->executeOperations($operations);
 	}
 
@@ -101,7 +102,7 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 			'Operation execution failed: ' . $operationResult->getValue()
 		);
 	}
-	
+
 	public function checkVersionRange($actualVersion, $minVersion, $maxVersion, $versionParts = 3) {
 		$actualVersionCombined = $this->versionToInt($actualVersion, $versionParts);
 		if ($minVersion != '') {
@@ -112,10 +113,10 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 			$maxVersionCombined = $this->versionToInt($maxVersion, $versionParts);
 			if ($actualVersionCombined > $maxVersionCombined) return FALSE;
 		}
-		
+
 		return TRUE;
 	}
-	
+
 	protected function versionToInt($version, $versionParts = 3, $versionBase = 1000) {
 		$versionDigits = explode('.', $version, $versionParts);
 		$versionCombined = 0;

@@ -47,24 +47,30 @@
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_OperationResult {
-	
+
 	/**
 	 * @var boolean
 	 */
 	protected $status;
-	
+
 	/**
 	 * @var array|string
 	 */
 	protected $value;
-	
+
+	/**
+	 * Construct a new operation result
+	 *
+	 * @param boolean $status
+	 * @param mixed $value
+	 */
 	public function __construct($status, $value) {
 		$this->status = $status;
 		$this->value = $value;
 	}
-	
+
 	/**
-	 * @return boolean If the operation was executed successful 
+	 * @return boolean If the operation was executed successful
 	 */
 	public function isSuccessful() {
 		return $this->status;
@@ -76,12 +82,13 @@ class tx_caretakerinstance_OperationResult {
 	public function getValue() {
 		return $this->value;
 	}
-	
+
 	/**
 	 * @return The Operation Result as an array
 	 */
 	public function toArray() {
 		return array('status' => $this->status, 'value' => $this->value);
 	}
+
 }
 ?>

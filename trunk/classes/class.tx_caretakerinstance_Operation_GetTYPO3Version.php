@@ -37,8 +37,8 @@
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
 /**
- * A Operation which returns the current TYPO3 version 
- * 
+ * A Operation which returns the current TYPO3 version
+ *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
  * @author Christopher Hlubek <hlubek@networkteam.com>
@@ -48,6 +48,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinstance_IOperation {
+
 	/**
 	 * @param array $parameter None
 	 * @return the current PHP version
@@ -55,5 +56,6 @@ class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinst
 	public function execute($parameter = array()) {
 		return new tx_caretakerinstance_OperationResult(true, TYPO3_version);
 	}
+
 }
 ?>

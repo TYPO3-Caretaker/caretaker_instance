@@ -54,12 +54,12 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 	 */
 	public function execute($parameter = null) {
 		$path = $this->getPath($parameter);
-				
+
 		if (is_file($path)) {
 			//if file exists, get the tstamp
 			$time = filemtime($path);
 			$size = filesize($path);
-			
+
 			return new tx_caretakerinstance_OperationResult(TRUE, array(
 				'type' => 'file',
 				'path' => $parameter,
@@ -75,10 +75,10 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 			return new tx_caretakerinstance_OperationResult(FALSE, array('path' => $parameter));
 		}
 	}
-	
+
 	/**
 	 * prepare path, resolve relative path and resolve EXT: path
-	 * 
+	 *
 	 * @param $path absolute or relative path or EXT:foobar/
 	 * @return string/bool false if path is invalid, else the absolute path
 	 */
@@ -87,13 +87,13 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 		if (substr($path, -1) === '/') {
  			$path = substr($path, 0, -1);
 		}
-		
+
 			// FIXME remove this hacky part
 			// skip path checks for CLI mode
 		if (defined('TYPO3_cliMode')) {
 			return $path;
 		}
-				
+
 		$path = t3lib_div::getFileAbsFileName($path);
 		if (t3lib_div::isAllowedAbsPath($path)) {
 			return $path;
@@ -101,5 +101,6 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 			return false;
 		}
 	}
+
 }
 ?>

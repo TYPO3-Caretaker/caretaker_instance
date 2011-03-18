@@ -49,10 +49,13 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  */
 class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerinstance_IOperation {
 
+	/**
+	 * @var array Available extension scopes
+	 */
 	protected $scopes = array('system', 'global', 'local');
 
 	/**
-	 * 
+	 *
 	 * @param array $parameter Array of extension locations as string (system, global, local)
 	 * @return The extension list
 	 */
@@ -69,9 +72,15 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 		} else {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'No extension locations given');
 		}
-		
+
 	}
-	
+
+	/**
+	 * Get the path for the given scope
+	 *
+	 * @param string $scope
+	 * @return string
+	 */
 	protected function getPathForScope($scope) {
 		$path = '';
 		switch ($scope) {
@@ -88,7 +97,13 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 		}
 		return $path;
 	}
-	
+
+	/**
+	 * Get the list of extensions in the given scope
+	 *
+	 * @param string $scope
+	 * @return boolean
+	 */
 	protected function getExtensionListForScope($scope) {
 		$path = $this->getPathForScope($scope);
 		$extensionInfo = array();
@@ -96,13 +111,13 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 			$extensionFolders = t3lib_div::get_dirs($path);
 			if (is_array($extensionFolders)) {
 				foreach($extensionFolders as $extKey) {
-					$extensionInfo[$extKey]['ext_key'] = $extKey;					
+					$extensionInfo[$extKey]['ext_key'] = $extKey;
 					$extensionInfo[$extKey]['installed'] = (boolean)t3lib_extMgm::isLoaded($extKey);
 
 					if (@is_file($path . $extKey . '/ext_emconf.php'))	{
 						$_EXTKEY = $extKey;
 						@include($path . $extKey . '/ext_emconf.php');
-						$extensionVersion = $EM_CONF[$extKey]['version']; 
+						$extensionVersion = $EM_CONF[$extKey]['version'];
 					} else {
 						$extensionVersion = FALSE;
 					}
@@ -110,12 +125,13 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 					if ($extensionVersion) {
 						$extensionInfo[$extKey]['version'] = $extensionVersion;
 						$extensionInfo[$extKey]['scope'][$scope] = $extensionVersion;
-					}					
+					}
 				}
 			}
 		}
-		
+
 		return $extensionInfo;
 	}
+
 }
 ?>

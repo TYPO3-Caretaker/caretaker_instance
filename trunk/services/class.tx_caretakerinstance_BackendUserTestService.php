@@ -34,7 +34,6 @@
  * $Id$
  */
 
-
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
 /**
@@ -48,8 +47,8 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_RemoteTestServiceBase{
-	
+class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_RemoteTestServiceBase {
+
 	/**
 	 * Value Description
 	 * @var string
@@ -67,7 +66,7 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 	 * @var string
 	 */
 	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:backend_user_test_configuration';
-	
+
 
 	public function runTest() {
 		$blacklistedUsernames = explode(chr(10), $this->getConfigValue('blacklist'));
@@ -75,7 +74,7 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 		$operations = array();
 		foreach ($blacklistedUsernames as $username) {
 			$username = trim( $username );
-			if ( strlen( $username) ) {
+			if (strlen($username)) {
 				$operations[] = array('GetRecord', array('table' => 'be_users', 'field' => 'username', 'value' => $username, 'checkEnableFields' => TRUE));
 			}
 		}
@@ -87,7 +86,7 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 		}
 
 		$usernames = array();
-		
+
 		$results = $commandResult->getOperationResults();
 		foreach ($results as $operationResult) {
 			if ($operationResult->isSuccessful()) {

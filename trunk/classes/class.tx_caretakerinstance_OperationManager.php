@@ -34,13 +34,12 @@
  * $Id$
  */
 
-
 require_once('class.tx_caretakerinstance_IOperationManager.php');
 require_once('class.tx_caretakerinstance_IOperation.php');
 
 /**
  * Operation manager for operation registration and execution.
- * 
+ *
  * This implementation registers Operations in an array.
  *
  * @author Martin Ficzel <martin@work.de>
@@ -60,9 +59,9 @@ class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOpe
 
 	/**
 	 * Register a new operation
-	 * 
+	 *
 	 * @param string $operationKey The key of the operation (All lowercase, underscores)
-	 * @param string|object $operation Operation instance or class 
+	 * @param string|object $operation Operation instance or class
 	 */
 	function registerOperation($operationKey, $operation) {
 		$this->operations[$operationKey] = $operation;
@@ -92,12 +91,13 @@ class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOpe
 	 * @return tx_caretakerinstance_OperationResult
 	 */
 	function executeOperation($operationKey, $parameter = array()) {
-		$operation = $this->getOperation($operationKey); 
+		$operation = $this->getOperation($operationKey);
 		if ($operation) {
 			return $operation->execute($parameter);
 		} else {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Operation [' . $operationKey . '] unknown');
 		}
 	}
+
 }
 ?>

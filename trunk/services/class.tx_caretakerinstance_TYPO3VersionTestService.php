@@ -48,11 +48,11 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
-	
+
 	public function runTest() {
 		$minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'));
 		$maxVersion = $this->checkForLatestVersion($this->getConfigValue('max_version'));
-		
+
 		if (!$minVersion && !$maxVersion) {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute TYPO3 version test without min and max version');
 		}
@@ -60,16 +60,16 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		if ($maxVersion === FALSE) {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'No TYPO3 version information available. Please add "TYPO3 Versionnumbers Update" to your scheduler queue.');
 		}
-		
+
 		$operation = array('GetTYPO3Version');
 		$operations = array($operation);
-		
+
 		$commandResult = $this->executeRemoteOperations($operations);
 
 		if (!$this->isCommandResultSuccessful($commandResult)) {
 			return $this->getFailedCommandResultTestResult($commandResult);
 		}
-		
+
 		$results = $commandResult->getOperationResults();
 		$operationResult = $results[0];
 		if ($operationResult->isSuccessful()) {
@@ -77,7 +77,7 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		} else {
 			return $this->getFailedOperationResultTestResult($operationResult);
 		}
-		
+
 		$checkResult = $this->checkVersionRange(
 			$version,
 			$minVersion,
@@ -89,10 +89,10 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		} else {
 			$message = 'TYPO3 version ' . $version . ' is installed, but';
 			if ($minVersion) {
-				$message .= ' >= ' . $minVersion; 
+				$message .= ' >= ' . $minVersion;
 			}
 			if ($maxVersion) {
-				$message .= ' <= ' . $maxVersion; 
+				$message .= ' <= ' . $maxVersion;
 			}
 			$message .= ' expected.';
 			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $message);

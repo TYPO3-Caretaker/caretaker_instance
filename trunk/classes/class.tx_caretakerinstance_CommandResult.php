@@ -63,17 +63,17 @@ class tx_caretakerinstance_CommandResult {
 	 * @see tx_caretakerinstance_CommandResult::status_ok
 	 */
 	protected $status;
-	
+
 	/**
 	 * @var array of tx_caretakerinstance_OperationResult
 	 */
 	protected $operationResults;
-	
+
 	/**
 	 * @var string The message of the command execution
 	 */
 	protected $message;
-	
+
 	/**
 	 * Create a new Command Result object
 	 *
@@ -92,14 +92,14 @@ class tx_caretakerinstance_CommandResult {
 		$this->operationResults = $operationResults;
 		$this->message = $message;
 	}
-	
+
 	/**
 	 * @return TRUE if the execution of the whole command was successful
 	 */
 	public function isSuccessful() {
 		return $this->status === self::status_ok;
 	}
-	
+
 	/**
 	 * @return array of tx_caretakerinstance_OperationResult The results of the operations
 	 */
@@ -137,29 +137,30 @@ class tx_caretakerinstance_CommandResult {
 			'results' => $results,
 			'message' => $this->message
 		);
-		
+
 		return json_encode($array);
 	}
-	
+
 	/**
 	 * create a new CommandResult from a Json-String (e.g. receive by http-call)
-	 * 
+	 *
 	 * @param $json string
 	 * @return tx_caretakerinstance_CommandResult
 	 */
 	public static function fromJson($json) {
 		$data = json_decode($json, TRUE);
-		
+
 		if (is_array($data)) {
 			$results = array();
 			foreach ($data['results'] as $key => $result) {
 				$results[] = new tx_caretakerinstance_OperationResult($result['status'], $result['value']);
 			}
-			
+
 			return new tx_caretakerinstance_CommandResult($data['status'], $results, $data['message']);
 		} else {
 			return new tx_caretakerinstance_CommandResult(self::status_undefined, NULL, 'Cannot decode command result');
 		}
 	}
+
 }
 ?>

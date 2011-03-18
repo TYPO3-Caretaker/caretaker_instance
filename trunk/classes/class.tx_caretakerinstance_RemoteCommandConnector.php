@@ -39,7 +39,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/cla
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTokenFailedException.php'));
 
 /**
- * Connect to an Instance and execute a Commend (bunch of Operations)
+ * Connect to an Instance and execute a Command (bunch of Operations)
  *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
@@ -50,11 +50,12 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/cla
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_RemoteCommandConnector {
+
 	/**
 	 * @var tx_caretakerinstance_ICryptoManager
 	 */
 	protected $cryptoManager;
-	
+
 	/**
 	 * @var tx_caretakerinstance_ISecurityManager
 	 */
@@ -64,8 +65,10 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 * @var tx_caretaker_InstanceNode
 	 */
 	protected $instance;
-	
+
 	/**
+	 * Construct the remote command connector
+	 *
 	 * @param $cryptoManager tx_caretakerinstance_ICryptoManager
 	 * @param $securityManager tx_caretakerinstance_ISecurityManager
 	 * @return tx_caretakerinstance_RemoteCommandConnector
@@ -74,10 +77,10 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		$this->cryptoManager = $cryptoManager;
 		$this->securityManager = $securityManager;
 	}
-	
+
 	/**
-	 * executes a bunch of operation an a remote instance and takes care to secure/encrypt the communication
-	 * 
+	 * Executes a bunch of operation an a remote instance and takes care to secure/encrypt the communication
+	 *
 	 * @param $operations array
 	 * @param $baseurl string
 	 * @param $instancePublicKey string
@@ -102,9 +105,9 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		}
 
 		$commandRequest = $this->buildCommandRequest(
-			$sessionToken, 
+			$sessionToken,
 			$this->getInstancePublicKey(),
-			$this->getInstanceURL(), 
+			$this->getInstanceURL(),
 			$this->getDataFromOperations($operations)
 		);
 		$commandRequest->setSignature(
@@ -113,9 +116,10 @@ class tx_caretakerinstance_RemoteCommandConnector {
 
 		return $this->executeRequest($commandRequest);
 	}
-	
-	
+
 	/**
+	 * Execute the given command request
+	 *
 	 * @param tx_caretakerinstance_CommandRequest $commandRequest
 	 * @return tx_caretakerinstance_CommandResult
 	 */
@@ -135,12 +139,12 @@ class tx_caretakerinstance_RemoteCommandConnector {
 				// TODO: check if valid json
 				if ($json) {
 					return tx_caretakerinstance_CommandResult::fromJson($json);
+				} else {
+					return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Empty result returned' );
 				}
-
 			} else if ($httpRequestResult['info']['http_code'] === 0) {
 				// seems to be a timeout
 				return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'No Response/Timeout (Total-Time: ' . $httpRequestResult['info']['total_time'] . ')' );
-				
 			} else {
 				return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Invalid result: ' . $httpRequestResult['response'] . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
 			}
@@ -148,7 +152,7 @@ class tx_caretakerinstance_RemoteCommandConnector {
 			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Invalid result request could not be executed' . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
 		}
 	}
-	
+
 	/**
 	 * Build a CommandRequest
 	 *
@@ -161,7 +165,7 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	public function buildCommandRequest($sessionToken, $instancePublicKey, $url, $rawData) {
 		$encryptedData = json_encode(array(
 			'encrypted' => $this->cryptoManager->encrypt($rawData, $instancePublicKey),
-		));		
+		));
 		return new tx_caretakerinstance_CommandRequest(
 			array(
 				'session_token' => $sessionToken,
@@ -174,9 +178,10 @@ class tx_caretakerinstance_RemoteCommandConnector {
 			)
 		);
 	}
-	
+
 	/**
-	 * create a CommandResult
+	 * Create a CommandResult
+	 *
 	 * @param boolean|int $status
 	 * @param array $operationResults
 	 * @param string $message
@@ -185,15 +190,16 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	protected function getCommandResult($status, $operationResults, $message) {
 		return new tx_caretakerinstance_CommandResult($status, $operationResults, $message);
 	}
-	
+
 	/**
 	 * Request a session token from a remote instance
+	 *
 	 * @return string
 	 */
 	public function requestSessionToken() {
 		$requestUrl = $this->getInstanceURL() . '&rst=1';
 		$httpRequestResult = $this->executeHttpRequest($requestUrl);
-		
+
 		if (is_array($httpRequestResult)
 		  && $httpRequestResult['info']['http_code'] === 200
 		  && preg_match('/^([0-9]{10}:[a-z0-9].*)$/', $httpRequestResult['response'], $matches)) {
@@ -218,8 +224,8 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	}
 
 	/**
-	 * get url for current instance
-	 * 
+	 * Get the URL of the current instance
+	 *
 	 * @return string
 	 */
 	public function getInstanceURL() {
@@ -227,13 +233,11 @@ class tx_caretakerinstance_RemoteCommandConnector {
 			return FALSE;
 		}
 		$baseUrl = $this->instance->getUrl();
-		return $baseUrl .
-			(substr($baseUrl, -1) !== '/' ? '/' : '') .
-			'?eID=tx_caretakerinstance';
+		return $baseUrl . (substr($baseUrl, -1) !== '/' ? '/' : '') . '?eID=tx_caretakerinstance';
 	}
 
 	/**
-	 * get public key for current instance
+	 * Get the public key of the current instance
 	 *
 	 * @return string
 	 */
@@ -246,16 +250,18 @@ class tx_caretakerinstance_RemoteCommandConnector {
 
 
 	/**
+	 * Set the current instance
+	 *
 	 * @param tx_caretaker_InstanceNode $instance
 	 * @return void
 	 */
 	public function setInstance($instance) {
 		$this->instance = $instance;
 	}
-	
+
 	/**
-	 * create a json string of operations
-	 * 
+	 * Create a JSON string of operations
+	 *
 	 * @param array $operations
 	 * @return string json
 	 */
@@ -263,13 +269,13 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		return json_encode(
 			array(
 				'operations' => $operations
-			)	
+			)
 		);
 	}
-	
+
 	/**
-	 * get encrypted json string of operations
-	 * 
+	 * Get an encrypted JSON string of operations
+	 *
 	 * @param array $operations
 	 * @param string $publicKey
 	 * @return string encrypted json
@@ -279,10 +285,10 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		$encryptedData = $this->cryptoManager->encrypt($this->getDataFromOperations($operations), $publicKey);
 		return $encryptedData;
 	}
-	
+
 	/**
-	 * get a signature for given request
-	 * 
+	 * Get a signature for the given command request
+	 *
 	 * @param tx_caretakerinstance_CommandRequest $commandRequest
 	 * @return string
 	 */
@@ -292,9 +298,9 @@ class tx_caretakerinstance_RemoteCommandConnector {
 			$this->securityManager->getPrivateKey()
 		);
 	}
-	
+
 	/**
-	 * Execute a HTTP request for the POST values via CURL
+	 * Execute an HTTP request for the POST values via CURL
 	 *
 	 * @param string $requestUrl The URL for the HTTP request
 	 * @param array $postValues POST values with key / value
@@ -330,7 +336,7 @@ class tx_caretakerinstance_RemoteCommandConnector {
 			}
 			rtrim($postQuery, '&');
 			$headers[] = 'Content-Length: '.strlen($postQuery);
-			$headers[] = 'Expect:'; // fix Problem with lighthttp 
+			$headers[] = 'Expect:'; // fix Problem with lighthttp
 			curl_setopt($curl, CURLOPT_POST, count($postValues));
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $postQuery);
 		}
@@ -348,5 +354,6 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		'info' => $info
 		);
 	}
+
 }
 ?>

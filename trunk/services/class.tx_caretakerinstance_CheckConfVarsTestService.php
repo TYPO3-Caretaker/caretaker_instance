@@ -49,7 +49,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance_RemoteTestServiceBase{
-	
+
 	/**
 	 * Value Description
 	 * @var string
@@ -67,23 +67,23 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 	 * @var string
 	 */
 	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:typo3_conf_vars_test_configuration';
-	
+
 
 	public function runTest() {
-		
+
 		$checkConfVars = explode(chr(10), $this->getConfigValue('checkConfVars'));
 
 		$operations = array();
-		
+
 		foreach ($checkConfVars as $checkConfVar) {
-			
+
 			$checkConfVar = trim($checkConfVar);
 
 				// ignore empty and comment lines
 			if ( $checkConfVar == '' || strpos($checkConfVar, '#' ) === 0 || strpos($checkConfVar, '//' ) === 0 ){
 				continue;
 			}
-			
+
 				// detect comparison Opertor by regex
 			$matches = array();
 			preg_match( '/([a-zA-Z0-9\|]+)[\s]*([\=\!\<\>]{1,2})[\s]*(.*)/', $checkConfVar, $matches );
@@ -124,13 +124,13 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 					));
 				}
 			}
-			
+
 		}
 
 		if (count($operations)==0){
 			return tx_caretaker_TestResult::create(  tx_caretaker_Constants::state_warning , 0, 'No conditions found');
 		}
-		
+
 		$commandResult = $this->executeRemoteOperations($operations);
 
 		if (!$this->isCommandResultSuccessful($commandResult)) {
@@ -138,11 +138,11 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 		}
 
 		$results  = $commandResult->getOperationResults();
-		
+
 		$sucess   = array();
 		$failures = array();
 
-		
+
 		foreach ($results as $key => $operationResult) {
 			if ($operationResult->isSuccessful()) {
 				if ( $operations[$key][1]['usingRegexp'] == true ){
@@ -165,14 +165,14 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 		if ( count($sucess) ) {
 			$msg_success .= chr(10) . 'Matched Conditions: ' . chr(10) . implode( chr(10) , $sucess );
 		}
-		
-		
-		$resultMatch   = $this->getConfigValue('resultMatch');	
+
+
+		$resultMatch   = $this->getConfigValue('resultMatch');
 		$resultNoMatch = $this->getConfigValue('resultNoMatch');
 
 		if ( $resultMatch == NULL ) $resultMatch = tx_caretaker_Constants::state_error;
 		if ( $resultNoMatch == NULL ) $resultNoMatch = tx_caretaker_Constants::state_ok;
-		
+
 		if ( count($failures) ) {
 			$msg_failures .= chr(10) . 'Not Matched Conditions: ' . chr(10) . implode( chr(10) , $failures );
 			return tx_caretaker_TestResult::create( intval($resultNoMatch) , 0, $msg_failures . chr(10) . $msg_success);
