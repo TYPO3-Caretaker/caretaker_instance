@@ -233,7 +233,7 @@ class tx_caretakerinstance_RemoteCommandConnector {
 			return FALSE;
 		}
 		$baseUrl = $this->instance->getUrl();
-		return $baseUrl . (substr($baseUrl, -1) !== '/' ? '/' : '') . '?eID=tx_caretakerinstance';
+		return $baseUrl . (substr($baseUrl, -1) !== '/' ? '/' : '') . 'index.php?eID=tx_caretakerinstance';
 	}
 
 	/**
