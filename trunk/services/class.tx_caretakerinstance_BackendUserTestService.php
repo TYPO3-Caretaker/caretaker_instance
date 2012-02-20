@@ -99,10 +99,14 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 			}
 		}
 
+		$blacklistedUsernamesFound = array();
 		foreach ($blacklistedUsernames as $username) {
 			if (in_array($username, $usernames)) {
-				return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'User [' . $username . '] is blacklisted and should not be active.');
+				$blacklistedUsernamesFound[] = $username;
 			}
+		}
+		if (count($blacklistedUsernamesFound) > 0) {
+			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Users [' . implode(',', $blacklistedUsernamesFound) . '] ae blacklisted and should not be active.');
 		}
 
 		return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, '');

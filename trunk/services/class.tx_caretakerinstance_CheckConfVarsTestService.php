@@ -86,7 +86,7 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
 
 				// detect comparison Opertor by regex
 			$matches = array();
-			preg_match( '/([a-zA-Z0-9\|]+)[\s]*([\=\!\<\>]{1,2})[\s]*(.*)/', $checkConfVar, $matches );
+			preg_match( '/([a-zA-Z0-9\|_]+)[\s]*([\=\!\<\>]{1,2})[\s]*(.*)/', $checkConfVar, $matches );
 
 			if ( $matches[1] && $matches[2] && isset($matches[3]) ){
 
