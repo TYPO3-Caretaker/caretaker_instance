@@ -54,6 +54,7 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 	 */
 	public function execute($parameter = null) {
 		$path = $this->getPath($parameter);
+		list($path) = glob($path);
 
 		if (is_file($path)) {
 			//if file exists, get the tstamp
