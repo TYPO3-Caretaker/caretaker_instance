@@ -137,6 +137,10 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	public function generateKeyPair() {
 		$keyPair = openssl_pkey_new();
 
+		if (!$keyPair) {
+			throw new Exception('Cant create OpenSSL private key.');
+		}
+
 		openssl_pkey_export($keyPair, $privateKey);
 
 		$publicKey = openssl_pkey_get_details($keyPair);

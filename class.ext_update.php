@@ -73,14 +73,16 @@ class ext_update {
 		$extConf = $this->getExtConf();
 
 		$this->factory = tx_caretakerinstance_ServiceFactory::getInstance();
-		list($publicKey, $privateKey) = $this->factory->getCryptoManager()->generateKeyPair();
+		try {
+			list($publicKey, $privateKey) = $this->factory->getCryptoManager()->generateKeyPair();
+			$extConf['crypto.']['instance.']['publicKey'] = $publicKey;
+			$extConf['crypto.']['instance.']['privateKey'] = $privateKey;
+			$this->writeExtConf($extConf);
+			$content = "Success: Generated public / private key";
+		} catch(Exception $exception) {
+			$content = 'Error: ' . $exception->getMessage();
+		}
 
-		$extConf['crypto.']['instance.']['publicKey'] = $publicKey;
-		$extConf['crypto.']['instance.']['privateKey'] = $privateKey;
-
-		$this->writeExtConf($extConf);
-
-		$content = "Generated public / private key";
 		return $content;
 	}
 
