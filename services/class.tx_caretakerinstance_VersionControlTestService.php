@@ -97,7 +97,7 @@ class tx_caretakerinstance_VersionControlTestService extends tx_caretakerinstanc
 
         $path = $_SERVER['DOCUMENT_ROOT'];
 
-        // check if php is complied with subversion support. 
+        // check if php is compiled with subversion support. 
         if (function_exists('svn_update')) {
             return sizeof(svn_status($path));
         }
