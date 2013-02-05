@@ -47,24 +47,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  */
 class tx_caretakerinstance_VersionControlTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
-    /**
-     * Value Description
-     * @var string
-     */
-    protected $valueDescription = '';
-
-    /**
-     * Service type description in human readble form.
-     * @var string
-     */
-    protected $typeDescription = 'LLL:EXT:caretaker_instance/locallang.xml:version_control_test_description';
-
-    /**
-     * Template to display the test Configuration in human readable form.
-     * @var string
-     */
-    protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:version_control_test_configuration';
-
+ 
     public function runTest() {
 
         switch($this->getConfigValue('versionControlSystem')){
@@ -91,14 +74,14 @@ class tx_caretakerinstance_VersionControlTestService extends tx_caretakerinstanc
     /**
      * Get subversion status of a DOCUMENT_ROOT.
      * 
-     * @return array if svn_update()-function is available otherwise FALSE; 
+     * @return array if svn_status()-function is available otherwise FALSE; 
      */
     private function getSubversionStatus() {
 
         $path = $_SERVER['DOCUMENT_ROOT'];
 
         // check if php is compiled with subversion support. 
-        if (function_exists('svn_update')) {
+        if (function_exists('svn_status')) {
             return sizeof(svn_status($path));
         }
        
