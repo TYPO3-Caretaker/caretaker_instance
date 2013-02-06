@@ -38,7 +38,7 @@
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
 /**
- * Check if the versioning control system is up to date.
+ * Check if the disk space is sufficient.
  *
  * @author Tomas Norre Mikkelsen <tnm@netimage.dk>
  *
@@ -47,49 +47,50 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  */
 class tx_caretakerinstance_DiskSpaceTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
-	protected $stateWarning = '80' // In procent
-	protected $stateError	= '90' // In procent
+    // default warning and error procent
+    protected $stateDefaultWarning = '80'; // In procent
+    protected $stateDefaultError = '90'; // In procent
 
- 
     public function runTest() {
 
-		// Configuration for diskusage for warning and error
-		$warningState['WARNING']	= isset($this->getConfigValue('state_warning') ? isset($this->getConfigValue('state_warning') : $this->stateWarning;
-		$warningState['ERROR'] 		= isset($this->getConfigValue('state_error') ? isset($this->getConfigValue('state_error') : $this->stateError;
+        $warningState = array(
+            'WARNING' => $this->getConfigValue('warning_procent'),
+            'ERROR' => $this->getConfigValue('error_procent')
+        );
 
-		$diskSpaceProcent = $this->diskSpaceInProcent();
-        
-        if($diskSpaceProcent < $warningState['WARNING']){
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, 'Everything is ok!'.$diskSpaceProcent.'% of the disk is used');
-		} elseif($diskSpaceProcent < $warningState['ERROR']){
-			return 	tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, 0, $diskSpaceProcent'% of the disk is used, maybe you should clean it up.');
-		} else {
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Not enough diskspace, '.$diskSpaceProcent.'% is used. Please cleanup the server or by additional space.');
-		}
-        
-        
+        // Configuration for diskusage for warning and error
+        $warningState['WARNING'] = !empty($warningState['WARNING']) ? $warningState['WARNING'] : $this->stateDefaultWarning;
+        $warningState['ERROR'] = !empty($warningState['ERROR']) ? $warningState['ERROR'] : $this->stateDefaultError;
+
+        $diskSpaceProcent = $this->diskSpaceInProcent();
+
+        if ($diskSpaceProcent < $warningState['WARNING']) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, 'Everything is ok! ' . $diskSpaceProcent . '% of the disk is used, a warning will be triggered at ' . $warningState['WARNING'] . '% disk usage');
+        } elseif ($diskSpaceProcent < $warningState['ERROR']) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, 0, $diskSpaceProcent . '% of the disk is used, maybe you should clean it up. An error will be triggered at ' . $warningState['ERROR'] . '% disk usage');
+        } else {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Not enough diskspace, ' . $diskSpaceProcent . '% is used. Please cleanup the server or by additional space. This error is triggered because the webhotel use ' . $warningState['ERROR'] . '% or more disk space');
+        }
     }
 
-    
     /**
      * Get used diskspace.
      * 
      * @return int of used diskspace in procentage
      */
     private function diskSpaceInProcent() {
-		
-		$diskSize = disk_total_space(getcwd());
-		$diskUsed = disk_free_space(getcwd());
 
-		$remain = 100 - ($diskUsed / $diskSize * 100);
+        $diskSize = disk_total_space(getcwd());
+        $diskUsed = disk_free_space(getcwd());
 
-		return (int) $remain;
-        
+        $remain = 100 - ($diskUsed / $diskSize * 100);
+
+        return (int) $remain;
     }
 
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_VersionControlTestService.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_VersionControlTestService.php']);
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_DiskSpaceTestService.php']) {
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_DiskSpaceTestService.php']);
 }
 ?>

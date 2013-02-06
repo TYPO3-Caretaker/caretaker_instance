@@ -9,24 +9,24 @@
         </TCEforms> 
         <type>array</type>
         <el>
-            <versionControlSystem>
-                <TCEforms>
-                    <label>LLL:EXT:caretaker_instance/locallang.xml:version_control_test_system</label>
-                    <config>
-                        <type>select</type>
-                        <items type="array">
-                            
-                            <numIndex index="0" type="array">
-                                <numIndex index="0">LLL:EXT:caretaker_instance/locallang.xml:version_control_test_system.I.1</numIndex>
-                                <numIndex index="1">0</numIndex>
-                            </numIndex>
-                        </items>
-                        <minitems>0</minitems>
-                        <maxitems>1</maxitems>
-                        <size>1</size>
-                    </config>
-                </TCEforms>
-            </versionControlSystem>
+            <warning_procent>
+				<TCEforms>
+					<label>If following % is reached warning will be activated (80% is default, if not set)</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+					</config>
+				</TCEforms>
+			</warning_procent>
+            <error_procent>
+				<TCEforms>
+					<label>If following % is reached error will be activated (90% is default, if not set)</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+					</config>
+				</TCEforms>
+			</error_procent>
         </el>
     </ROOT>
 </T3DataStructure>
