@@ -77,7 +77,13 @@ class ext_update {
 			list($publicKey, $privateKey) = $this->factory->getCryptoManager()->generateKeyPair();
 			$extConf['crypto.']['instance.']['publicKey'] = $publicKey;
 			$extConf['crypto.']['instance.']['privateKey'] = $privateKey;
-			$this->writeExtConf($extConf);
+			$typo3Version = explode('.', TYPO3_version);
+			$majorVersion = intval($typo3Version[0]);
+			if ($majorVersion >= 6) {
+				$this->writeExtensionConfiguration($extConf);
+			} else {
+				$this->writeExtConf($extConf);
+			}
 			$content = "Success: Generated public / private key";
 		} catch(Exception $exception) {
 			$content = 'Error: ' . $exception->getMessage();
@@ -102,6 +108,19 @@ class ext_update {
 		$install->writeToLocalconf_control($lines);
 
 		t3lib_extMgm::removeCacheFiles();
+	}
+
+	/**
+	 * Writes the extension's configuration (version for TYPO3 CMS 6.0+)
+	 *
+	 * @param $extensionConfiguration
+	 * @return void
+	 */
+	protected function writeExtensionConfiguration($extensionConfiguration) {
+		/** @var $configurationManager \TYPO3\CMS\Core\Configuration\ConfigurationManager */
+		$configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Configuration\\ConfigurationManager');
+		$configurationManager->setLocalConfigurationValueByPath('EXT/extConf/caretaker_instance', serialize($extensionConfiguration));
+		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::removeCacheFiles();
 	}
 
 	/**
