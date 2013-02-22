@@ -96,6 +96,7 @@ class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 	}
 
 	public function testOperation_GetFilesystemChecksumFailsIfPathIsNotAllowed() {
+		$this->fail('test runs indefinitely');
 		$operation = new tx_caretakerinstance_Operation_GetFilesystemChecksum();
 
 		$result = $operation->execute(array('path' => PATH_site . '../../'));
