@@ -45,7 +45,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_testcase {
+class tx_caretakerinstance_RemoteCommandConnectorTest extends tx_phpunit_testcase {
 	function setUp() {
 		$this->securityManager = $this->getMock('tx_caretakerinstance_ISecurityManager');
 		$this->cryptoManager = $this->getMock('tx_caretakerinstance_ICryptoManager');

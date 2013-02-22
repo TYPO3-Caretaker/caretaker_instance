@@ -43,7 +43,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_Services_testcase extends tx_phpunit_testcase {
+class tx_caretakerinstance_ServicesTest extends tx_phpunit_testcase {
 
 	public function testFindInsecureExtensionCommand (){
 

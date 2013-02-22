@@ -54,7 +54,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
+class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 	public function testOperationInterface() {
 		$parameter = array('foo' => 'bar');
 		$operation = new tx_caretakerinstance_DummyOperation();

@@ -44,7 +44,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
+class tx_caretakerinstance_CommandServiceTest extends tx_phpunit_testcase {
 
 	/**
 	 * @var tx_caretakerinstance_SecurityManager

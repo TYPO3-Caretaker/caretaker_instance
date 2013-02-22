@@ -34,7 +34,7 @@
  * $Id$
  */
 
-class tx_caretakerinstance_ExtensionTestService_testcase extends tx_phpunit_testcase {
+class tx_caretakerinstance_ExtensionTestServiceTest extends tx_phpunit_testcase {
 	public function testExtensionMustNotBeInstalledForRequirementNone() {
 		$service = new tx_caretakerinstance_ExtensionTestService();
 		$result = $service->checkVersionForRequirementAndVersionRange(
