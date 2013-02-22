@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<phpunit backupGlobals="false" colors="true">
+    <filter>
+        <whitelist>
+            <directory suffix=".php">../classes/</directory>
+            <directory suffix=".php">../services/</directory>
+            <file>../class.ext_update.php</file>
+        </whitelist>
+    </filter>
+</phpunit>
