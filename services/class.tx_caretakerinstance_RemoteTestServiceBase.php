@@ -103,15 +103,28 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 		);
 	}
 
-	public function checkVersionRange($actualVersion, $minVersion, $maxVersion, $versionParts = 3) {
-		$actualVersionCombined = $this->versionToInt($actualVersion, $versionParts);
+	/**
+	 * Check if the given version is within the minimum and maximum version
+	 *
+	 * @param string $actualVersion Version to compare to min and max
+	 * @param string $minVersion    Minimum version that is required.
+	 *                              May be empty.
+	 * @param string $maxVersion    Maximum version that is required.
+	 *                              May be empty.
+	 *
+	 * @return boolean TRUE if the actual version is within min and max.
+	 */
+	public function checkVersionRange($actualVersion, $minVersion, $maxVersion)
+	{
 		if ($minVersion != '') {
-			$minVersionCombined = $this->versionToInt($minVersion, $versionParts);
-			if ($actualVersionCombined < $minVersionCombined) return FALSE;
+			if (!version_compare($actualVersion, $minVersion, '>=')) {
+				return FALSE;
+			}
 		}
 		if ($maxVersion != '') {
-			$maxVersionCombined = $this->versionToInt($maxVersion, $versionParts);
-			if ($actualVersionCombined > $maxVersionCombined) return FALSE;
+			if (!version_compare($actualVersion, $maxVersion, '<=')) {
+				return FALSE;
+			}
 		}
 
 		return TRUE;

@@ -111,5 +111,90 @@ class tx_caretakerinstance_RemoteTestServiceTest extends tx_phpunit_testcase
             )
         );
     }
+
+    public function testCheckVersionRangeTypeAlpha()
+    {
+        $this->assertTrue(
+            $this->rts->checkVersionRange(
+                '4.6.0', // Actual version
+                '4.6.0alpha1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0 is higher than .0alpha1'
+        );
+        $this->assertTrue(
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0alpha1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 == .0alpha1'
+        );
+        $this->assertFalse(
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0alpha2', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 < .0alpha2'
+        );
+        $this->assertFalse(
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 < .0'
+        );
+    }
+
+    public function testCheckVersionRangeTypeAlphaBeta()
+    {
+        $this->assertFalse(
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0beta1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 < .0beta1'
+        );
+        $this->assertTrue(
+            $this->rts->checkVersionRange(
+                '4.6.0beta1', // Actual version
+                '4.6.0alpha1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0beta1 > .0alpha1'
+        );
+    }
+
+    public function testCheckVersionRangeTypeRc()
+    {
+        $this->assertTrue(
+            $this->rts->checkVersionRange(
+                '4.6.0rc1', // Actual version
+                '4.6.0beta1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0rc1 > .0beta1'
+        );
+        $this->assertFalse(
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0rc1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 < .0rc1'
+        );
+        $this->assertTrue(
+            $this->rts->checkVersionRange(
+                '4.6.0', // Actual version
+                '4.6.0rc1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0 > .0rc1'
+        );
+    }
+
 }
 ?>
