@@ -34,11 +34,82 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_ExtensionTestService.php'));
+require_once t3lib_extMgm::extPath(
+    'caretaker_instance',
+    'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'
+);
 
-class tx_caretakerinstance_RemoteTestServiceTest extends tx_phpunit_testcase {
-	public function testSomething() {
 
-	}
+class tx_caretakerinstance_RemoteTestServiceTest_BaseImpl
+    extends tx_caretakerinstance_RemoteTestServiceBase
+{
+}
+
+class tx_caretakerinstance_RemoteTestServiceTest extends tx_phpunit_testcase
+{
+    /**
+     * @var tx_caretakerinstance_RemoteTestService
+     */
+    protected $rts;
+
+    public function setUp()
+    {
+        $this->rts = new tx_caretakerinstance_RemoteTestServiceTest_BaseImpl();
+    }
+
+    public function testCheckVersionRangeOk()
+    {
+        $this->assertTrue(
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.0', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            )
+        );
+    }
+
+    public function testCheckVersionRangeOkExactMin()
+    {
+        $this->assertTrue(
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.8', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            )
+        );
+    }
+
+    public function testCheckVersionRangeOkExactMax()
+    {
+        $this->assertTrue(
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.0', // Minimal allowed version
+                '4.6.8' // Maximal allowed version
+            )
+        );
+    }
+
+    public function testCheckVersionRangeMaxDoesNotMatch()
+    {
+        $this->assertFalse(
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.0', // Minimal allowed version
+                '4.6.7' // Maximal allowed version
+            )
+        );
+    }
+
+    public function testCheckVersionRangeMinDoesNotMatch()
+    {
+        $this->assertFalse(
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.9', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            )
+        );
+    }
 }
 ?>
