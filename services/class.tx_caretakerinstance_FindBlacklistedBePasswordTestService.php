@@ -1,5 +1,6 @@
 <?php
-/***************************************************************
+
+/* * *************************************************************
  * Copyright notice
  *
  * (c) 2009-2011 by n@work GmbH and networkteam GmbH
@@ -21,7 +22,7 @@
  * GNU General Public License for more details.
  *
  * This copyright notice MUST APPEAR in all copies of the script!
- ***************************************************************/
+ * ************************************************************* */
 
 /**
  * This is a file of the caretaker project.
@@ -33,22 +34,22 @@
  *
  * $Id$
  */
-
-
 require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
 /**
- * Check if given BE-Users exists
+ * Check if there are blacklisted passwords or users which use the same password (likely "test", "test", "1234" or something similar) in the be_users table
  *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
+ * @author Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ * @author Ulrik Høyer Kold <kontakt@ulrikkold.dk>
  *
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caretakerinstance_RemoteTestServiceBase{
+class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
 	/**
 	 * Value Description
@@ -68,15 +69,15 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 	 */
 	protected $configurationInfoTemplate = '';
 
-
 	public function runTest() {
 		$blacklistedPasswords = explode(chr(10), $this->getConfigValue('blacklist'));
+		$checkForDuplicatePasswords = $this->getConfigValue('check_duplicate_passwords');
 
 		$operations = array();
 		foreach ($blacklistedPasswords as $password) {
-			$password = trim( $password );
-			if ( strlen( $password) ) {
-				$operations[] = array('GetRecord', array('table' => 'be_users', 'field' => 'password', 'value' => md5( $password ), 'checkEnableFields' => TRUE));
+			$password = trim($password);
+			if (strlen($password)) {
+				$operations[] = array('GetRecords', array('table' => 'be_users', 'field' => 'password', 'value' => md5($password), 'checkEnableFields' => TRUE));
 			}
 		}
 
@@ -92,28 +93,81 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 		foreach ($results as $operationResult) {
 			if ($operationResult->isSuccessful()) {
 
-				$user = $operationResult->getValue();
-				if ($user !== FALSE) {
-					$careless_users[] = $user;
+				$users = $operationResult->getValue();
+				if ($users !== FALSE) {
+					foreach ($users as $user) {
+						$careless_users[] = $user;
+					}
 				}
 			} else {
 				return $this->getFailedOperationResultTestResult($operationResult);
 			}
 		}
 
-		if ( count($careless_users) > 0){
-			$submessages = array();
-			foreach ( $careless_users as $user){
-				$submessages[] = new tx_caretaker_ResultMessage( $user['username'] );
+		if ($checkForDuplicatePasswords) {
+			// clean the preceding operations
+			unset($operations);
+			$operations = array();
+
+			// Will check whether "password" is IN (subselect or comma separated list)
+			$sql_fields = array(
+				'password' => array(
+					'SELECT password FROM be_users WHERE disable = 0 AND deleted = 0 GROUP BY password HAVING COUNT(*) > 1' // subselect or comma separated values
+				)
+			);
+
+			$operations[] = array('GetRecords', array('table' => 'be_users', 'field' => array_keys($sql_fields), 'value' => $sql_fields, 'checkEnableFields' => TRUE));
+
+			$commandResult = $this->executeRemoteOperations($operations);
+
+			if (!$this->isCommandResultSuccessful($commandResult)) {
+				return $this->getFailedCommandResultTestResult($commandResult);
 			}
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'The following accounts have blacklisted passwords:' , $submessages );
+
+
+			$results = $commandResult->getOperationResults();
+			foreach ($results as $operationResult) {
+				if ($operationResult->isSuccessful()) {
+
+					$users = $operationResult->getValue();
+					if ($users !== FALSE) {
+						foreach ($users as $user) {
+							$careless_users[] = $user;
+						}
+					}
+				} else {
+					return $this->getFailedOperationResultTestResult($operationResult);
+				}
+			}
+		}
+
+		// Check if multiple users have the same password, if so then add them to $careless_users array.
+		if (count($careless_users) > 0) {
+
+			$submessages = array();
+			foreach ($careless_users as $user) {
+				$submessages[] = new tx_caretaker_ResultMessage($user['username']);
+			}
+//			// Remove dublets
+
+			$submessages = array_unique($submessages, SORT_REGULAR);
+			asort($submessages);
+
+			if($checkForDuplicatePasswords) {
+				$text_reply = 'The following accounts have blacklisted or duplicate passwords: ';
+			} else {
+				$text_reply = 'The following accounts have blacklisted passwords: ';
+			}
+
+			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $text_reply, $submessages);
 		}
 
 		return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, '');
 	}
+
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
 }
 ?>
