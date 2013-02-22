@@ -129,15 +129,6 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 
 		return TRUE;
 	}
-
-	protected function versionToInt($version, $versionParts = 3, $versionBase = 1000) {
-		$versionDigits = explode('.', $version, $versionParts);
-		$versionCombined = 0;
-		for ($i = 0; $i < $versionParts; $i++) {
-			$versionCombined = ($versionCombined * $versionBase) + $versionDigits[$i];
-		}
-		return $versionCombined;
-	}
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretakerinstance_RemoteTestServiceBase.php'])	{
