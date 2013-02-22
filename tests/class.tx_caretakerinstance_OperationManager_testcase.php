@@ -54,7 +54,7 @@ class tx_caretakerinstance_OperationManager_testcase extends tx_phpunit_testcase
 		$operationManager->registerOperation('get_php_version',
 			'tx_caretakerinstance_Operation_GetPHPVersion');
 		$operation = $operationManager->getOperation('get_php_version');
-		$this->assertType('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
+		$this->assertInstanceOf('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
 	}
 
 	public function testRegisterOperationAsInstance() {
@@ -62,7 +62,7 @@ class tx_caretakerinstance_OperationManager_testcase extends tx_phpunit_testcase
 		$operationManager->registerOperation('get_php_version',
 			new tx_caretakerinstance_Operation_GetPHPVersion());
 		$operation = $operationManager->getOperation('get_php_version');
-		$this->assertType('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
+		$this->assertInstanceOf('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
 	}
 
 	public function testGetOperationForUnknownOperation() {

@@ -106,12 +106,12 @@ class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
 
 		$result = $this->commandService->executeCommand($this->commandRequest);
 
-		$this->assertType('tx_caretakerinstance_CommandResult', $result);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandResult', $result);
 
 		$this->assertTrue($result->isSuccessful());
 
 		foreach($result->getOperationResults() as $operationResult) {
-			$this->assertType('tx_caretakerinstance_OperationResult', $operationResult);
+			$this->assertInstanceOf('tx_caretakerinstance_OperationResult', $operationResult);
 			$this->assertTrue($operationResult->isSuccessful());
 			$this->assertEquals('bar', $operationResult->getValue());
 		}

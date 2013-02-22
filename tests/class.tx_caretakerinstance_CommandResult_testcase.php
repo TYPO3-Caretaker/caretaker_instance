@@ -61,7 +61,7 @@ class tx_caretakerinstance_CommandResult_testcase extends tx_phpunit_testcase {
 		$json = '{"status":0,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}';
 		$result = tx_caretakerinstance_CommandResult::fromJson($json);
 
-		$this->assertType('tx_caretakerinstance_CommandResult', $result);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandResult', $result);
 		$this->assertEquals('Test message', $result->getMessage());
 		$this->assertTrue($result->isSuccessful());
 		$this->assertEquals(array(

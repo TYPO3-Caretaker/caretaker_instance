@@ -71,11 +71,11 @@ class tx_caretakerinstance_ServiceFactory_testcase extends tx_phpunit_testcase {
 		$commandService = $factory->getCommandService();
 
 
-		$this->assertType('tx_caretakerinstance_CommandService', $commandService);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandService', $commandService);
 
 		$securityManager = $factory->getSecurityManager();
 
-		$this->assertType('tx_caretakerinstance_SecurityManager', $securityManager);
+		$this->assertInstanceOf('tx_caretakerinstance_SecurityManager', $securityManager);
 
 		// Test that properties have been set from extConf
 		$this->assertEquals('FakePublicKey', $securityManager->getPublicKey());
@@ -116,7 +116,7 @@ class tx_caretakerinstance_ServiceFactory_testcase extends tx_phpunit_testcase {
 		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
 		$connector = $factory->getRemoteCommandConnector();
 
-		$this->assertType('tx_caretakerinstance_RemoteCommandConnector', $connector);
+		$this->assertInstanceOf('tx_caretakerinstance_RemoteCommandConnector', $connector);
 	}
 
 	function tearDown() {

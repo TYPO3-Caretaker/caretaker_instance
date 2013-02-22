@@ -80,7 +80,7 @@ class tx_caretakerinstance_Services_testcase extends tx_phpunit_testcase {
 
 		$result = $stub->runTest();
 
-		$this->assertType('tx_caretaker_TestResult',$result);
+		$this->assertInstanceOf('tx_caretaker_TestResult',$result);
 		$this->assertEquals(tx_caretaker_Constants::state_ok,$result->getState());
 
 	}

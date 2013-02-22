@@ -81,7 +81,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 		$connector->setInstance($instance);
 		$result = $connector->executeOperations(array('foo'=>'bar'));
 
-		$this->assertType('tx_caretakerinstance_CommandResult', $result);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandResult', $result);
 		$this->assertTrue($result->isSuccessful());
 		$this->assertEquals($exceptedResult, $result);
 	}
@@ -104,7 +104,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 
 		$result = $connector->executeOperations(array('foo'=>'bar'));
 
-		$this->assertType('tx_caretakerinstance_CommandResult', $result);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandResult', $result);
 		$this->assertFalse($result->isSuccessful());
 	}
 
@@ -118,7 +118,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 
 		$result = $connector->executeOperations(array('foo'=>'bar'));
 
-		$this->assertType('tx_caretakerinstance_CommandResult', $result);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandResult', $result);
 		$this->assertFalse($result->isSuccessful());
 	}
 
@@ -129,7 +129,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 
 		$request = $connector->buildCommandRequest('sessionToken', 'publicKey', 'http://foo.barr/', 'rawData');
 
-		$this->assertType('tx_caretakerinstance_CommandRequest', $request);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandRequest', $request);
 		$this->assertEquals('sessionToken', $request->getSessionToken());
 		$this->assertEquals('publicKey', $request->getServerKey());
 		$this->assertEquals('http://foo.barr/', $request->getServerUrl());
@@ -295,7 +295,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 
 		$result = $connector->executeRequest($request);
 
-		$this->assertType('tx_caretakerinstance_CommandResult', $result);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandResult', $result);
 		$this->assertTrue($result->isSuccessful());
 		$this->assertEquals('Test message', $result->getMessage());
 		$this->assertEquals(array(
@@ -344,7 +344,7 @@ class tx_caretakerinstance_RemoteCommandConnector_testcase extends tx_phpunit_te
 
 		$result = $connector->executeRequest($request);
 
-		$this->assertType('tx_caretakerinstance_CommandResult', $result);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandResult', $result);
 		$this->assertFalse($result->isSuccessful());
 		$this->assertEquals(null, $result->getOperationResults());
 	}
