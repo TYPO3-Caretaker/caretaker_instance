@@ -9,7 +9,7 @@
         </TCEforms> 
         <type>array</type>
         <el>
-            <warning_procent>
+            <warning_percent>
 				<TCEforms>
 					<label>If following % is reached warning will be activated (80% is default, if not set)</label>
 					<config>
@@ -17,8 +17,8 @@
 						<size>2</size>
 					</config>
 				</TCEforms>
-			</warning_procent>
-            <error_procent>
+			</warning_percent>
+            <error_percent>
 				<TCEforms>
 					<label>If following % is reached error will be activated (90% is default, if not set)</label>
 					<config>
@@ -26,7 +26,7 @@
 						<size>2</size>
 					</config>
 				</TCEforms>
-			</error_procent>
+			</error_percent>
         </el>
     </ROOT>
 </T3DataStructure>

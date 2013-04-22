@@ -47,50 +47,46 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  */
 class tx_caretakerinstance_DiskSpaceTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
-    // default warning and error procent
-    protected $stateDefaultWarning = '80'; // In procent
-    protected $stateDefaultError = '90'; // In procent
+	// default warning and error percent
+	protected $stateDefaultWarning = '80'; // In percent
+	protected $stateDefaultError = '90'; // In percent
 
-    public function runTest() {
+	public function runTest() {
+		
+		$warningState = array(
+			'WARNING' => $this->getConfigValue('warning_percent'),
+			'ERROR' => $this->getConfigValue('error_percent')
+		);
 
-        $warningState = array(
-            'WARNING' => $this->getConfigValue('warning_procent'),
-            'ERROR' => $this->getConfigValue('error_procent')
-        );
+		// Configuration for diskusage for warning and error
+		$warningState['WARNING'] = !empty($warningState['WARNING']) ? $warningState['WARNING'] : $this->stateDefaultWarning;
+		$warningState['ERROR'] = !empty($warningState['ERROR']) ? $warningState['ERROR'] : $this->stateDefaultError;
 
-        // Configuration for diskusage for warning and error
-        $warningState['WARNING'] = !empty($warningState['WARNING']) ? $warningState['WARNING'] : $this->stateDefaultWarning;
-        $warningState['ERROR'] = !empty($warningState['ERROR']) ? $warningState['ERROR'] : $this->stateDefaultError;
-
-        $diskSpaceProcent = $this->diskSpaceInProcent();
-
-        if ($diskSpaceProcent < $warningState['WARNING']) {
-            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, 'Everything is ok! ' . $diskSpaceProcent . '% of the disk is used, a warning will be triggered at ' . $warningState['WARNING'] . '% disk usage');
-        } elseif ($diskSpaceProcent < $warningState['ERROR']) {
-            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, 0, $diskSpaceProcent . '% of the disk is used, maybe you should clean it up. An error will be triggered at ' . $warningState['ERROR'] . '% disk usage');
+		$operations[] = array('GetDiskUsage', array());
+		$commandResult = $this->executeRemoteOperations($operations);
+		
+		// catch errors
+		if (!$this->isCommandResultSuccessful($commandResult)) {
+			return $this->getFailedCommandResultTestResult($commandResult);
+		}
+		// process resultset
+		$resultset = $commandResult->getOperationResults();
+		$result = reset($resultset);
+		$diskSpacePercent = $result->getValue();
+		
+        if ($diskSpacePercent < $warningState['WARNING']) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, 'Everything is ok! ' . $diskSpacePercent . '% of the disk is used, a warning will be triggered at ' . $warningState['WARNING'] . '% disk usage');
+        } elseif ($diskSpacePercent < $warningState['ERROR']) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, 0, $diskSpacePercent . '% of the disk is used, maybe you should clean it up. An error will be triggered at ' . $warningState['ERROR'] . '% disk usage');
         } else {
-            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Not enough diskspace, ' . $diskSpaceProcent . '% is used. Please cleanup the server or by additional space. This error is triggered because the webhotel use ' . $warningState['ERROR'] . '% or more disk space');
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Not enough diskspace, ' . $diskSpacePercent . '% is used. Please cleanup the server or by additional space. This error is triggered because the webhotel use ' . $warningState['ERROR'] . '% or more disk space');
         }
-    }
-
-    /**
-     * Get used diskspace.
-     * 
-     * @return int of used diskspace in procentage
-     */
-    private function diskSpaceInProcent() {
-
-        $diskSize = disk_total_space(getcwd());
-        $diskUsed = disk_free_space(getcwd());
-
-        $remain = 100 - ($diskUsed / $diskSize * 100);
-
-        return (int) $remain;
-    }
+		
+	}
 
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_DiskSpaceTestService.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_DiskSpaceTestService.php']);
+	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_DiskSpaceTestService.php']);
 }
 ?>
