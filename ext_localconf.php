@@ -46,6 +46,7 @@ $operations = array(
 	'GetExtensionVersion',
 	'GetExtensionList',
 	'GetRecord',
+	'GetRecords',
 	'GetFilesystemChecksum',
 	'MatchPredefinedVariable',
 	'CheckPathExists',
