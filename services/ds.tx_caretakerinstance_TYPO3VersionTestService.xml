@@ -3,7 +3,8 @@
 /**
  * This is a file of the caretaker project.
  * 
- * @author	Christopher Hlubek	<hlubek@networkteam.com>
+ * @author	Christopher Hlubek		<hlubek@networkteam.com>
+ * @author	Tomas Norre Mikkelsen	<tomasnorre@gmail.com>
  * 
  * $$Id$$
  */
@@ -36,6 +37,14 @@
 					</config>
 				</TCEforms>
 			</max_version>
+			<dont_allow_dev_versions>
+				<TCEforms>
+					<label>Don't allow latest to be developement versions (alpha,beta,rc etc.)</label>
+					<config>
+						<type>check</type>
+					</config>
+				</TCEforms>
+			</dont_allow_dev_versions>
 		</el>
 	</ROOT>
 </T3DataStructure>

@@ -43,6 +43,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  * @author Thomas Hempel <thomas@work.de>
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
+ * @author Tomas Norre Mikkelsen <tomasnorre@gmail.com>
  *
  * @package TYPO3
  * @subpackage caretaker_instance
@@ -50,9 +51,11 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
 class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
 
 	public function runTest() {
-		$minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'));
-		$maxVersion = $this->checkForLatestVersion($this->getConfigValue('max_version'));
-
+		$ignoreDevVersions = $this->getConfigValue('dont_allow_dev_versions');
+		$minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'),$ignoreDevVersions);
+		$maxVersion = $this->checkForLatestVersion($this->getConfigValue('max_version'),$ignoreDevVersions);
+		
+		
 		if (!$minVersion && !$maxVersion) {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute TYPO3 version test without min and max version');
 		}
@@ -101,10 +104,15 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		return $testResult;
 	}
 
-	protected function checkForLatestVersion($versionString) {
+	protected function checkForLatestVersion($versionString,$ignoreDevVersions) {
 		if (strpos($versionString, '.latest') !== FALSE) {
 			$versionDigits = explode('.', $versionString, 3);
-			$latestVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', 'TYPO3versions');
+			if ($ignoreDevVersions) {
+				$latestVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', 'TYPO3versionsStable');
+			} else {
+				$latestVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', 'TYPO3versions');
+			}
+			
 			$newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
 
 			if (!empty($newVersionString)) {
