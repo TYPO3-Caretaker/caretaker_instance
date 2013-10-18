@@ -228,7 +228,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 		}
 	}
 
-	public function getLatestExtensionTerInfos($ext_key, $ext_version) {
+	protected function getLatestExtensionTerInfos4($ext_key) {
 		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'extkey, version',
 			'cache_extensions',
@@ -237,6 +237,40 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 			'lastuploaddate DESC',
 			1
 		);
+
+		return $ext_infos;
+	}
+
+	protected function getLatestExtensionTerInfos6($ext_key) {
+		$repo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance("TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository");
+		$repo->initializeObject();
+
+		$extension = $repo->findHighestAvailableVersion($ext_key);
+
+		if($extension === null || !$extension instanceof \TYPO3\CMS\Extensionmanager\Domain\Model\Extension) {
+			return false;
+		}
+
+		return array(array(
+			'extkey' => $extension->getExtensionKey(),
+			'version' => $extension->getVersion(),
+		));
+	}
+
+	public function getLatestExtensionTerInfos($ext_key, $ext_version) {
+		$typo3Version = explode('.', TYPO3_version);
+		$majorVersion = intval($typo3Version[0]);
+
+		if ($majorVersion >= 6) {
+			$ext_infos = $this->getLatestExtensionTerInfos6($ext_key);
+		} else {
+			$ext_infos = $this->getLatestExtensionTerInfos4($ext_key);
+		}
+
+		if (!is_array($ext_infos)) {
+			return false;
+		}
+
 		$result  = false;
 		$latestVersion = 0;
 		foreach ( $ext_infos  as  $ext_info){
