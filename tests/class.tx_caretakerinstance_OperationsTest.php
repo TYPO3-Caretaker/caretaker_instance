@@ -54,12 +54,12 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
+class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 	public function testOperationInterface() {
 		$parameter = array('foo' => 'bar');
 		$operation = new tx_caretakerinstance_DummyOperation();
 		$result = $operation->execute($parameter);
-		$this->assertType("tx_caretakerinstance_OperationResult", $result);
+		$this->assertInstanceOf("tx_caretakerinstance_OperationResult", $result);
 
 		$status = $result->isSuccessful();
 		$this->assertTrue($status);
@@ -75,9 +75,9 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 
 		$this->assertTrue($result->isSuccessful());
 		$value = $result->getValue();
-		$this->assertType('array', $value);
+		$this->assertInternalType('array', $value);
 		$this->assertEquals('0', count($value['singleChecksums']));
-		$this->assertType('string', $value['checksum']);
+		$this->assertInternalType('string', $value['checksum']);
 		$this->assertEquals('23d35ef1a611fc75561b0d71d8b3234b', $value['checksum']);
 	}
 
@@ -89,13 +89,14 @@ class tx_caretakerinstance_Operations_testcase extends tx_phpunit_testcase {
 		$this->assertTrue($result->isSuccessful());
 		$value = $result->getValue();
 
-		$this->assertType('array', $value);
-		$this->assertType('array', $value['singleChecksums']);
-		$this->assertType('string', $value['checksum']);
+		$this->assertInternalType('array', $value);
+		$this->assertInternalType('array', $value['singleChecksums']);
+		$this->assertInternalType('string', $value['checksum']);
 		$this->assertEquals(32, strlen($value['checksum']));
 	}
 
 	public function testOperation_GetFilesystemChecksumFailsIfPathIsNotAllowed() {
+		$this->fail('test runs indefinitely');
 		$operation = new tx_caretakerinstance_Operation_GetFilesystemChecksum();
 
 		$result = $operation->execute(array('path' => PATH_site . '../../'));

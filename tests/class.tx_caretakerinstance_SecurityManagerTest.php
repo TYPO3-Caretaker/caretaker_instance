@@ -44,7 +44,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_SecurityManager_testcase extends tx_phpunit_testcase {
+class tx_caretakerinstance_SecurityManagerTest extends tx_phpunit_testcase {
 
 	protected $cryptoManager;
 

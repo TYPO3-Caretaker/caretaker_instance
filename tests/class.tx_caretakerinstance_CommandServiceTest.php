@@ -44,7 +44,7 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
+class tx_caretakerinstance_CommandServiceTest extends tx_phpunit_testcase {
 
 	/**
 	 * @var tx_caretakerinstance_SecurityManager
@@ -106,12 +106,12 @@ class tx_caretakerinstance_CommandService_testcase extends tx_phpunit_testcase {
 
 		$result = $this->commandService->executeCommand($this->commandRequest);
 
-		$this->assertType('tx_caretakerinstance_CommandResult', $result);
+		$this->assertInstanceOf('tx_caretakerinstance_CommandResult', $result);
 
 		$this->assertTrue($result->isSuccessful());
 
 		foreach($result->getOperationResults() as $operationResult) {
-			$this->assertType('tx_caretakerinstance_OperationResult', $operationResult);
+			$this->assertInstanceOf('tx_caretakerinstance_OperationResult', $operationResult);
 			$this->assertTrue($operationResult->isSuccessful());
 			$this->assertEquals('bar', $operationResult->getValue());
 		}

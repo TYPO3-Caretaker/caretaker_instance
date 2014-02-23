@@ -48,13 +48,13 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caret
  * @package		TYPO3
  * @subpackage	tx_caretakerinstance
  */
-class tx_caretakerinstance_OperationManager_testcase extends tx_phpunit_testcase {
+class tx_caretakerinstance_OperationManagerTest extends tx_phpunit_testcase {
 	public function testRegisterOperationAsClass() {
 		$operationManager = new tx_caretakerinstance_OperationManager();
 		$operationManager->registerOperation('get_php_version',
 			'tx_caretakerinstance_Operation_GetPHPVersion');
 		$operation = $operationManager->getOperation('get_php_version');
-		$this->assertType('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
+		$this->assertInstanceOf('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
 	}
 
 	public function testRegisterOperationAsInstance() {
@@ -62,7 +62,7 @@ class tx_caretakerinstance_OperationManager_testcase extends tx_phpunit_testcase
 		$operationManager->registerOperation('get_php_version',
 			new tx_caretakerinstance_Operation_GetPHPVersion());
 		$operation = $operationManager->getOperation('get_php_version');
-		$this->assertType('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
+		$this->assertInstanceOf('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
 	}
 
 	public function testGetOperationForUnknownOperation() {
