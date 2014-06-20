@@ -242,7 +242,8 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 	}
 
 	protected function getLatestExtensionTerInfos6($ext_key) {
-		$repo = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance("TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository");
+		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+		$repo = $objectManager->get("TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository");
 		$repo->initializeObject();
 
 		$extension = $repo->findHighestAvailableVersion($ext_key);
