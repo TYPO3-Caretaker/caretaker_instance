@@ -74,12 +74,11 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		$value = $parameter['value'];
 		$checkEnableFields = $parameter['checkEnableFields'] == TRUE;
 
-		$this->includeTCA();
+		\TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
 
 		if (!isset($GLOBALS['TCA'][$table])) {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Table [' . $table . '] not found in the TCA');
 		}
-		t3lib_div::loadTCA($table);
 		if (!isset($GLOBALS['TCA'][$table]['columns'][$field]) && !in_array($field, $this->implicitFields)) {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Field [' . $field . '] of table [' . $table . '] not found in the TCA');
 		}
@@ -104,26 +103,6 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 			}
 		} else {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
-		}
-	}
-
-	/**
-	 * Include TCA to load table definitions
-	 *
-	 * @return void
-	 */
-	protected function includeTCA() {
-		if (!$GLOBALS['TSFE']) {
-			require_once(PATH_tslib.'class.tslib_fe.php');
-
-				// require some additional stuff in TYPO3 4.1
-			require_once(PATH_t3lib.'class.t3lib_cs.php');
-			require_once(PATH_t3lib.'class.t3lib_userauth.php');
-			require_once(PATH_tslib.'class.tslib_feuserauth.php');
-
-				// Make new instance of TSFE object for initializing user:
-			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
-			$GLOBALS['TSFE']->includeTCA();
 		}
 	}
 
