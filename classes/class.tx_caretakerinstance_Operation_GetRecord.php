@@ -73,7 +73,7 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		$field = $parameter['field'];
 		$value = $parameter['value'];
 		$checkEnableFields = $parameter['checkEnableFields'] == TRUE;
-		$t3Version = floatval($GLOBALS['TYPO3_VERSION']?$GLOBALS['TYPO3_VERSION']:$GLOBALS['TYPO_VERSION']);
+		$t3Version = floatval($GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version']);
 		if ($t3Version >= 6.0) {
 			\TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
 		} else {
