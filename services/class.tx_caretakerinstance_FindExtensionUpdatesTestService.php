@@ -231,10 +231,10 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 	protected function getLatestExtensionTerInfos4($ext_key) {
 		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
 			'extkey, version',
-			'cache_extensions',
-			'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') . ' AND reviewstate > -1 ',
+			'tx_extensionmanager_domain_model_extension',
+			'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') . ' AND review_state > -1 ',
 			'',
-			'lastuploaddate DESC',
+			'last_updated DESC',
 			1
 		);
 
