@@ -185,7 +185,7 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
 		// Ext is in TER
 		if ($ter_info) {
 			// Ext is reviewed as secure or not reviewed at all
-			if ($ter_info['reviewstate'] > -1) {
+			if ($ter_info['review_state'] > -1) {
 				return array(0, '');
 			}
 
@@ -246,7 +246,14 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
 	}
 
 	public function getExtensionTerInfos($ext_key, $ext_version) {
-		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('extkey, version, reviewstate', 'cache_extensions', 'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') . ' AND version = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_version, 'cache_extensions'), '', '' , 1);
+		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
+			'extension_key, version, review_state',
+			'tx_extensionmanager_domain_model_extension',
+			'extension_key = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'tx_extensionmanager_domain_model_extension') . ' AND version = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_version, 'tx_extensionmanager_domain_model_extension'),
+			'',
+			'',
+			1
+		);
 		if (count($ext_infos) > 0) {
 			return $ext_infos[0];
 		} else {
