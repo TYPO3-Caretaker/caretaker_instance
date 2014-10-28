@@ -117,14 +117,16 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	 */
 	protected function includeTCA() {
 		if (!$GLOBALS['TSFE']) {
-			require_once(PATH_tslib.'class.tslib_fe.php');
+			if (version_compare(TYPO3_version, '6.0.0', '<')) {
+				require_once(PATH_tslib.'class.tslib_fe.php');
 
 				// require some additional stuff in TYPO3 4.1
-			require_once(PATH_t3lib.'class.t3lib_cs.php');
-			require_once(PATH_t3lib.'class.t3lib_userauth.php');
-			require_once(PATH_tslib.'class.tslib_feuserauth.php');
+				require_once(PATH_t3lib.'class.t3lib_cs.php');
+				require_once(PATH_t3lib.'class.t3lib_userauth.php');
+				require_once(PATH_tslib.'class.tslib_feuserauth.php');
+			}
 
-				// Make new instance of TSFE object for initializing user:
+			// Make new instance of TSFE object for initializing user:
 			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
 			$GLOBALS['TSFE']->includeTCA();
 		}
