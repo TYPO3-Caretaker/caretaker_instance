@@ -183,7 +183,7 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
 		$ter_info = $this->getExtensionTerInfos($ext_key, $ext_version);
 
 		// Ext is in TER
-		if ($ter_info) {
+		if (is_array($ter_info)) {
 			// Ext is reviewed as secure or not reviewed at all
 			if ($ter_info['reviewstate'] > -1) {
 				return array(0, '');
@@ -245,13 +245,45 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
 		}
 	}
 
-	public function getExtensionTerInfos($ext_key, $ext_version) {
-		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows('extkey, version, reviewstate', 'cache_extensions', 'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') . ' AND version = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_version, 'cache_extensions'), '', '' , 1);
-		if (count($ext_infos) > 0) {
-			return $ext_infos[0];
-		} else {
+	protected function getLatestExtensionTerInfos4($ext_key, $ext_version) {
+		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
+			'extkey, version, reviewstate',
+			'cache_extensions',
+			'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') .
+				' AND version = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_version, 'cache_extensions'),
+			'',
+			'lastuploaddate DESC'
+		);
+
+		return $ext_infos;
+	}
+
+	protected function getLatestExtensionTerInfos6($ext_key, $ext_version) {
+		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+		$repo = $objectManager->get("TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository");
+		$repo->initializeObject();
+
+		$extension = $repo->findOneByExtensionKeyAndVersion($ext_key, $ext_version);
+
+		if($extension === null || !$extension instanceof \TYPO3\CMS\Extensionmanager\Domain\Model\Extension) {
 			return false;
 		}
+
+		return array(
+			'extkey' => $extension->getExtensionKey(),
+			'version' => $extension->getVersion(),
+			'reviewstate' => $extension->getReviewState(),
+		);
+	}
+
+	public function getExtensionTerInfos($ext_key, $ext_version) {
+		if (version_compare(TYPO3_version, '6.0.0', '>=')) {
+			$ext_infos = $this->getLatestExtensionTerInfos6($ext_key, $ext_version);
+		} else {
+			$ext_infos = $this->getLatestExtensionTerInfos4($ext_key, $ext_version);
+		}
+
+		return $ext_infos;
 	}
 
 	public function getInstalledExtensionErrorHandling() {
