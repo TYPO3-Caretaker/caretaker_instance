@@ -275,11 +275,10 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 		$result  = false;
 		$latestVersion = null;
 		foreach ( $ext_infos  as  $ext_info){
-			$foundVersion = $this->versionToInt(  );
 			if ( $latestVersion === null
 				|| version_compare($ext_info['version'], $latestVersion, '>')
 			){
-				$latestVersion = $foundVersion;
+				$latestVersion = $ext_info['version'];
 				$result = $ext_info;
 			}
 		}
