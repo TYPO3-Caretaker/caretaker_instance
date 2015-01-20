@@ -137,7 +137,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		$md5s = array();
 		$d = dir($path);
 		while(FALSE !== ($entry = $d->read())) {
-			if ($entry === '.' || $entry === '..' || $entry === '.svn') {
+			if ($entry === '.' || $entry === '..' || $entry === '.svn' || $entry === '.git') {
 				continue;
 			}
 			if (is_dir($path . '/' . $entry)) {
