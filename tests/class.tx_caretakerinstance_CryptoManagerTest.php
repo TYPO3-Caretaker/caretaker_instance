@@ -137,7 +137,6 @@ class tx_caretakerinstance_CryptoManagerTest extends tx_phpunit_testcase {
 			'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
 			$crypt
 		);
-		// t3lib_div::debug($crypt);
 	}
 
 	function testDecryptAString() {
