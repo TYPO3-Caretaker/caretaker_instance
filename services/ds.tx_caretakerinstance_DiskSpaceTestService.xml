@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3DataStructure>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <ROOT>
+        <TCEforms> 
+            <sheetTitle>Default</sheetTitle> 
+        </TCEforms> 
+        <type>array</type>
+        <el>
+            <warning_percent>
+				<TCEforms>
+					<label>If following % is reached warning will be activated (80% is default, if not set)</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+					</config>
+				</TCEforms>
+			</warning_percent>
+            <error_percent>
+				<TCEforms>
+					<label>If following % is reached error will be activated (90% is default, if not set)</label>
+					<config>
+						<type>input</type>
+						<size>2</size>
+					</config>
+				</TCEforms>
+			</error_percent>
+        </el>
+    </ROOT>
+</T3DataStructure>

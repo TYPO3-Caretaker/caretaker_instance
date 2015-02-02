@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<T3DataStructure>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <ROOT>
+        <TCEforms> 
+            <sheetTitle>Default</sheetTitle> 
+        </TCEforms> 
+        <type>array</type>
+        <el>
+            <versionControlSystem>
+                <TCEforms>
+                    <label>LLL:EXT:caretaker_instance/locallang.xml:version_control_test_system</label>
+                    <config>
+                        <type>select</type>
+                        <items type="array">
+                            
+                            <numIndex index="0" type="array">
+                                <numIndex index="0">LLL:EXT:caretaker_instance/locallang.xml:version_control_test_system.I.1</numIndex>
+                                <numIndex index="1">0</numIndex>
+                            </numIndex>
+                        </items>
+                        <minitems>0</minitems>
+                        <maxitems>1</maxitems>
+                        <size>1</size>
+                    </config>
+                </TCEforms>
+            </versionControlSystem>
+        </el>
+    </ROOT>
+</T3DataStructure>

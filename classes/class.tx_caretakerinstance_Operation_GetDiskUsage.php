@@ -34,30 +34,41 @@
  * $Id$
  */
 
-if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
-// Add eID script for caretaker instance frontend service
-$TYPO3_CONF_VARS['FE']['eID_include']['tx_caretakerinstance'] = 'EXT:caretaker_instance/eid/eid.tx_caretakerinstance.php';
+/**
+ * A sample Operation which returns the remaining diskspace
+ *
+  * @author Tomas Norre Mikkelsen <tomasnorre@gmail.com>
+ *
+ * @package TYPO3
+ * @subpackage caretaker_instance
+ */
+class tx_caretakerinstance_Operation_GetDiskUsage implements tx_caretakerinstance_IOperation {
 
-// Register default caretaker Operations
-$operations = array(
-	'GetPHPVersion',
-	'GetTYPO3Version',
-	'GetExtensionVersion',
-	'GetExtensionList',
-	'GetRecord',
-	'GetRecords',
-	'GetFilesystemChecksum',
-	'GetVersionControlStatus',
-	'GetDiskUsage',
-	'MatchPredefinedVariable',
-	'CheckPathExists',
-);
-foreach ($operations as $operationKey) {
-	$TYPO3_CONF_VARS['EXTCONF']['caretaker_instance']['operations'][$operationKey] =
-		'EXT:caretaker_instance/classes/class.tx_caretakerinstance_Operation_' . $operationKey . '.php:&tx_caretakerinstance_Operation_' . $operationKey;
+	/**
+	 * Get the remaining disk space in percent
+	 *
+	 * @param array $parameter None
+	 * @return the remaining disk space in percent
+	 */
+	public function execute($parameter = array()) {
+		return new tx_caretakerinstance_OperationResult(true, $this->diskUsageInPercent());
+	}
+
+	/**
+	 * Get remain disk space in percent.
+	 * 
+	 * @return int
+	 */
+	private function diskUsageInPercent(){
+
+		$diskSize = disk_total_space(getcwd());
+        $diskUsed = disk_free_space(getcwd());
+
+        $remain = 100 - ($diskUsed / $diskSize * 100);
+
+        return (int) $remain;
+	}
 }
-
-require(t3lib_extMgm::extPath('caretaker_instance').'/ext_conf_include.php');
-
 ?>

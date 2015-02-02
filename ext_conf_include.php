@@ -49,6 +49,8 @@ if (t3lib_extMgm::isLoaded('caretaker') ){
 	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_FindBlacklistedBePassword', 'TYPO3 -> Check be-password blacklist', 'Find backend user accounts with blacklisted passwords.');
 	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_CheckConfVars',             'TYPO3 -> Check TYPO3_CONF_VARS', 'Check Settings of TYPO3_CONF_VARS');
 	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_CheckPath',                 'FILE -> Check path', 'Checks for some path stats');
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_VersionControl',            'FILE -> Check versioning system', 'Check is version control system is up to date.');
+	tx_caretaker_ServiceHelper::registerCaretakerService($_EXTKEY, 'services', 'tx_caretakerinstance_DiskSpace',                 'DISK -> Check disk space', 'Check if there is avaiable disk space.');
 
 }
 

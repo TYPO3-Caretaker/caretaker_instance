@@ -4,11 +4,12 @@
  * This is a file of the caretaker project.
  * Copyright 2008 by n@work Internet Informationssystem GmbH (www.work.de)
  * 
- * @Author	Thomas Hempel 		<thomas@work.de>
- * @Author	Martin Ficzel		<martin@work.de>
- * @Author	Tobias Liebig		<mail_typo3.org@etobi.de>
- * @Author	Christopher Hlubek 	<hlubek@networkteam.com>
- * @Author	Patrick Kollodzik	<patrick@work.de>
+ * @Author	Thomas Hempel           <thomas@work.de>
+ * @Author	Martin Ficzel           <martin@work.de>
+ * @Author	Tobias Liebig           <mail_typo3.org@etobi.de>
+ * @Author	Christopher Hlubek      <hlubek@networkteam.com>
+ * @Author	Patrick Kollodzik       <patrick@work.de>
+ * @Author  Tomas Norre Mikkelsen   <tnm@netimage.dk>
  * 
  * $$Id$$
  */
@@ -39,6 +40,11 @@
 
 			<label index="backend_user_test_description">Backend-user test</label>
 			<label index="backend_user_test_configuration"></label>
+            
+			<label index="version_control_test_description">Version control test</label>
+			<label index="version_control_test_configuration"></label>
+			<label index="version_control_test_system">Choose version control system</label>
+			<label index="version_control_test_system.I.1">Subversion (svn)</label>
 			
 			<label index="check_path_description">Check-path test</label>
 			<label index="check_path_test_configuration"></label>
