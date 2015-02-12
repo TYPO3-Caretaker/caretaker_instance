@@ -68,6 +68,9 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 */
 	public function encrypt($data, $publicKey) {
 		$publicKey = $this->decodeKey($publicKey);
+		if (empty($publicKey)) {
+			throw new \Exception('Public key missing', 1423738632);
+		}
 
 		openssl_seal($data, $cryptedData, $envelopeKeys, array($publicKey));
 
@@ -87,6 +90,9 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 */
 	public function decrypt($data, $privateKey) {
 		$privateKey = $this->decodeKey($privateKey);
+		if (empty($privateKey)) {
+			throw new \Exception('Private key missing', 1423738633);
+		}
 
 		list($envelopeKey, $cryptedData) = explode(':', $data);
 
@@ -107,6 +113,9 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 */
 	public function createSignature($data, $privateKey) {
 		$privateKey = $this->decodeKey($privateKey);
+		if (empty($privateKey)) {
+			throw new \Exception('Private key missing', 1423738634);
+		}
 
 		openssl_sign($data, $signature, $privateKey);
 		$signature = base64_encode($signature);
@@ -123,6 +132,9 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 */
 	public function verifySignature($data, $signature, $publicKey) {
 		$publicKey = $this->decodeKey($publicKey);
+		if (empty($publicKey)) {
+			throw new \Exception('Public key missing', 1423738635);
+		}
 
 		$signature = base64_decode($signature);
 		$correct = openssl_verify($data, $signature, $publicKey);

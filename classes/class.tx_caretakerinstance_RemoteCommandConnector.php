@@ -140,7 +140,13 @@ class tx_caretakerinstance_RemoteCommandConnector {
 				if ($json) {
 					return tx_caretakerinstance_CommandResult::fromJson($json);
 				} else {
-					return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Empty result returned' );
+					if (!empty($httpRequestResult['response'])) {
+						$json = json_decode($httpRequestResult['response'], TRUE);
+						if ($json && $json['status'] == -1) {
+							return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Error while executing remote command: ' . $json['message'] . ' (' . $json['exception']['code'] . ')' );
+						}
+					}
+					return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Cant decode remote command result' );
 				}
 			} else if ($httpRequestResult['info']['http_code'] === 0) {
 				// seems to be a timeout
@@ -331,10 +337,12 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		);
 
 		if (is_array($postValues)) {
+			$postQuery = '';
 			foreach($postValues as $key => $value) {
 				$postQuery .= urlencode($key) . '=' . urlencode($value) . '&';
 			}
 			rtrim($postQuery, '&');
+			// echo $postQuery;
 			$headers[] = 'Content-Length: '.strlen($postQuery);
 			$headers[] = 'Expect:'; // fix Problem with lighthttp
 			curl_setopt($curl, CURLOPT_POST, count($postValues));
