@@ -74,6 +74,20 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 		$checkForDuplicatePasswords = $this->getConfigValue('check_duplicate_passwords');
 
 		$operations = array();
+		$operations[] = array('GetExtensionVersion', array('extensionKey' => 'saltedpasswords'));
+		$commandResult = $this->executeRemoteOperations($operations);
+
+		$results = $commandResult->getOperationResults();
+		$operationResult = $results[0];
+		if ($operationResult->isSuccessful()) {
+			return tx_caretaker_TestResult::create(
+				tx_caretaker_Constants::state_undefined,
+				0,
+				'FindBlacklistedBePassword is not supported if EXT:saltedpasswords is installed on instance.'
+			);
+		}
+
+		$operations = array();
 		foreach ($blacklistedPasswords as $password) {
 			$password = trim($password);
 			if (strlen($password)) {
@@ -92,7 +106,6 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 		$results = $commandResult->getOperationResults();
 		foreach ($results as $operationResult) {
 			if ($operationResult->isSuccessful()) {
-
 				$users = $operationResult->getValue();
 				if ($users !== FALSE) {
 					foreach ($users as $user) {
