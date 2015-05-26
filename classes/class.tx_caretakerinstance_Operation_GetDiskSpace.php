@@ -2,7 +2,7 @@
 /***************************************************************
  * Copyright notice
  *
- * (c) 2009-2011 by n@work GmbH and networkteam GmbH
+ * (c) 2015 by Tobias Liebig <tobias.liebig@typo3.org>
  *
  * All rights reserved
  *
@@ -34,29 +34,27 @@
  * $Id$
  */
 
-if (!defined ('TYPO3_MODE')) 	die ('Access denied.');
+require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
-// Add eID script for caretaker instance frontend service
-$TYPO3_CONF_VARS['FE']['eID_include']['tx_caretakerinstance'] = 'EXT:caretaker_instance/eid/eid.tx_caretakerinstance.php';
+/**
+ * A Operation which returns the current TYPO3 version
+ *
+ * @author Tobias Liebig <tobias.liebig@typo3.org>
+ *
+ * @package TYPO3
+ * @subpackage caretaker_instance
+ */
+class tx_caretakerinstance_Operation_GetDiskSpace implements tx_caretakerinstance_IOperation {
 
-// Register default caretaker Operations
-$operations = array(
-	'GetPHPVersion',
-	'GetTYPO3Version',
-	'GetExtensionVersion',
-	'GetExtensionList',
-	'GetRecord',
-	'GetRecords',
-	'GetFilesystemChecksum',
-	'MatchPredefinedVariable',
-	'CheckPathExists',
-	'GetDiskSpace',
-);
-foreach ($operations as $operationKey) {
-	$TYPO3_CONF_VARS['EXTCONF']['caretaker_instance']['operations'][$operationKey] =
-		'EXT:caretaker_instance/classes/class.tx_caretakerinstance_Operation_' . $operationKey . '.php:&tx_caretakerinstance_Operation_' . $operationKey;
+	/**
+	 * @param array $parameter
+	 * @return tx_caretakerinstance_OperationResult
+	 */
+	public function execute($parameter = array()) {
+		$path = !empty($parameter['path']) ? $parameter['path'] : '/';
+		return new tx_caretakerinstance_OperationResult(true, array(
+			'total' => disk_total_space($path),
+			'free' => disk_free_space($path)
+		));
+	}
 }
-
-require(t3lib_extMgm::extPath('caretaker_instance').'/ext_conf_include.php');
-
-?>
