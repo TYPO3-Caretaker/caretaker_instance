@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<!-- 
+/**
+ * This is a file of the caretaker project.
+ * 
+ * @author	Tobias Liebig <tobias.liebig@typo3.org>
+ * 
+ * $$Id$$
+ */
+-->
+<T3DataStructure>
+	<meta>
+		<langDisable>1</langDisable>
+	</meta>
+	<ROOT>
+		<TCEforms> 
+			<sheetTitle>Default</sheetTitle> 
+		</TCEforms> 
+		<type>array</type>
+		<el>
+			<path>
+				<TCEforms>
+					<label>Disk Path</label>
+					<config>
+						<type>input</type>
+						<size>30</size>
+						<default>/</default>
+					</config>
+				</TCEforms>
+			</path>
+			<min_free>
+				<TCEforms>
+					<label>Minimum Free disk space</label>
+					<config>
+						<type>input</type>
+						<size>10</size>
+						<eval>int</eval>
+						<default>0</default>
+					</config>
+				</TCEforms>
+			</min_free>
+			<min_free_unit>
+				<TCEforms>
+					<label>Unit</label>
+					<config>
+						<type>select</type>
+						<items>
+							<numIndex index="0">
+								<numIndex index="0">%</numIndex>
+								<numIndex index="1">%</numIndex>
+							</numIndex>
+							<numIndex index="1">
+								<numIndex index="0">TB</numIndex>
+								<numIndex index="1">TB</numIndex>
+							</numIndex>
+							<numIndex index="2">
+								<numIndex index="0">GB</numIndex>
+								<numIndex index="1">GB</numIndex>
+							</numIndex>
+							<numIndex index="3">
+								<numIndex index="0">MB</numIndex>
+								<numIndex index="1">MB</numIndex>
+							</numIndex>
+							<numIndex index="4">
+								<numIndex index="0">kB</numIndex>
+								<numIndex index="1">kB</numIndex>
+							</numIndex>
+							<numIndex index="5">
+								<numIndex index="0">B</numIndex>
+								<numIndex index="1">B</numIndex>
+							</numIndex>
+					  </items>
+					</config>
+				</TCEforms>
+			</min_free_unit>
+		</el>
+	</ROOT>
+</T3DataStructure>
