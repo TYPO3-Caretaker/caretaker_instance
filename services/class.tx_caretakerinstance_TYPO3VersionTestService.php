@@ -50,8 +50,8 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
 class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
 
 	public function runTest() {
-		$minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'));
-		$maxVersion = $this->checkForLatestVersion($this->getConfigValue('max_version'));
+		$minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'), $this->getConfigValue('allow_unstable'));
+		$maxVersion = $this->checkForLatestVersion($this->getConfigValue('max_version'), $this->getConfigValue('allow_unstable'));
 
 		if (!$minVersion && !$maxVersion) {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute TYPO3 version test without min and max version');
@@ -101,10 +101,15 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		return $testResult;
 	}
 
-	protected function checkForLatestVersion($versionString) {
+	/**
+	 * @param string $versionString
+	 * @param bool $allowUnstable
+	 * @return string|bool
+	 */
+	protected function checkForLatestVersion($versionString, $allowUnstable = FALSE) {
 		if (strpos($versionString, '.latest') !== FALSE) {
 			$versionDigits = explode('.', $versionString, 3);
-			$latestVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', 'TYPO3versions');
+			$latestVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable');
 			$newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
 
 			if (!empty($newVersionString)) {
