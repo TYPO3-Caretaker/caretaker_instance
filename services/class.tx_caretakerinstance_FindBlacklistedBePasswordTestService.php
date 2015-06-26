@@ -79,7 +79,7 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 
 		$results = $commandResult->getOperationResults();
 		$operationResult = $results[0];
-		if ($operationResult->isSuccessful()) {
+		if (is_object($operationResult) && $operationResult->isSuccessful()) {
 			return tx_caretaker_TestResult::create(
 				tx_caretaker_Constants::state_undefined,
 				0,
