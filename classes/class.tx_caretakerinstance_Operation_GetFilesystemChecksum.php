@@ -34,9 +34,6 @@
  * $Id$
  */
 
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_IOperation.php'));
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * Returns a "fingerprint" of a given path, can be used to check if a file or folder has been changed
  *

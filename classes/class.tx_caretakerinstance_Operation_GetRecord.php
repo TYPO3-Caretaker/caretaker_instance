@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * An Operation that returns the first record matched by a field name and value as an array (excluding protected record details like be_user password).
  * This operation should be SQL injection safe. The table has to be mapped in the TCA.

@@ -34,9 +34,6 @@
  * $Id$
  */
 
-require_once('class.tx_caretakerinstance_CommandRequest.php');
-require_once('class.tx_caretakerinstance_CommandResult.php');
-
 /**
  * The Command Service can execute Commands and
  * is a coarse front service for the caretaker instance.

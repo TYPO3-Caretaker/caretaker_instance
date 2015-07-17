@@ -34,10 +34,6 @@
  * $Id$
  */
 
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandRequest.php'));
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTimeoutException.php'));
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTokenFailedException.php'));
-
 /**
  * Connect to an Instance and execute a Command (bunch of Operations)
  *

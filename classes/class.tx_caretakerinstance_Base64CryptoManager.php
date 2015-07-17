@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once('class.tx_caretakerinstance_ICryptoManager.php');
-
 /**
  * A Bas64 based Crypto Manager implementation
  *

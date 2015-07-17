@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once('class.tx_caretakerinstance_ISecurityManager.php');
-
 /**
  * Holds public/private Keys and does encoding/decoding (using CryptoManager)
  *

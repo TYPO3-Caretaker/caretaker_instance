@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once('class.tx_caretakerinstance_AbstractCryptoManager.php');
-
 /**
  * An OpenSSL based Crypto Manager implementation
  *

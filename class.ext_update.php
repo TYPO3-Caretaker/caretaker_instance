@@ -34,10 +34,6 @@
  * $Id$
  */
 
-if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('caretaker_instance')) {
-	require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_ServiceFactory.php'));
-}
-
 /**
  * Extension manager update class to generate public / private key pairs.
  *

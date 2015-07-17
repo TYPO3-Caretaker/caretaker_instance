@@ -34,9 +34,6 @@
  * $Id$
  */
 
-require_once('class.tx_caretakerinstance_IOperationManager.php');
-require_once('class.tx_caretakerinstance_IOperation.php');
-
 /**
  * Operation manager for operation registration and execution.
  *

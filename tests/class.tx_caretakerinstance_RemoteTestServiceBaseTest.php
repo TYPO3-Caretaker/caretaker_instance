@@ -34,11 +34,6 @@
  * $Id$
  */
 
-require_once \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath(
-    'caretaker_instance',
-    'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'
-);
-
 
 class tx_caretakerinstance_RemoteTestServiceTest_BaseImpl
     extends tx_caretakerinstance_RemoteTestServiceBase

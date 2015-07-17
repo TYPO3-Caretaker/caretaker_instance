@@ -46,8 +46,6 @@ if($_SERVER['REQUEST_METHOD'] != 'POST') {
 }
 */
 
-require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_ServiceFactory.php'));
-
 // \TYPO3\CMS\Frontend\Utility\EidUtility::connectDB();
 
 try {
