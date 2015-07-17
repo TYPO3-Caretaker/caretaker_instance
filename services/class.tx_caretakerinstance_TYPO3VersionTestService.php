@@ -47,6 +47,9 @@
  */
 class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
+	/**
+	 * @return tx_caretaker_TestResult
+	 */
 	public function runTest() {
 		$minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'), $this->getConfigValue('allow_unstable'));
 		$maxVersion = $this->checkForLatestVersion($this->getConfigValue('max_version'), $this->getConfigValue('allow_unstable'));

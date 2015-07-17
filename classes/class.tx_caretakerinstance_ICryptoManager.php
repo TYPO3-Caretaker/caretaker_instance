@@ -88,7 +88,7 @@ interface tx_caretakerinstance_ICryptoManager {
 	 * Encrypt data with the given public key
 	 *
 	 * @param $data string The data to encrypt
-	 * @param $key string The public key for encryption
+	 * @param $publicKey string The public key for encryption
 	 * @return string The encrypted data
 	 */
 	function encrypt($data, $publicKey);
@@ -97,7 +97,7 @@ interface tx_caretakerinstance_ICryptoManager {
 	 * Decrypt data with the given private key
 	 *
 	 * @param $data string The data to decrypt
-	 * @param $key string The private key for decryption
+	 * @param $privateKey string The private key for decryption
 	 * @return string The decrypted data
 	 */
 	function decrypt($data, $privateKey);

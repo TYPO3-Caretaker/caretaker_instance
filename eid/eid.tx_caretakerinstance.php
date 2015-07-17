@@ -57,6 +57,9 @@ try {
 			header('HTTP/1.0 500 Invalid request');
 		}
 	} else {
+		$sessionToken = NULL;
+		$data = NULL;
+		$signature = NULL;
 		if (isset($_POST['st']) && isset($_POST['d']) && isset($_POST['s'])) {
 			$sessionToken = $_POST['st'];
 			$data = $_POST['d'];
@@ -67,11 +70,9 @@ try {
 		$request = new tx_caretakerinstance_CommandRequest(
 				array(
 						'session_token' => $sessionToken,
-						'client_info' =>
-								array(
-										'host_address' => $remoteAddress
-								)
-				,
+						'client_info' => array(
+								'host_address' => $remoteAddress
+						),
 						'data' => array(),
 						'raw' => stripslashes($data),
 						'signature' => $signature
@@ -88,11 +89,9 @@ try {
 			'status' => tx_caretakerinstance_CommandResult::status_undefined,
 			'exception' => array(
 					'code' => $exception->getCode()
-				// 'trace' => $exception->getTraceAsString()
 			),
 			'message' => $exception->getMessage()
 	));
 }
 
 exit;
-?>

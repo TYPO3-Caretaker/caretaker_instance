@@ -109,5 +109,3 @@ class ext_update {
 	}
 
 }
-
-?>

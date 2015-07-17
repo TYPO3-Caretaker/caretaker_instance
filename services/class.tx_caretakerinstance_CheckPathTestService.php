@@ -43,6 +43,10 @@
  * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_RemoteTestServiceBase {
+
+	/**
+	 * @return tx_caretaker_TestResult
+	 */
 	public function runTest() {
 		// fetch config values
 		$paths = $this->getConfigValue('cppaths');

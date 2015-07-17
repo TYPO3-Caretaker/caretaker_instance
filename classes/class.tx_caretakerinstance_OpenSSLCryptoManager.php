@@ -61,8 +61,9 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 * Will be encrypted using openssl_seal.
 	 *
 	 * @param $data string The data to encrypt
-	 * @param $key string The public key for encryption (as PEM formatted string)
+	 * @param $publicKey string The public key for encryption (as PEM formatted string)
 	 * @return string The encrypted data
+	 * @throws Exception
 	 */
 	public function encrypt($data, $publicKey) {
 		$publicKey = $this->decodeKey($publicKey);
@@ -83,8 +84,9 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 * Decrypt data with <em>private</em> key
 	 *
 	 * @param $data string The data to decrypt
-	 * @param $key string The private key for decryption (as PEM formatted string)
+	 * @param string $privateKey The private key for decryption (as PEM formatted string)
 	 * @return string The decrypted data
+	 * @throws Exception
 	 */
 	public function decrypt($data, $privateKey) {
 		$privateKey = $this->decodeKey($privateKey);
@@ -108,6 +110,7 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 * @param string $data
 	 * @param string $privateKey The private key in PEM form
 	 * @return string
+	 * @throws Exception
 	 */
 	public function createSignature($data, $privateKey) {
 		$privateKey = $this->decodeKey($privateKey);
@@ -127,6 +130,7 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	 * @param string $signature
 	 * @param string $publicKey The private key in PEM form
 	 * @return string
+	 * @throws Exception
 	 */
 	public function verifySignature($data, $signature, $publicKey) {
 		$publicKey = $this->decodeKey($publicKey);
@@ -141,8 +145,8 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 
 	/**
 	 * Generate a new key pair
-	 *
 	 * @return array Public and private key as string
+	 * @throws Exception
 	 */
 	public function generateKeyPair() {
 		$keyPair = openssl_pkey_new();

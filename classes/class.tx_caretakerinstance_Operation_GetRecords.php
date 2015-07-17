@@ -58,6 +58,10 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 			'be_users' => array('password', 'uc'),
 			'fe_users' => array('password')
 	);
+
+	/**
+	 * @var array
+	 */
 	protected $implicitFields = array('uid', 'pid', 'deleted', 'hidden');
 
 	/**
@@ -113,8 +117,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 	 *
 	 * @example ../services/class.tx_caretakerinstance_FindBlacklistedBePasswordTestService.php This class tests if there are duplicate passwords, besides checking for the presence of blacklisted passwords.
 	 * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
-	 *
-	 * @return A set of records as an array or FALSE if no record was found
+	 * @return tx_caretakerinstance_OperationResult A set of records as an array or FALSE if no record was found
 	 */
 	public function execute($parameter = array()) {
 		$table = $parameter['table'];
@@ -128,9 +131,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Table [' . $table . '] not found in the TCA');
 		}
 
-		\TYPO3\CMS\Core\Utility\GeneralUtility::loadTCA($table);
 		if (is_array($field) && is_array($value)) {
-
 			// check that every value in the field array is both in the TCA and the value array
 			foreach ($field as $val) {
 				if (!isset($GLOBALS['TCA'][$table]['columns'][$val]) && (!in_array($val, $this->implicitFields) || !in_array($val, $value))) {
@@ -165,7 +166,6 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 			$firstField = true;
 			foreach ($value as $key => $val) {
 
-
 				if (!$firstField) {
 					$arrSql['WHERE'] .= " AND ";
 				}
@@ -189,9 +189,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 
 
 		if ($result) {
-
 			$records = array();
-
 			while (FALSE !== ($record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result))) {
 				if ($record !== FALSE) {
 					if (isset($this->protectedFieldsByTable[$table])) {

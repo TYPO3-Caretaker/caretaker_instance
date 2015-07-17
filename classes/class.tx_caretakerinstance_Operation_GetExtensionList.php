@@ -55,7 +55,7 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	/**
 	 *
 	 * @param array $parameter Array of extension locations as string (system, global, local)
-	 * @return The extension list
+	 * @return tx_caretakerinstance_OperationResult The extension list
 	 */
 	public function execute($parameter = array()) {
 		$locations = $parameter['locations'];
@@ -80,7 +80,6 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	 * @return string
 	 */
 	protected function getPathForScope($scope) {
-		$path = '';
 		switch ($scope) {
 			case 'system':
 				$path = PATH_typo3 . 'sysext/';

@@ -65,7 +65,9 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 	 */
 	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:backend_user_test_configuration';
 
-
+	/**
+	 * @return tx_caretaker_TestResult
+	 */
 	public function runTest() {
 		$blacklistedUsernames = explode(chr(10), $this->getConfigValue('blacklist'));
 

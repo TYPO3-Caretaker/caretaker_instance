@@ -53,7 +53,7 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 	 * value will not be returned.
 	 *
 	 * @param array $parameter key, match, usingRegexp, comparisonOperator
-	 * @return the current PHP version
+	 * @return tx_caretakerinstance_OperationResult The current PHP version
 	 */
 	public function execute($parameter = array()) {
 
@@ -90,9 +90,7 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 					$success = ($parameter['match'] == $value);
 					break;
 			}
-
 		}
-
 		return new tx_caretakerinstance_OperationResult($success, '');
 	}
 
@@ -103,6 +101,7 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 	 */
 	protected function getValueForKeyPath(array $keyPath) {
 		$key = array_shift($keyPath);
+		$value = NULL;
 		switch ($key) {
 			case 'GLOBALS':
 				$value = $GLOBALS;

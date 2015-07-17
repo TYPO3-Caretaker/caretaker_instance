@@ -51,7 +51,7 @@ class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretaker
 	 * Get the extension version of the given extension by extension key
 	 *
 	 * @param array $parameter None
-	 * @return The extension version
+	 * @return tx_caretakerinstance_OperationResult The extension version
 	 */
 	public function execute($parameter = array()) {
 		$extensionKey = $parameter['extensionKey'];

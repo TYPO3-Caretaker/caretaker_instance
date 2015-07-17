@@ -47,7 +47,7 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 	/**
 	 * execute operation (checkPathExists)
 	 * @param array $parameter a path 'path' to a file or folder
-	 * @return 'file' if path is a file, 'directory' if it's a directory and false if it doesn't exist
+	 * @return tx_caretakerinstance_OperationResult 'file' if path is a file, 'directory' if it's a directory and false if it doesn't exist
 	 */
 	public function execute($parameter = null) {
 		$path = $this->getPath($parameter);
@@ -77,7 +77,7 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 	/**
 	 * prepare path, resolve relative path and resolve EXT: path
 	 *
-	 * @param $path absolute or relative path or EXT:foobar/
+	 * @param string $path absolute or relative path or EXT:foobar/
 	 * @return string/bool false if path is invalid, else the absolute path
 	 */
 	protected function getPath($path) {

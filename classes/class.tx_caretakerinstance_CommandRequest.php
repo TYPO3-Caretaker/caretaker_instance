@@ -152,7 +152,7 @@ class tx_caretakerinstance_CommandRequest {
 	}
 
 	/**
-	 * @param string The signature
+	 * @param string $signature
 	 * @return void
 	 */
 	public function setSignature($signature) {

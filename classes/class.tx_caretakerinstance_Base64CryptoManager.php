@@ -51,6 +51,11 @@
  */
 class tx_caretakerinstance_Base64CryptoManager implements tx_caretakerinstance_ICryptoManager {
 
+	/**
+	 * @param string $data
+	 * @param string $secret
+	 * @return string
+	 */
 	public function createSessionToken($data, $secret) {
 		$salt = substr(md5(rand()), 0, 12);
 		$token = $data . ':' . $salt . md5($secret . ':' . $data . ':' . $salt);
@@ -58,6 +63,11 @@ class tx_caretakerinstance_Base64CryptoManager implements tx_caretakerinstance_I
 		return $token;
 	}
 
+	/**
+	 * @param string $token
+	 * @param string $secret
+	 * @return bool
+	 */
 	public function verifySessionToken($token, $secret) {
 		list($data, $hash) = explode(':', $token, 2);
 		$salt = substr($hash, 0, 12);
@@ -69,25 +79,47 @@ class tx_caretakerinstance_Base64CryptoManager implements tx_caretakerinstance_I
 		}
 	}
 
+	/**
+	 * @param string $data
+	 * @param string $privateKey
+	 * @return string
+	 */
 	public function createSignature($data, $privateKey) {
 		return md5($data);
 	}
 
+	/**
+	 * @param string $data
+	 * @param string $signature
+	 * @param string $publicKey
+	 * @return bool
+	 */
 	public function verifySignature($data, $signature, $publicKey) {
-
 		return md5($data) == $signature;
 	}
 
+	/**
+	 * @param string $data
+	 * @param $key
+	 * @return string
+	 */
 	public function encrypt($data, $key) {
 		return base64_encode($data);
 	}
 
+	/**
+	 * @param string $data
+	 * @param $key
+	 * @return string
+	 */
 	public function decrypt($data, $key) {
 		return base64_decode($data);
 	}
 
+	/**
+	 * @return array
+	 */
 	public function generateKeyPair() {
 		return array('', '');
 	}
-
 }

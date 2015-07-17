@@ -57,7 +57,7 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 	protected $valueDescription = '';
 
 	/**
-	 * Service type description in human readble form.
+	 * Service type description in human readable form.
 	 * @var string
 	 */
 	protected $typeDescription = 'Test that no users with blacklisted passwords exist on the instance.';
@@ -68,6 +68,9 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 	 */
 	protected $configurationInfoTemplate = '';
 
+	/**
+	 * @return tx_caretaker_TestResult
+	 */
 	public function runTest() {
 		$blacklistedPasswords = explode(chr(10), $this->getConfigValue('blacklist'));
 		$checkForDuplicatePasswords = $this->getConfigValue('check_duplicate_passwords');

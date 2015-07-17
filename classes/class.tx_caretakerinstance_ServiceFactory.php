@@ -53,6 +53,32 @@ class tx_caretakerinstance_ServiceFactory {
 	protected static $instance;
 
 	/**
+	 * @var tx_caretakerinstance_CommandService
+	 */
+	protected $commandService;
+
+
+	/**
+	 * @var tx_caretakerinstance_SecurityManager
+	 */
+	protected $securityManager;
+
+	/**
+	 * @var tx_caretakerinstance_OperationManager
+	 */
+	protected $operationManager;
+
+	/**
+	 * @var tx_caretakerinstance_OpenSSLCryptoManager
+	 */
+	protected $cryptoManager;
+
+	/**
+	 * @var tx_caretakerinstance_RemoteCommandConnector
+	 */
+	protected $remoteCommandConnector;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {

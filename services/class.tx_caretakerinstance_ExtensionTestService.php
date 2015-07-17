@@ -117,6 +117,14 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 		return $testResult;
 	}
 
+	/**
+	 * @param string $actualValue
+	 * @param string $requirement
+	 * @param string $minVersion
+	 * @param string $maxVersion
+	 * @return bool
+	 * @throws Exception
+	 */
 	public function checkVersionForRequirementAndVersionRange($actualValue, $requirement, $minVersion, $maxVersion) {
 		if ($requirement == 'none') {
 			if ($actualValue) {
@@ -134,6 +142,7 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 			return !$actualValue;
 		} elseif ($requirement == 'evil') {
 			// TODO implement check for installed but not loaded extension
+			throw new \Exception('requirement "evil" not implemented');
 		}
 	}
 }

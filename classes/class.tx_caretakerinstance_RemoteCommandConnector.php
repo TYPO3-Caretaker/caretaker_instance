@@ -78,8 +78,6 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 * Executes a bunch of operation an a remote instance and takes care to secure/encrypt the communication
 	 *
 	 * @param $operations array
-	 * @param $baseurl string
-	 * @param $instancePublicKey string
 	 * @return tx_caretakerinstance_CommandResult
 	 */
 	public function executeOperations(array $operations) {
@@ -195,8 +193,9 @@ class tx_caretakerinstance_RemoteCommandConnector {
 
 	/**
 	 * Request a session token from a remote instance
-	 *
 	 * @return string
+	 * @throws tx_caretakerinstance_RequestSessionTimeoutException
+	 * @throws tx_caretakerinstance_RequestSessionTokenFailedException
 	 */
 	public function requestSessionToken() {
 		$requestUrl = $this->getInstanceURL() . '&rst=1';

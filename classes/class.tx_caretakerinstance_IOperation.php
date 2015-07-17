@@ -67,5 +67,4 @@ interface tx_caretakerinstance_IOperation {
 	 * @return tx_caretakerinstance_OperationResult The operation result
 	 */
 	function execute($parameter = array());
-
 }

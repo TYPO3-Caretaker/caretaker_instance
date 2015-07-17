@@ -44,6 +44,9 @@
  */
 class tx_caretakerinstance_DiskSpaceTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
+	/**
+	 * @return tx_caretaker_TestResult
+	 */
 	public function runTest() {
 		$path = $this->getConfigValue('path');
 

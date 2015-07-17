@@ -64,7 +64,7 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	 * Get record data from the given table and uid
 	 *
 	 * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
-	 * @return The first found record as an array or FALSE if no record was found
+	 * @return tx_caretakerinstance_OperationResult The first found record as an array or FALSE if no record was found
 	 */
 	public function execute($parameter = array()) {
 		$table = $parameter['table'];
