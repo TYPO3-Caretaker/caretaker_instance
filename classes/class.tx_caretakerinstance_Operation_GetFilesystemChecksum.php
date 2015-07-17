@@ -34,8 +34,8 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_IOperation.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_IOperation.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
 /**
  * Returns a "fingerprint" of a given path, can be used to check if a file or folder has been changed
@@ -102,8 +102,8 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 
 		// getFileAbsFileName can't handle directory path with trailing / correctly
 
-		$path = t3lib_div::getFileAbsFileName($path);
-		if (t3lib_div::isAllowedAbsPath($path)) {
+		$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
+		if (\TYPO3\CMS\Core\Utility\GeneralUtility::isAllowedAbsPath($path)) {
 			return $path;
 		} else {
 			return FALSE;

@@ -35,7 +35,7 @@
  */
 
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
 /**
  * Check insecure extensions
@@ -245,20 +245,7 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
 		}
 	}
 
-	protected function getLatestExtensionTerInfos4($ext_key, $ext_version) {
-		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetSingleRow(
-			'extkey, version, reviewstate',
-			'cache_extensions',
-			'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') .
-				' AND version = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_version, 'cache_extensions'),
-			'',
-			'lastuploaddate DESC'
-		);
-
-		return $ext_infos;
-	}
-
-	protected function getLatestExtensionTerInfos6($ext_key, $ext_version) {
+	public function getExtensionTerInfos($ext_key, $ext_version) {
 		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 		$repo = $objectManager->get("TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository");
 		$repo->initializeObject();
@@ -274,16 +261,6 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
 			'version' => $extension->getVersion(),
 			'reviewstate' => $extension->getReviewState(),
 		);
-	}
-
-	public function getExtensionTerInfos($ext_key, $ext_version) {
-		if (version_compare(TYPO3_version, '6.0.0', '>=')) {
-			$ext_infos = $this->getLatestExtensionTerInfos6($ext_key, $ext_version);
-		} else {
-			$ext_infos = $this->getLatestExtensionTerInfos4($ext_key, $ext_version);
-		}
-
-		return $ext_infos;
 	}
 
 	public function getInstalledExtensionErrorHandling() {

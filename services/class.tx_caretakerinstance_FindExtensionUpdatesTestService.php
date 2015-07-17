@@ -35,7 +35,7 @@
  */
 
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
 /**
  * Check insecure extensions
@@ -228,20 +228,8 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 		}
 	}
 
-	protected function getLatestExtensionTerInfos4($ext_key) {
-		$ext_infos = $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-			'extkey, version',
-			'cache_extensions',
-			'extkey = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($ext_key, 'cache_extensions') . ' AND reviewstate > -1 ',
-			'',
-			'lastuploaddate DESC',
-			1
-		);
 
-		return $ext_infos;
-	}
-
-	protected function getLatestExtensionTerInfos6($ext_key) {
+	public function getLatestExtensionTerInfos($ext_key, $ext_version) {
 		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 		$repo = $objectManager->get("TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository");
 		$repo->initializeObject();
@@ -252,21 +240,10 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 			return false;
 		}
 
-		return array(array(
+		$ext_infos = array(array(
 			'extkey' => $extension->getExtensionKey(),
 			'version' => $extension->getVersion(),
 		));
-	}
-
-	public function getLatestExtensionTerInfos($ext_key, $ext_version) {
-		$typo3Version = explode('.', TYPO3_version);
-		$majorVersion = intval($typo3Version[0]);
-
-		if ($majorVersion >= 6) {
-			$ext_infos = $this->getLatestExtensionTerInfos6($ext_key);
-		} else {
-			$ext_infos = $this->getLatestExtensionTerInfos4($ext_key);
-		}
 
 		if (!is_array($ext_infos)) {
 			return false;
@@ -283,7 +260,6 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 			}
 		}
 		return $result;
-
 	}
 
 	public function getStatusOfUpdatableExtensions() {

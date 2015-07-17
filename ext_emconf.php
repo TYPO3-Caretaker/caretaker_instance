@@ -63,13 +63,13 @@ $EM_CONF[$_EXTKEY] = array(
 	'clearCacheOnLoad' => 0,
 	'lockType' => '',
 	'author_company' => '',
-	'version' => '0.6.0',
-	'TYPO3_version' => '4.5.0-6.2.99',
+	'version' => '0.7.0',
+	'TYPO3_version' => '6.2.99-7.99.99',
 	'PHP_version' => '5.3.0-',
 	'constraints' => array(
 		'depends' => array(
 			'cms' => '',
-			'typo3' => '4.5.0-6.2.99',
+			'typo3' => '6.2.99-7.99.99',
 			'php' => '5.3.0-'
 		),
 		'conflicts' => array(

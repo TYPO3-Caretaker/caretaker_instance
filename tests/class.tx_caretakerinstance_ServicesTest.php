@@ -34,7 +34,7 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_FindInsecureExtensionTestService.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_FindInsecureExtensionTestService.php'));
 
 /**
  * Testcase for the ServiceFactory

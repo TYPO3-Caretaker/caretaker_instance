@@ -34,11 +34,11 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationManager.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandService.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_SecurityManager.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OpenSSLCryptoManager.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_RemoteCommandConnector.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationManager.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandService.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_SecurityManager.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OpenSSLCryptoManager.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_RemoteCommandConnector.php'));
 
 /**
  * Singleton factory as a dependency injection container
@@ -114,7 +114,7 @@ class tx_caretakerinstance_ServiceFactory {
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'])) {
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] as $key => $operationRef) {
 					if(is_string($operationRef)) {
-						$operation = t3lib_div::getUserObj($operationRef);
+						$operation = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($operationRef);
 					} elseif ($operationRef instanceof tx_caretakerinstance_IOperation) {
 						$operation = $operationRef;
 					} else {

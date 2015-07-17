@@ -34,7 +34,7 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
 /**
  * An Operation that returns the first record matched by a field name and value as an array (excluding protected record details like be_user password).
@@ -73,13 +73,7 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		$field = $parameter['field'];
 		$value = $parameter['value'];
 		$checkEnableFields = $parameter['checkEnableFields'] == TRUE;
-		$t3Version = floatval($GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version']);
-		if ($t3Version >= 6.0) {
-			\TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
-		} else {
-			$this->includeTCA();
-			t3lib_div::loadTCA($table);
-		}
+		\TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
 		if (!isset($GLOBALS['TCA'][$table])) {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Table [' . $table . '] not found in the TCA');
 		}
@@ -117,17 +111,8 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	 */
 	protected function includeTCA() {
 		if (!$GLOBALS['TSFE']) {
-			if (version_compare(TYPO3_version, '6.0.0', '<')) {
-				require_once(PATH_tslib.'class.tslib_fe.php');
-
-				// require some additional stuff in TYPO3 4.1
-				require_once(PATH_t3lib.'class.t3lib_cs.php');
-				require_once(PATH_t3lib.'class.t3lib_userauth.php');
-				require_once(PATH_tslib.'class.tslib_feuserauth.php');
-			}
-
 			// Make new instance of TSFE object for initializing user:
-			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
+			$GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
 			$GLOBALS['TSFE']->includeTCA();
 		}
 	}

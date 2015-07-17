@@ -34,7 +34,7 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
 /**
  * An Operation that returns a list of installed extensions
@@ -108,11 +108,11 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 		$path = $this->getPathForScope($scope);
 		$extensionInfo = array();
 		if (@is_dir($path))	{
-			$extensionFolders = t3lib_div::get_dirs($path);
+			$extensionFolders = \TYPO3\CMS\Core\Utility\GeneralUtility::get_dirs($path);
 			if (is_array($extensionFolders)) {
 				foreach($extensionFolders as $extKey) {
 					$extensionInfo[$extKey]['ext_key'] = $extKey;
-					$extensionInfo[$extKey]['installed'] = (boolean)t3lib_extMgm::isLoaded($extKey);
+					$extensionInfo[$extKey]['installed'] = (boolean)\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey);
 
 					if (@is_file($path . $extKey . '/ext_emconf.php'))	{
 						$_EXTKEY = $extKey;

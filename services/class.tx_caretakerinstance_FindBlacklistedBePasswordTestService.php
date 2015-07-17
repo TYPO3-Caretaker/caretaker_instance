@@ -34,7 +34,7 @@
  *
  * $Id$
  */
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
 /**
  * Check if there are blacklisted passwords or users which use the same password (likely "test", "test", "1234" or something similar) in the be_users table

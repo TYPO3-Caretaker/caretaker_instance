@@ -34,8 +34,8 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_IOperation.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_IOperation.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
 
 /**
  * Checks wether the given path exists or not
@@ -95,8 +95,8 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 			return $path;
 		}
 
-		$path = t3lib_div::getFileAbsFileName($path);
-		if (t3lib_div::isAllowedAbsPath($path)) {
+		$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
+		if (\TYPO3\CMS\Core\Utility\GeneralUtility::isAllowedAbsPath($path)) {
 			return $path;
 		} else {
 			return false;

@@ -23,7 +23,7 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_ExtensionTestService.php'));
+require_once(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_ExtensionTestService.php'));
 
 /**
  * This is a file of the caretaker project.
