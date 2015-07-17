@@ -45,7 +45,7 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
+class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
 	/**
 	 * Value Description
@@ -71,7 +71,7 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 		$minVersion = $this->getConfigValue('min_version');
 		$maxVersion = $this->getConfigValue('max_version');
 
-		if (!$extensionKey){
+		if (!$extensionKey) {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute extension test without extension key');
 		}
 
@@ -93,17 +93,17 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 		}
 
 		$checkResult = $this->checkVersionForRequirementAndVersionRange(
-			$extensionVersion,
-			$requirementMode,
-			$minVersion,
-			$maxVersion
+				$extensionVersion,
+				$requirementMode,
+				$minVersion,
+				$maxVersion
 		);
 
 		if ($checkResult) {
-			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ( $extensionVersion === false ? 'not ' : '' ) . 'installed';
+			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ($extensionVersion === false ? 'not ' : '') . 'installed';
 			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
 		} else {
-			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ( $extensionVersion === false ? 'not ' : '' ) . 'installed, but ';
+			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ($extensionVersion === false ? 'not ' : '') . 'installed, but ';
 			if ($minVersion) {
 				$message .= ' >= ' . $minVersion;
 			}
@@ -138,7 +138,6 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php']);
 }
-?>

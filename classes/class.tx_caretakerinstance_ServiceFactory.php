@@ -64,7 +64,7 @@ class tx_caretakerinstance_ServiceFactory {
 	 * @return tx_caretakerinstance_ServiceFactory
 	 */
 	public static function getInstance() {
-		if(tx_caretakerinstance_ServiceFactory::$instance == null) {
+		if (tx_caretakerinstance_ServiceFactory::$instance == null) {
 			tx_caretakerinstance_ServiceFactory::$instance = new tx_caretakerinstance_ServiceFactory();
 
 		}
@@ -75,10 +75,10 @@ class tx_caretakerinstance_ServiceFactory {
 	 * @return tx_caretakerinstance_CommandService
 	 */
 	public function getCommandService() {
-		if($this->commandService == null) {
+		if ($this->commandService == null) {
 			$this->commandService = new tx_caretakerinstance_CommandService(
-				$this->getOperationManager(),
-				$this->getSecurityManager()
+					$this->getOperationManager(),
+					$this->getSecurityManager()
 			);
 		}
 		return $this->commandService;
@@ -88,7 +88,7 @@ class tx_caretakerinstance_ServiceFactory {
 	 * @return tx_caretakerinstance_SecurityManager
 	 */
 	public function getSecurityManager() {
-		if($this->securityManager == null) {
+		if ($this->securityManager == null) {
 			$this->securityManager = new tx_caretakerinstance_SecurityManager($this->getCryptoManager());
 			$this->securityManager->setPublicKey($this->extConf['crypto.']['instance.']['publicKey']);
 			$this->securityManager->setPrivateKey($this->extConf['crypto.']['instance.']['privateKey']);
@@ -107,7 +107,7 @@ class tx_caretakerinstance_ServiceFactory {
 
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'])) {
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] as $key => $operationRef) {
-					if(is_string($operationRef)) {
+					if (is_string($operationRef)) {
 						$operation = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($operationRef);
 					} elseif ($operationRef instanceof tx_caretakerinstance_IOperation) {
 						$operation = $operationRef;
@@ -137,8 +137,8 @@ class tx_caretakerinstance_ServiceFactory {
 	public function getRemoteCommandConnector() {
 		if ($this->remoteCommandConnector == null) {
 			$this->remoteCommandConnector = new tx_caretakerinstance_RemoteCommandConnector(
-				$this->getCryptoManager(),
-				$this->getSecurityManager()
+					$this->getCryptoManager(),
+					$this->getSecurityManager()
 			);
 		}
 		return $this->remoteCommandConnector;
@@ -152,4 +152,3 @@ class tx_caretakerinstance_ServiceFactory {
 	}
 
 }
-?>

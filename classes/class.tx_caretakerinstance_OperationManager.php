@@ -97,4 +97,3 @@ class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOpe
 	}
 
 }
-?>

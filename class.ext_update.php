@@ -37,9 +37,9 @@
 /**
  * Extension manager update class to generate public / private key pairs.
  *
- * @author		Christopher Hlubek <hlubek@networkteam.com>
- * @package		TYPO3
- * @subpackage	tx_caretakerinstance
+ * @author        Christopher Hlubek <hlubek@networkteam.com>
+ * @package        TYPO3
+ * @subpackage    tx_caretakerinstance
  */
 class ext_update {
 
@@ -56,7 +56,7 @@ class ext_update {
 		$extConf = $this->getExtConf();
 
 		$show = !strlen($extConf['crypto.']['instance.']['publicKey']) ||
-			!strlen($extConf['crypto.']['instance.']['privateKey']);
+				!strlen($extConf['crypto.']['instance.']['privateKey']);
 		return $show;
 	}
 
@@ -75,7 +75,7 @@ class ext_update {
 			$extConf['crypto.']['instance.']['privateKey'] = $privateKey;
 			$this->writeExtensionConfiguration($extConf);
 			$content = "Success: Generated public / private key";
-		} catch(Exception $exception) {
+		} catch (Exception $exception) {
 			$content = 'Error: ' . $exception->getMessage();
 		}
 
@@ -109,4 +109,5 @@ class ext_update {
 	}
 
 }
+
 ?>

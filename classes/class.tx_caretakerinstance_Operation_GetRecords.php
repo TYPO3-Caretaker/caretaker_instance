@@ -55,8 +55,8 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 	 * @var array
 	 */
 	protected $protectedFieldsByTable = array(
-		'be_users' => array('password', 'uc'),
-		'fe_users' => array('password')
+			'be_users' => array('password', 'uc'),
+			'fe_users' => array('password')
 	);
 	protected $implicitFields = array('uid', 'pid', 'deleted', 'hidden');
 
@@ -65,27 +65,27 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 	 *
 	 * <p>The $parameter array is normally just formed like this:</p>
 	 * <code>
-	 *	array(
-	 *		'table' => 'be_users',
-	 *		'field' => 'password',
-	 *		'value' => md5(string)
-	 *	)
+	 *    array(
+	 *        'table' => 'be_users',
+	 *        'field' => 'password',
+	 *        'value' => md5(string)
+	 *    )
 	 * </code>
 	 *
 	 * <p>However, the values for 'field' and 'value' can also be arrays like this:</p>
 	 * <code>
 	 *  array(
-	 *		'table'		=> 'be_users',
-	 *		'field'		=> array (
-	 *						'password',
-	 *						'deleted',
-	 *						'hidden'
-	 *					),
-	 *		'value'		=>	array (
-	 *						'password'	=> 'forbidden_password',
-	 *						'deleted'	=> 0,
-	 *						'hidden'	=> 0
-	 *					)
+	 *        'table'        => 'be_users',
+	 *        'field'        => array (
+	 *                        'password',
+	 *                        'deleted',
+	 *                        'hidden'
+	 *                    ),
+	 *        'value'        =>    array (
+	 *                        'password'    => 'forbidden_password',
+	 *                        'deleted'    => 0,
+	 *                        'hidden'    => 0
+	 *                    )
 	 *  )
 	 * </code>
 	 * <p>The above parameter array will convert to this SQL query:</p>
@@ -96,13 +96,13 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 	 * <p>A more complex example which does not only compare "value" to "field" (e.g. "deleted = 0"):</p>
 	 * <code>
 	 * array(
-	 *		'table'		=> 'be_users',
-	 *		'field'		=> array('password'),
-	 *		'value'		=> array(
-	 *						'password'	=>	array(
-	 *										'SELECT password FROM be_users WHERE deleted = 0 and disable = 0 GROUP BY password HAVING COUNT(*) > 1'
-	 *									)
-	 *					)
+	 *        'table'        => 'be_users',
+	 *        'field'        => array('password'),
+	 *        'value'        => array(
+	 *                        'password'    =>    array(
+	 *                                        'SELECT password FROM be_users WHERE deleted = 0 and disable = 0 GROUP BY password HAVING COUNT(*) > 1'
+	 *                                    )
+	 *                    )
 	 * )
 	 * </code>
 	 *
@@ -112,7 +112,6 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 	 * </code>
 	 *
 	 * @example ../services/class.tx_caretakerinstance_FindBlacklistedBePasswordTestService.php This class tests if there are duplicate passwords, besides checking for the presence of blacklisted passwords.
-
 	 * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
 	 *
 	 * @return A set of records as an array or FALSE if no record was found
@@ -134,14 +133,14 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 
 			// check that every value in the field array is both in the TCA and the value array
 			foreach ($field as $val) {
-				if (!isset($GLOBALS['TCA'][$table]['columns'][$val]) && (!in_array($val, $this->implicitFields) || !in_array($val, $value) )) {
+				if (!isset($GLOBALS['TCA'][$table]['columns'][$val]) && (!in_array($val, $this->implicitFields) || !in_array($val, $value))) {
 					return new tx_caretakerinstance_OperationResult(FALSE, 'Field [' . $val . '] of table [' . $table . '] not found in the TCA OR not found in value array.');
 				}
 			}
 
 			// check that every key in the value array is both in the TCA and the field array
 			foreach ($value as $key => $val) {
-				if (!isset($GLOBALS['TCA'][$table]['columns'][$key]) && (!in_array($key, $this->implicitFields) || !in_array($key, $field) )) {
+				if (!isset($GLOBALS['TCA'][$table]['columns'][$key]) && (!in_array($key, $this->implicitFields) || !in_array($key, $field))) {
 					return new tx_caretakerinstance_OperationResult(FALSE, 'Field [' . $key . '] of table [' . $table . '] not found in the TCA OR not found in field array.');
 				}
 			}
@@ -172,7 +171,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 				}
 
 				if (is_array($val)) {
-					$arrSql['WHERE'] .= "$key IN (" . join(",",$val) . ")"; // @TODO Make sure there are no loop holes in the generated SQL query...
+					$arrSql['WHERE'] .= "$key IN (" . join(",", $val) . ")"; // @TODO Make sure there are no loop holes in the generated SQL query...
 				} else {
 					$arrSql['WHERE'] .= "$key = " . $GLOBALS['TYPO3_DB']->fullQuoteStr($val, $table);
 				}
@@ -193,7 +192,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 
 			$records = array();
 
-			while (FALSE !== ( $record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result) ) ) {
+			while (FALSE !== ($record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result))) {
 				if ($record !== FALSE) {
 					if (isset($this->protectedFieldsByTable[$table])) {
 						$protectedFields = $this->protectedFieldsByTable[$table];
@@ -246,7 +245,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
 
 			// Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
 			if ($ctrl['versioningWS']) {
-				$query .=' AND ' . $table . '.t3ver_state <= 0'; // Shadow state for new items MUST be ignored!
+				$query .= ' AND ' . $table . '.t3ver_state <= 0'; // Shadow state for new items MUST be ignored!
 			}
 
 			// Enable fields:

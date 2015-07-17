@@ -56,4 +56,3 @@ class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinst
 	}
 
 }
-?>

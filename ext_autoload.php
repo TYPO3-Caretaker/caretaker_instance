@@ -2,6 +2,8 @@
 
 $extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance');
 return array(
+	'tx_caretakerinstance_requestsessiontimeoutexception' => $extensionPath . 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTimeoutException.php',
+	'tx_caretakerinstance_requestsessiontokenfailedexception' => $extensionPath . 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTokenFailedException.php',
 	'tx_caretakerinstance_abstractcryptomanager' => $extensionPath . 'classes/class.tx_caretakerinstance_AbstractCryptoManager.php',
 	'tx_caretakerinstance_base64cryptomanager' => $extensionPath . 'classes/class.tx_caretakerinstance_Base64CryptoManager.php',
 	'tx_caretakerinstance_commandrequest' => $extensionPath . 'classes/class.tx_caretakerinstance_CommandRequest.php',

@@ -54,8 +54,8 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	 * @var array
 	 */
 	protected $protectedFieldsByTable = array(
-		'be_users' => array('password', 'uc'),
-		'fe_users' => array('password')
+			'be_users' => array('password', 'uc'),
+			'fe_users' => array('password')
 	);
 
 	protected $implicitFields = array('uid', 'pid', 'deleted', 'hidden');
@@ -80,9 +80,9 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		}
 
 		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'*',
-			$table,
-			$field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
+				'*',
+				$table,
+				$field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
 
 		if ($result) {
 			$record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result);
@@ -127,24 +127,24 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		$ctrl = $GLOBALS['TCA'][$table]['ctrl'];
 		$query = '';
 		if (is_array($ctrl)) {
-				// Delete field check:
+			// Delete field check:
 			if ($ctrl['delete']) {
 				$query .= ' AND ' . $table . '.' . $ctrl['delete'] . ' = 0';
 			}
 
-				// Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
+			// Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
 			if ($ctrl['versioningWS']) {
-				$query .=' AND ' . $table . '.t3ver_state <= 0'; // Shadow state for new items MUST be ignored!
+				$query .= ' AND ' . $table . '.t3ver_state <= 0'; // Shadow state for new items MUST be ignored!
 			}
 
-				// Enable fields:
-			if (is_array($ctrl['enablecolumns']))	{
+			// Enable fields:
+			if (is_array($ctrl['enablecolumns'])) {
 				if ($ctrl['enablecolumns']['disabled']) {
 					$field = $table . '.' . $ctrl['enablecolumns']['disabled'];
 					$query .= ' AND ' . $field . ' = 0';
 				}
 				if ($ctrl['enablecolumns']['starttime']) {
-					$field = $table.'.'.$ctrl['enablecolumns']['starttime'];
+					$field = $table . '.' . $ctrl['enablecolumns']['starttime'];
 					$query .= ' AND (' . $field . ' <= ' . time() . ')';
 				}
 				if ($ctrl['enablecolumns']['endtime']) {
@@ -157,4 +157,3 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	}
 
 }
-?>

@@ -79,6 +79,4 @@ abstract class tx_caretakerinstance_AbstractCryptoManager implements tx_caretake
 			return FALSE;
 		}
 	}
-
 }
-?>

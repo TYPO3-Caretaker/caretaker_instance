@@ -131,9 +131,9 @@ class tx_caretakerinstance_CommandResult {
 		}
 
 		$array = array(
-			'status' => $this->status,
-			'results' => $results,
-			'message' => $this->message
+				'status' => $this->status,
+				'results' => $results,
+				'message' => $this->message
 		);
 
 		return json_encode($array);
@@ -161,4 +161,3 @@ class tx_caretakerinstance_CommandResult {
 	}
 
 }
-?>

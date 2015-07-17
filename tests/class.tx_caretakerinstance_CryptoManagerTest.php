@@ -37,10 +37,10 @@
 /**
  * Testcase for the CryptoManager
  *
- * @author		Christopher Hlubek <hlubek (at) networkteam.com>
- * @author		Tobias Liebig <liebig (at) networkteam.com>
- * @package		TYPO3
- * @subpackage	tx_caretakerinstance
+ * @author        Christopher Hlubek <hlubek (at) networkteam.com>
+ * @author        Tobias Liebig <liebig (at) networkteam.com>
+ * @package        TYPO3
+ * @subpackage    tx_caretakerinstance
  */
 class tx_caretakerinstance_CryptoManagerTest extends tx_phpunit_testcase {
 
@@ -79,7 +79,7 @@ class tx_caretakerinstance_CryptoManagerTest extends tx_phpunit_testcase {
 		$data = time();
 
 		$tokens = array();
-		for($i = 0; $i < 3; $i++) {
+		for ($i = 0; $i < 3; $i++) {
 			$token = $this->cryptoManager->createSessionToken($data, $this->privateKey);
 			$this->assertArrayNotHasKey($token, $tokens);
 			$tokens[$token] = 1;
@@ -127,13 +127,13 @@ class tx_caretakerinstance_CryptoManagerTest extends tx_phpunit_testcase {
 		$this->markTestSkipped('Skip encryption test because open SSL salts the data and the result is always different.');
 
 		$crypt = $this->cryptoManager->encrypt(
-			'{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
-			$this->publicKey
+				'{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
+				$this->publicKey
 		);
 
 		$this->assertEquals(
-			'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
-			$crypt
+				'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
+				$crypt
 		);
 	}
 
@@ -141,15 +141,14 @@ class tx_caretakerinstance_CryptoManagerTest extends tx_phpunit_testcase {
 		$this->markTestSkipped('Skip encryption test because open SSL salts the data and the result is always different.');
 
 		$plain = $this->cryptoManager->decrypt(
-			'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
-			$this->privateKey
+				'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
+				$this->privateKey
 		);
 
 		$this->assertEquals(
-			'{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
-			$plain
+				'{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
+				$plain
 		);
 	}
 
 }
-?>

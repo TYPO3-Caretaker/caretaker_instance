@@ -71,7 +71,7 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 
 		$operations = array();
 		foreach ($blacklistedUsernames as $username) {
-			$username = trim( $username );
+			$username = trim($username);
 			if (strlen($username)) {
 				$operations[] = array('GetRecord', array('table' => 'be_users', 'field' => 'username', 'value' => $username, 'checkEnableFields' => TRUE));
 			}
@@ -111,7 +111,6 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
 }
-?>

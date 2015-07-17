@@ -59,15 +59,15 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 			$size = filesize($path);
 
 			return new tx_caretakerinstance_OperationResult(TRUE, array(
-				'type' => 'file',
-				'path' => $parameter,
-				'time' => $time,
-				'size' => $size
+					'type' => 'file',
+					'path' => $parameter,
+					'time' => $time,
+					'size' => $size
 			));
 		} elseif (is_dir($path)) {
 			return new tx_caretakerinstance_OperationResult(TRUE, array(
-				'type' => 'folder',
-				'path' => $parameter
+					'type' => 'folder',
+					'path' => $parameter
 			));
 		} else {
 			return new tx_caretakerinstance_OperationResult(FALSE, array('path' => $parameter));
@@ -81,13 +81,13 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 	 * @return string/bool false if path is invalid, else the absolute path
 	 */
 	protected function getPath($path) {
-			// getFileAbsFileName can't handle directory path with trailing / correctly
+		// getFileAbsFileName can't handle directory path with trailing / correctly
 		if (substr($path, -1) === '/') {
- 			$path = substr($path, 0, -1);
+			$path = substr($path, 0, -1);
 		}
 
-			// FIXME remove this hacky part
-			// skip path checks for CLI mode
+		// FIXME remove this hacky part
+		// skip path checks for CLI mode
 		if (defined('TYPO3_cliMode')) {
 			return $path;
 		}
@@ -101,4 +101,3 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
 	}
 
 }
-?>

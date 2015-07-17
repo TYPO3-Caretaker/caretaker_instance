@@ -56,14 +56,14 @@ class tx_caretakerinstance_ServiceHelper {
 	 * @param string $extKey kex of the extension wich is adding the service
 	 * @param string $path path to the flexform and service class without slahes before and after
 	 * @param string $key key wich is used for to identify the service
-	 * @param string $title  title of the testservice
+	 * @param string $title title of the testservice
 	 * @param string $description description of the testservice
 	 */
-	public static function registerCaretakerTestService ($extKey, $path, $key, $title, $description = '') {
+	public static function registerCaretakerTestService($extKey, $path, $key, $title, $description = '') {
 		if ($GLOBALS['T3_SERVICES']['caretaker_test_service'] === NULL) {
-				// EXT:caretaker not yet loaded. Memorize the data for later registration
+			// EXT:caretaker not yet loaded. Memorize the data for later registration
 			self::$deferredTestServicesToRegister[$extKey . $path . $key] = array(
-				$extKey, $path, $key, $title, $description
+					$extKey, $path, $key, $title, $description
 			);
 			return;
 		} else {

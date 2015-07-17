@@ -91,4 +91,3 @@ class tx_caretakerinstance_OperationResult {
 	}
 
 }
-?>

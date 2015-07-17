@@ -37,10 +37,10 @@
 /**
  * Testcase for the ServiceFactory
  *
- * @author		Christopher Hlubek <hlubek (at) networkteam.com>
- * @author		Tobias Liebig <liebig (at) networkteam.com>
- * @package		TYPO3
- * @subpackage	tx_caretakerinstance
+ * @author        Christopher Hlubek <hlubek (at) networkteam.com>
+ * @author        Tobias Liebig <liebig (at) networkteam.com>
+ * @package        TYPO3
+ * @subpackage    tx_caretakerinstance
  */
 class tx_caretakerinstance_ServiceFactoryTest extends tx_phpunit_testcase {
 	function testCommandServiceFactory() {
@@ -48,22 +48,22 @@ class tx_caretakerinstance_ServiceFactoryTest extends tx_phpunit_testcase {
 		// Simulate TYPO3 ext conf
 
 		$extConf = array(
-			'crypto.' => array(
-				'instance.' => array(
-					'publicKey' => 'FakePublicKey',
-					'privateKey' => 'FakePrivateKey'
+				'crypto.' => array(
+						'instance.' => array(
+								'publicKey' => 'FakePublicKey',
+								'privateKey' => 'FakePrivateKey'
+						),
+						'client.' => array(
+								'publicKey' => 'FakeClientPublicKey'
+						)
 				),
-				'client.' => array(
-					'publicKey' => 'FakeClientPublicKey'
+				'security.' => array(
+						'clientHostAddressRestriction' => '10.0.0.1'
 				)
-			),
-			'security.' => array(
-				'clientHostAddressRestriction' => '10.0.0.1'
-			)
 		);
 
 		$GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance'] =
-			serialize($extConf);
+				serialize($extConf);
 
 		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
 		$commandService = $factory->getCommandService();
@@ -87,7 +87,7 @@ class tx_caretakerinstance_ServiceFactoryTest extends tx_phpunit_testcase {
 		$this->markTestSkipped('This has to be checked!');
 
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] = array(
-			'dummy' => 'EXT:caretaker_instance/tests/fixtures/class.tx_caretakerinstance_DummyOperation.php:&tx_caretakerinstance_DummyOperation'
+				'dummy' => 'EXT:caretaker_instance/tests/fixtures/class.tx_caretakerinstance_DummyOperation.php:&tx_caretakerinstance_DummyOperation'
 		);
 		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
 		$operationManager = $factory->getOperationManager();
@@ -99,7 +99,7 @@ class tx_caretakerinstance_ServiceFactoryTest extends tx_phpunit_testcase {
 
 	function testOperationInstanceRegistrationByConfVars() {
 		$GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] = array(
-			'dummyInstance' => new tx_caretakerinstance_DummyOperation()
+				'dummyInstance' => new tx_caretakerinstance_DummyOperation()
 		);
 		$factory = tx_caretakerinstance_ServiceFactory::getInstance();
 		$operationManager = $factory->getOperationManager();
@@ -122,4 +122,3 @@ class tx_caretakerinstance_ServiceFactoryTest extends tx_phpunit_testcase {
 		tx_caretakerinstance_ServiceFactory::destroy();
 	}
 }
-?>

@@ -82,9 +82,9 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 	 */
 	protected function getFailedCommandResultTestResult($commandResult) {
 		return tx_caretaker_TestResult::create(
-			($commandResult instanceof tx_caretakerinstance_CommandResult ? $commandResult->getStatus() : tx_caretaker_Constants::state_error),
-			0,
-			'Command execution failed: ' . ($commandResult instanceof tx_caretakerinstance_CommandResult ? $commandResult->getMessage() : 'undefined')
+				($commandResult instanceof tx_caretakerinstance_CommandResult ? $commandResult->getStatus() : tx_caretaker_Constants::state_error),
+				0,
+				'Command execution failed: ' . ($commandResult instanceof tx_caretakerinstance_CommandResult ? $commandResult->getMessage() : 'undefined')
 		);
 	}
 
@@ -95,9 +95,9 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 	 */
 	protected function getFailedOperationResultTestResult($operationResult) {
 		return tx_caretaker_TestResult::create(
-			tx_caretaker_Constants::state_error,
-			0,
-			'Operation execution failed: ' . $operationResult->getValue()
+				tx_caretaker_Constants::state_error,
+				0,
+				'Operation execution failed: ' . $operationResult->getValue()
 		);
 	}
 
@@ -105,15 +105,14 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 	 * Check if the given version is within the minimum and maximum version
 	 *
 	 * @param string $actualVersion Version to compare to min and max
-	 * @param string $minVersion    Minimum version that is required.
+	 * @param string $minVersion Minimum version that is required.
 	 *                              May be empty.
-	 * @param string $maxVersion    Maximum version that is required.
+	 * @param string $maxVersion Maximum version that is required.
 	 *                              May be empty.
 	 *
 	 * @return boolean TRUE if the actual version is within min and max.
 	 */
-	public function checkVersionRange($actualVersion, $minVersion, $maxVersion)
-	{
+	public function checkVersionRange($actualVersion, $minVersion, $maxVersion) {
 		if ($minVersion != '') {
 			if (!version_compare($actualVersion, $minVersion, '>=')) {
 				return FALSE;
@@ -129,7 +128,6 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretakerinstance_RemoteTestServiceBase.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretakerinstance_RemoteTestServiceBase.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretakerinstance_RemoteTestServiceBase.php']);
 }
-?>

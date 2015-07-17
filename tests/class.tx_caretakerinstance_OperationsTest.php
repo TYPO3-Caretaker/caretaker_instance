@@ -37,10 +37,10 @@
 /**
  * Testcase for Operations
  *
- * @author		Christopher Hlubek <hlubek (at) networkteam.com>
- * @author		Tobias Liebig <liebig (at) networkteam.com>
- * @package		TYPO3
- * @subpackage	tx_caretakerinstance
+ * @author        Christopher Hlubek <hlubek (at) networkteam.com>
+ * @author        Tobias Liebig <liebig (at) networkteam.com>
+ * @package        TYPO3
+ * @subpackage    tx_caretakerinstance
  */
 class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 	public function testOperationInterface() {
@@ -131,7 +131,7 @@ class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 		$this->assertFalse($result->isSuccessful());
 	}
 
-	public function testOperation_GetExtensionListFailsIfNoLocationListIsGiven(){
+	public function testOperation_GetExtensionListFailsIfNoLocationListIsGiven() {
 		$operation = new tx_caretakerinstance_Operation_GetExtensionList();
 
 		$result = $operation->execute();
@@ -139,13 +139,13 @@ class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 		$this->assertFalse($result->isSuccessful());
 	}
 
-	public function testOperation_GetExtensionListReturnsAnArrayOfExtensions(){
+	public function testOperation_GetExtensionListReturnsAnArrayOfExtensions() {
 		$operation = new tx_caretakerinstance_Operation_GetExtensionList();
 
-		$result = $operation->execute(array('locations' => array('global','local','system')));
+		$result = $operation->execute(array('locations' => array('global', 'local', 'system')));
 
 		$this->assertTrue($result->isSuccessful());
-		$this->assertGreaterThan( 0 , count($result->getValue() ) );
+		$this->assertGreaterThan(0, count($result->getValue()));
 	}
 
 	public function testOperation_GetRecordFindsAndCleansARecord() {
@@ -172,9 +172,9 @@ class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 		$operation = new tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
 		$result = $operation->execute(array(
-			'key' => $key,
-			'match' => $GLOBALS['Foo']['bar'],
-			)
+						'key' => $key,
+						'match' => $GLOBALS['Foo']['bar'],
+				)
 		);
 		$this->assertTrue($result->isSuccessful());
 	}
@@ -185,10 +185,10 @@ class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 		$operation = new tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
 		$result = $operation->execute(array(
-			'key' => $key,
-			'match' => '/baz/',
-			'usingRegexp' => true,
-			)
+						'key' => $key,
+						'match' => '/baz/',
+						'usingRegexp' => true,
+				)
 		);
 
 		$this->assertTrue($result->isSuccessful());
@@ -201,9 +201,9 @@ class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 		$operation = new tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
 		$result = $operation->execute(array(
-			'key' => $key,
-			'match' => 'an other value',
-			)
+						'key' => $key,
+						'match' => 'an other value',
+				)
 		);
 
 		$this->assertFalse($result->isSuccessful());
@@ -225,4 +225,3 @@ class tx_caretakerinstance_OperationsTest extends tx_phpunit_testcase {
 		$this->assertFalse($result->isSuccessful());
 	}
 }
-?>

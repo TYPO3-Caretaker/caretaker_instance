@@ -58,4 +58,3 @@ class tx_caretakerinstance_Operation_GetPHPVersion implements tx_caretakerinstan
 	}
 
 }
-?>

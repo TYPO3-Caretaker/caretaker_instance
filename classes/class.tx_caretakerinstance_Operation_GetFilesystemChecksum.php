@@ -68,7 +68,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		}
 		if (!empty($checksum)) {
 			$result = array(
-				'checksum' => $checksum,
+					'checksum' => $checksum,
 			);
 			if ($getSingleChecksums) {
 				$result['singleChecksums'] = $md5s;
@@ -133,7 +133,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		}
 		$md5s = array();
 		$d = dir($path);
-		while(FALSE !== ($entry = $d->read())) {
+		while (FALSE !== ($entry = $d->read())) {
 			if ($entry === '.' || $entry === '..' || $entry === '.svn' || $entry === '.git') {
 				continue;
 			}
@@ -149,10 +149,9 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		asort($md5s);
 
 		return array(
-			md5(implode(',', $md5s)),
-			$md5s
+				md5(implode(',', $md5s)),
+				$md5s
 		);
 	}
 
 }
-?>

@@ -47,4 +47,3 @@
  */
 class tx_caretakerinstance_RequestSessionTimeoutException extends Exception {
 }
-?>

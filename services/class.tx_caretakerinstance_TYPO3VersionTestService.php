@@ -45,7 +45,7 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
+class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
 	public function runTest() {
 		$minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'), $this->getConfigValue('allow_unstable'));
@@ -77,9 +77,9 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		}
 
 		$checkResult = $this->checkVersionRange(
-			$version,
-			$minVersion,
-			$maxVersion);
+				$version,
+				$minVersion,
+				$maxVersion);
 
 		if ($checkResult) {
 			$message = 'TYPO3 version ' . $version . ' is installed';
@@ -113,7 +113,7 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 			if (!empty($newVersionString)) {
 				$versionString = $newVersionString;
 			} else {
-					// if we reach this point, no "current version was "latest" was found. This can be caused by a not running TYPO3 Version update task.
+				// if we reach this point, no "current version was "latest" was found. This can be caused by a not running TYPO3 Version update task.
 				return FALSE;
 			}
 		}
@@ -122,7 +122,6 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php']);
 }
-?>

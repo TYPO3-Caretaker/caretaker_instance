@@ -39,25 +39,16 @@ if (!defined('PATH_typo3conf')) {
 	die('Could not access this script directly!');
 }
 
-/*
-if($_SERVER['REQUEST_METHOD'] != 'POST') {
-	header('HTTP/1.0 500 Invalid request');
-	exit;
-}
-*/
-
-// \TYPO3\CMS\Frontend\Utility\EidUtility::connectDB();
-
 try {
 	$factory = tx_caretakerinstance_ServiceFactory::getInstance();
 	$commandService = $factory->getCommandService();
 
 	$remoteAddress = $_SERVER['REMOTE_ADDR'];
 
-	if($_SERVER['REQUEST_METHOD'] == 'GET') {
-		if(isset($_GET['rst'])) {
+	if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+		if (isset($_GET['rst'])) {
 			$token = $commandService->requestSessionToken($remoteAddress);
-			if(!$token) {
+			if (!$token) {
 				header('HTTP/1.0 403 Request not allowed');
 			} else {
 				echo $token;
@@ -66,7 +57,7 @@ try {
 			header('HTTP/1.0 500 Invalid request');
 		}
 	} else {
-		if(isset($_POST['st']) && isset($_POST['d']) && isset($_POST['s'])) {
+		if (isset($_POST['st']) && isset($_POST['d']) && isset($_POST['s'])) {
 			$sessionToken = $_POST['st'];
 			$data = $_POST['d'];
 			$signature = $_POST['s'];
@@ -74,17 +65,17 @@ try {
 			header('HTTP/1.0 500 Invalid request');
 		}
 		$request = new tx_caretakerinstance_CommandRequest(
-			array(
-				'session_token' => $sessionToken,
-				'client_info' =>
-					array(
-						'host_address' => $remoteAddress
-					)
+				array(
+						'session_token' => $sessionToken,
+						'client_info' =>
+								array(
+										'host_address' => $remoteAddress
+								)
 				,
-				'data' => array(),
-				'raw' => stripslashes($data),
-				'signature' => $signature
-			));
+						'data' => array(),
+						'raw' => stripslashes($data),
+						'signature' => $signature
+				));
 
 		$result = $commandService->executeCommand($request);
 
@@ -92,14 +83,14 @@ try {
 
 		echo $commandService->wrapCommandResult($result);
 	}
-} catch(Exception $exception) {
+} catch (Exception $exception) {
 	echo json_encode(array(
-		'status' => tx_caretakerinstance_CommandResult::status_undefined,
-		'exception' => array(
-			'code' => $exception->getCode()
-			// 'trace' => $exception->getTraceAsString()
-		),
-		'message' => $exception->getMessage()
+			'status' => tx_caretakerinstance_CommandResult::status_undefined,
+			'exception' => array(
+					'code' => $exception->getCode()
+				// 'trace' => $exception->getTraceAsString()
+			),
+			'message' => $exception->getMessage()
 	));
 }
 

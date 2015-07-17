@@ -180,4 +180,3 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
 	}
 
 }
-?>

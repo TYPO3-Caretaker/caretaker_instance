@@ -42,7 +42,7 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_DiskSpaceTestService extends tx_caretakerinstance_RemoteTestServiceBase{
+class tx_caretakerinstance_DiskSpaceTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
 	public function runTest() {
 		$path = $this->getConfigValue('path');
@@ -70,14 +70,14 @@ class tx_caretakerinstance_DiskSpaceTestService extends tx_caretakerinstance_Rem
 		);
 
 		$info = '(' .
-			'free: ' . $this->humanFilesize($diskSpace['free']) .
-			' ; total: ' . $this->humanFilesize($diskSpace['total']) .
-			(
+				'free: ' . $this->humanFilesize($diskSpace['free']) .
+				' ; total: ' . $this->humanFilesize($diskSpace['total']) .
+				(
 				$minFreeAbsolute > 0 ? (
-					' ; expected free: ' . $this->getConfigValue('min_free') .
-					$this->getConfigValue('min_free_unit')
+						' ; expected free: ' . $this->getConfigValue('min_free') .
+						$this->getConfigValue('min_free_unit')
 				) : ''
-			) . ')';
+				) . ')';
 
 		if (!empty($minFreeAbsolute)) {
 			if ($diskSpace['free'] <= $minFreeAbsolute) {

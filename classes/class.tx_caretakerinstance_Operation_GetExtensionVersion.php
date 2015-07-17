@@ -71,4 +71,3 @@ class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretaker
 	}
 
 }
-?>

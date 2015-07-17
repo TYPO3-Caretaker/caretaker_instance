@@ -65,29 +65,29 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 			$success = (preg_match($parameter['match'], $value) >= 1);
 		} else {
 
-			switch ($parameter['comparisonOperator']){
+			switch ($parameter['comparisonOperator']) {
 				case ':regex:' :
 					$success = (preg_match($parameter['match'], $value) >= 1);
 					break;
 				case '>=' :
-					$success = ( $parameter['match'] >= $value );
+					$success = ($parameter['match'] >= $value);
 					break;
 				case '<=' :
-					$success = ( $parameter['match'] <= $value);
+					$success = ($parameter['match'] <= $value);
 					break;
 				case '>' :
-					$success = ( $parameter['match'] > $value);
+					$success = ($parameter['match'] > $value);
 					break;
 				case '<' :
-					$success = ( $parameter['match'] < $value);
+					$success = ($parameter['match'] < $value);
 					break;
 				case '!=':
-					$success = ( $parameter['match'] != $value );
+					$success = ($parameter['match'] != $value);
 					break;
 				default:
 				case '=':
 				case '==':
-					$success = ( $parameter['match'] == $value);
+					$success = ($parameter['match'] == $value);
 					break;
 			}
 
@@ -107,10 +107,10 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 			case 'GLOBALS':
 				$value = $GLOBALS;
 
-					// decode TYPO3_CONF_VARS->EXT->extConf children if requested
-				if ( $keyPath[0] == 'TYPO3_CONF_VARS' && $keyPath[1] == 'EXT' && $keyPath[2] == 'extConf' && $keyPath[3] ) {
-					$serializedValue = $value[ $keyPath[0] ][ $keyPath[1] ][ $keyPath[2] ][ $keyPath[3] ];
-					$value[ $keyPath[0] ][ $keyPath[1] ][ $keyPath[2] ][ $keyPath[3] ] = unserialize($serializedValue);
+				// decode TYPO3_CONF_VARS->EXT->extConf children if requested
+				if ($keyPath[0] == 'TYPO3_CONF_VARS' && $keyPath[1] == 'EXT' && $keyPath[2] == 'extConf' && $keyPath[3]) {
+					$serializedValue = $value[$keyPath[0]][$keyPath[1]][$keyPath[2]][$keyPath[3]];
+					$value[$keyPath[0]][$keyPath[1]][$keyPath[2]][$keyPath[3]] = unserialize($serializedValue);
 				}
 
 				break;
@@ -148,7 +148,7 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 				break;
 		}
 		foreach ($keyPath as $key) {
-			if ( isset( $value[$key] ) ){
+			if (isset($value[$key])) {
 				$value = $value[$key];
 			} else {
 				$value = false;
@@ -160,4 +160,3 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 	}
 
 }
-?>

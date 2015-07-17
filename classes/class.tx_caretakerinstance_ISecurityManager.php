@@ -90,4 +90,3 @@ interface tx_caretakerinstance_ISecurityManager {
 	function getPrivateKey();
 
 }
-?>

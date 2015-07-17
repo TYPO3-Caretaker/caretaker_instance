@@ -59,7 +59,7 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	 */
 	public function execute($parameter = array()) {
 		$locations = $parameter['locations'];
-		if (is_array($locations) && count($locations) > 0 ) {
+		if (is_array($locations) && count($locations) > 0) {
 			$extensionList = array();
 			foreach ($locations as $scope) {
 				if (in_array($scope, $this->scopes)) {
@@ -105,14 +105,14 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	protected function getExtensionListForScope($scope) {
 		$path = $this->getPathForScope($scope);
 		$extensionInfo = array();
-		if (@is_dir($path))	{
+		if (@is_dir($path)) {
 			$extensionFolders = \TYPO3\CMS\Core\Utility\GeneralUtility::get_dirs($path);
 			if (is_array($extensionFolders)) {
-				foreach($extensionFolders as $extKey) {
+				foreach ($extensionFolders as $extKey) {
 					$extensionInfo[$extKey]['ext_key'] = $extKey;
 					$extensionInfo[$extKey]['installed'] = (boolean)\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey);
 
-					if (@is_file($path . $extKey . '/ext_emconf.php'))	{
+					if (@is_file($path . $extKey . '/ext_emconf.php')) {
 						$_EXTKEY = $extKey;
 						@include($path . $extKey . '/ext_emconf.php');
 						$extensionVersion = $EM_CONF[$extKey]['version'];
@@ -132,4 +132,3 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	}
 
 }
-?>

@@ -91,4 +91,3 @@ class tx_caretakerinstance_Base64CryptoManager implements tx_caretakerinstance_I
 	}
 
 }
-?>

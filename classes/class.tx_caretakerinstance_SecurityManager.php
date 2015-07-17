@@ -113,13 +113,15 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 			// Session token expired
 			return FALSE;
 		} elseif (strlen($this->clientHostAddressRestriction) &&
-			$commandRequest->getClientHostAddress() != $this->clientHostAddressRestriction) {
+				$commandRequest->getClientHostAddress() != $this->clientHostAddressRestriction
+		) {
 			// Client IP address is not allowed
 			return FALSE;
 		} elseif (!$this->cryptoManager->verifySignature(
-			$commandRequest->getDataForSignature(),
-			$commandRequest->getSignature(),
-			$this->clientPublicKey)) {
+				$commandRequest->getDataForSignature(),
+				$commandRequest->getSignature(),
+				$this->clientPublicKey)
+		) {
 			// Signature didn't verify
 			return FALSE;
 		}
@@ -137,9 +139,9 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 		$data = json_decode($commandRequest->getRawData(), TRUE);
 		$commandRequest->mergeData($data);
 
-		if(strlen($commandRequest->getData('encrypted'))) {
+		if (strlen($commandRequest->getData('encrypted'))) {
 			$raw = $this->cryptoManager->decrypt($commandRequest->getData('encrypted'), $this->privateKey);
-			if(!$raw) {
+			if (!$raw) {
 				// Decryption failed
 				return FALSE;
 			}
@@ -159,8 +161,9 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 	 * @return string
 	 */
 	public function createSessionToken($clientHostAddress) {
-		if(strlen($this->clientHostAddressRestriction) &&
-			$clientHostAddress != $this->clientHostAddressRestriction) {
+		if (strlen($this->clientHostAddressRestriction) &&
+				$clientHostAddress != $this->clientHostAddressRestriction
+		) {
 			return FALSE;
 		}
 		return $this->cryptoManager->createSessionToken(time(), $this->privateKey);
@@ -259,4 +262,3 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
 	}
 
 }
-?>

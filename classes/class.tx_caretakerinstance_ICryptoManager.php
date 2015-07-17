@@ -110,4 +110,3 @@ interface tx_caretakerinstance_ICryptoManager {
 	function generateKeyPair();
 
 }
-?>

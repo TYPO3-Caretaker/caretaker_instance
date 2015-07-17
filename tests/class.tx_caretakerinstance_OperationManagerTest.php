@@ -37,16 +37,16 @@
 /**
  * Testcase for the OperationManager
  *
- * @author		Christopher Hlubek <hlubek (at) networkteam.com>
- * @author		Tobias Liebig <liebig (at) networkteam.com>
- * @package		TYPO3
- * @subpackage	tx_caretakerinstance
+ * @author        Christopher Hlubek <hlubek (at) networkteam.com>
+ * @author        Tobias Liebig <liebig (at) networkteam.com>
+ * @package        TYPO3
+ * @subpackage    tx_caretakerinstance
  */
 class tx_caretakerinstance_OperationManagerTest extends tx_phpunit_testcase {
 	public function testRegisterOperationAsClass() {
 		$operationManager = new tx_caretakerinstance_OperationManager();
 		$operationManager->registerOperation('get_php_version',
-			'tx_caretakerinstance_Operation_GetPHPVersion');
+				'tx_caretakerinstance_Operation_GetPHPVersion');
 		$operation = $operationManager->getOperation('get_php_version');
 		$this->assertInstanceOf('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
 	}
@@ -54,7 +54,7 @@ class tx_caretakerinstance_OperationManagerTest extends tx_phpunit_testcase {
 	public function testRegisterOperationAsInstance() {
 		$operationManager = new tx_caretakerinstance_OperationManager();
 		$operationManager->registerOperation('get_php_version',
-			new tx_caretakerinstance_Operation_GetPHPVersion());
+				new tx_caretakerinstance_Operation_GetPHPVersion());
 		$operation = $operationManager->getOperation('get_php_version');
 		$this->assertInstanceOf('tx_caretakerinstance_Operation_GetPHPVersion', $operation);
 	}
@@ -77,9 +77,9 @@ class tx_caretakerinstance_OperationManagerTest extends tx_phpunit_testcase {
 
 		$operation = $this->getMock('tx_caretakerinstance_IOperation', array('execute'));
 		$operation->expects($this->once())
-			->method('execute')
-			->with($this->equalTo(array('foo' => 'bar')))
-			->will($this->returnValue(new tx_caretakerinstance_OperationResult(true, 'bar')));
+				->method('execute')
+				->with($this->equalTo(array('foo' => 'bar')))
+				->will($this->returnValue(new tx_caretakerinstance_OperationResult(true, 'bar')));
 
 		$operationManager->registerOperation('mock', $operation);
 
@@ -88,4 +88,3 @@ class tx_caretakerinstance_OperationManagerTest extends tx_phpunit_testcase {
 		$this->assertEquals('bar', $result->getValue());
 	}
 }
-?>

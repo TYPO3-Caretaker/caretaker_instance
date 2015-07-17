@@ -45,4 +45,3 @@ class tx_caretakerinstance_TYPO3VersionTestServiceTest extends tx_phpunit_testca
 		$this->assertTrue($result);
 	}
 }
-?>

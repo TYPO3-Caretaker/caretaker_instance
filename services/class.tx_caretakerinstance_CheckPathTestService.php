@@ -44,32 +44,32 @@
  */
 class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 	public function runTest() {
-			// fetch config values
+		// fetch config values
 		$paths = $this->getConfigValue('cppaths');
 		$inverse = $this->getConfigValue('cpinverse');
 		$type = $this->getConfigValue('cptype');
 		$time = intval($this->getConfigValue('cptime'));
 		$fileAgeShouldBe = $this->getConfigValue('cptimeflag');
 
-			// catch required fields
+		// catch required fields
 		if (!$paths) {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot test without path.');
 		}
 
-			// prepare tests
+		// prepare tests
 		$paths = explode(chr(10), $paths);
 		foreach ($paths AS $path) {
 			$operations[] = array('CheckPathExists', $path);
 		}
-			// run
+		// run
 		$commandResult = $this->executeRemoteOperations($operations);
 
-			// catch errors
+		// catch errors
 		if (!$this->isCommandResultSuccessful($commandResult)) {
-		 	return $this->getFailedCommandResultTestResult($commandResult);
+			return $this->getFailedCommandResultTestResult($commandResult);
 		}
 
-			// process resultset
+		// process resultset
 		$resultset = $commandResult->getOperationResults();
 		foreach ($resultset AS $result) {
 			$resValue = $result->getValue();
@@ -87,16 +87,17 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
 				$resultState = tx_caretaker_Constants::state_error;
 			}
 
-			if ($fileAgeShouldBe != '' && $time != 0 && $result->isSuccessful())  {
+			if ($fileAgeShouldBe != '' && $time != 0 && $result->isSuccessful()) {
 				if ($resValue['time'] == 0) {
 					$msg[] = 'Seems like the caretaker_instance can\'t report the file modification time.';
 					$resultState = max($resultState, tx_caretaker_Constants::state_warning);
 				} else {
 					$fileIsYounger = ((time() - $resValue['time']) < $time);
 					if (($fileAgeShouldBe == 'younger' && $fileIsYounger)
-						|| ($fileAgeShouldBe == 'older' && !$fileIsYounger)) {
-							$resultState = tx_caretaker_Constants::state_error;
-							$msg[] = $resValue['path'] . ' is ' . ($fileIsYounger ? 'younger' : 'older') . ' than ' . $time . ' seconds';
+							|| ($fileAgeShouldBe == 'older' && !$fileIsYounger)
+					) {
+						$resultState = tx_caretaker_Constants::state_error;
+						$msg[] = $resValue['path'] . ' is ' . ($fileIsYounger ? 'younger' : 'older') . ' than ' . $time . ' seconds';
 					} else if ($inverse) {
 						// if we do time checks, the file exists, but it should not ($inverse), it's only a warning
 						$resultState = tx_caretaker_Constants::state_warning;
@@ -107,9 +108,9 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
 
 		if (is_array($msg)) {
 			return tx_caretaker_TestResult::create(
-				$resultState,
-				0,
-				implode(chr(10), $msg)
+					$resultState,
+					0,
+					implode(chr(10), $msg)
 			);
 		} else {
 			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 1);
@@ -117,7 +118,6 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_CheckPathTestService.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_CheckPathTestService.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_CheckPathTestService.php']);
 }
-?>

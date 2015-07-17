@@ -38,4 +38,3 @@ class tx_caretakerinstance_DummyOperation implements tx_caretakerinstance_IOpera
 		return new tx_caretakerinstance_OperationResult(true, $parameter['foo']);
 	}
 }
-?>
