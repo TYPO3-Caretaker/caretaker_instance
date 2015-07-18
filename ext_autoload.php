@@ -38,8 +38,8 @@ return array(
 	'tx_caretakerinstance_findblacklistedbepasswordtestservice' => $extensionPath . 'services/class.tx_caretakerinstance_FindBlacklistedBePasswordTestService.php',
 	'tx_caretakerinstance_findextensionupdatestestservice' => $extensionPath . 'services/class.tx_caretakerinstance_FindExtensionUpdatesTestService.php',
 	'tx_caretakerinstance_findinsecureextensiontestservice' => $extensionPath . 'services/class.tx_caretakerinstance_FindInsecureExtensionTestService.php',
-	'tx_caretakerinstance_remotetestservicebase' => $extensionPath . 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php',
 	'tx_caretakerinstance_typo3versiontestservice' => $extensionPath . 'services/class.tx_caretakerinstance_TYPO3VersionTestService.php',
+	'tx_caretakerinstance_remotetestservicebase' => $extensionPath . 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php',
 	'tx_caretakerinstance_commandresulttest' => $extensionPath . 'tests/class.tx_caretakerinstance_CommandResultTest.php',
 	'tx_caretakerinstance_commandservicetest' => $extensionPath . 'tests/class.tx_caretakerinstance_CommandServiceTest.php',
 	'tx_caretakerinstance_cryptomanagertest' => $extensionPath . 'tests/class.tx_caretakerinstance_CryptoManagerTest.php',
@@ -52,5 +52,5 @@ return array(
 	'tx_caretakerinstance_servicefactorytest' => $extensionPath . 'tests/class.tx_caretakerinstance_ServiceFactoryTest.php',
 	'tx_caretakerinstance_servicestest' => $extensionPath . 'tests/class.tx_caretakerinstance_ServicesTest.php',
 	'tx_caretakerinstance_typo3versiontestservicetest' => $extensionPath . 'tests/class.tx_caretakerinstance_TYPO3VersionTestServiceTest.php',
-	'tx_caretakerinstance_dummyoperation' => $extensionPath . 'tests/fixtures/class.tx_caretakerinstance_DummyOperation.php'
+	'tx_caretakerinstance_dummyoperation' => $extensionPath . 'tests/fixtures/class.tx_caretakerinstance_DummyOperation.php',
 );
