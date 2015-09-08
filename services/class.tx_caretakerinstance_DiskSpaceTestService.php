@@ -114,7 +114,7 @@ class tx_caretakerinstance_DiskSpaceTestService extends tx_caretakerinstance_Rem
 			return 0;
 		}
 		if ($unit === '%') {
-			return (int)(ceil($diskSpace['total'] / 100 * $value));
+			return (double)(ceil($diskSpace['total'] / 100 * $value));
 		}
 		$factor = array_search($unit, array('b', 'kB', 'MB', 'GB', 'TB'));
 		return $value * (pow(1024, $factor));
