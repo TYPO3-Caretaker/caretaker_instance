@@ -3,7 +3,7 @@
 // This file was generated on 2015-07-20 23:09
 
 $extensionPath = t3lib_extMgm::extPath('caretaker_instance');
-$extensionClassesPath = $extensionPath . 'Classes/';
+$extensionClassesPath = $extensionPath . 'classes/';
 return array(
 	'tx_caretakerinstance_abstractcryptomanager' => $extensionClassesPath . 'class.tx_caretakerinstance_AbstractCryptoManager.php',
 	'tx_caretakerinstance_backendusertestservice' => $extensionPath . 'services/class.tx_caretakerinstance_BackendUserTestService.php',
