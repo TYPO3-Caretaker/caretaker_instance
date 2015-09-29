@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * An Operation that returns a list of installed extensions
  *
@@ -57,11 +55,11 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	/**
 	 *
 	 * @param array $parameter Array of extension locations as string (system, global, local)
-	 * @return The extension list
+	 * @return tx_caretakerinstance_OperationResult The extension list
 	 */
 	public function execute($parameter = array()) {
 		$locations = $parameter['locations'];
-		if (is_array($locations) && count($locations) > 0 ) {
+		if (is_array($locations) && count($locations) > 0) {
 			$extensionList = array();
 			foreach ($locations as $scope) {
 				if (in_array($scope, $this->scopes)) {
@@ -82,7 +80,6 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	 * @return string
 	 */
 	protected function getPathForScope($scope) {
-		$path = '';
 		switch ($scope) {
 			case 'system':
 				$path = PATH_typo3 . 'sysext/';
@@ -107,14 +104,14 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	protected function getExtensionListForScope($scope) {
 		$path = $this->getPathForScope($scope);
 		$extensionInfo = array();
-		if (@is_dir($path))	{
-			$extensionFolders = t3lib_div::get_dirs($path);
+		if (@is_dir($path)) {
+			$extensionFolders = \TYPO3\CMS\Core\Utility\GeneralUtility::get_dirs($path);
 			if (is_array($extensionFolders)) {
-				foreach($extensionFolders as $extKey) {
+				foreach ($extensionFolders as $extKey) {
 					$extensionInfo[$extKey]['ext_key'] = $extKey;
-					$extensionInfo[$extKey]['installed'] = (boolean)t3lib_extMgm::isLoaded($extKey);
+					$extensionInfo[$extKey]['installed'] = (boolean)\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey);
 
-					if (@is_file($path . $extKey . '/ext_emconf.php'))	{
+					if (@is_file($path . $extKey . '/ext_emconf.php')) {
 						$_EXTKEY = $extKey;
 						@include($path . $extKey . '/ext_emconf.php');
 						$extensionVersion = $EM_CONF[$extKey]['version'];
@@ -134,4 +131,3 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 	}
 
 }
-?>

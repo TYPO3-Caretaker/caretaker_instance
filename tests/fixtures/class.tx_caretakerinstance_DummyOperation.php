@@ -34,8 +34,12 @@
  * $Id$
  */
 class tx_caretakerinstance_DummyOperation implements tx_caretakerinstance_IOperation {
+
+	/**
+	 * @param array $parameter
+	 * @return tx_caretakerinstance_OperationResult
+	 */
 	function execute($parameter = array()) {
 		return new tx_caretakerinstance_OperationResult(true, $parameter['foo']);
 	}
 }
-?>

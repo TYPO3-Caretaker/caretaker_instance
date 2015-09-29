@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * An Operation that returns the version of an installed extension
  *
@@ -53,17 +51,17 @@ class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretaker
 	 * Get the extension version of the given extension by extension key
 	 *
 	 * @param array $parameter None
-	 * @return The extension version
+	 * @return tx_caretakerinstance_OperationResult The extension version
 	 */
 	public function execute($parameter = array()) {
 		$extensionKey = $parameter['extensionKey'];
 
-		if (!t3lib_extMgm::isLoaded($extensionKey)) {
+		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Extension [' . $extensionKey . '] is not loaded');
 		}
 
 		$_EXTKEY = $extensionKey;
-		@include(t3lib_extMgm::extPath($extensionKey, 'ext_emconf.php'));
+		@include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey, 'ext_emconf.php'));
 
 		if (is_array($EM_CONF[$extensionKey])) {
 			return new tx_caretakerinstance_OperationResult(TRUE, $EM_CONF[$extensionKey]['version']);
@@ -73,4 +71,3 @@ class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretaker
 	}
 
 }
-?>

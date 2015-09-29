@@ -64,7 +64,7 @@ interface tx_caretakerinstance_ISecurityManager {
 	/**
 	 * Create a new session token for allowed hosts
 	 *
-	 * @param unknown_type $clientHostAddress
+	 * @param string $clientHostAddress
 	 */
 	function createSessionToken($clientHostAddress);
 
@@ -90,4 +90,3 @@ interface tx_caretakerinstance_ISecurityManager {
 	function getPrivateKey();
 
 }
-?>

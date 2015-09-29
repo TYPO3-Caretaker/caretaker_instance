@@ -34,16 +34,12 @@
  * $Id$
  */
 
-if (t3lib_extMgm::isLoaded('caretaker_instance')) {
-	require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_ServiceFactory.php'));
-}
-
 /**
  * Extension manager update class to generate public / private key pairs.
  *
- * @author		Christopher Hlubek <hlubek@networkteam.com>
- * @package		TYPO3
- * @subpackage	tx_caretakerinstance
+ * @author        Christopher Hlubek <hlubek@networkteam.com>
+ * @package        TYPO3
+ * @subpackage    tx_caretakerinstance
  */
 class ext_update {
 
@@ -60,7 +56,7 @@ class ext_update {
 		$extConf = $this->getExtConf();
 
 		$show = !strlen($extConf['crypto.']['instance.']['publicKey']) ||
-			!strlen($extConf['crypto.']['instance.']['privateKey']);
+				!strlen($extConf['crypto.']['instance.']['privateKey']);
 		return $show;
 	}
 
@@ -77,37 +73,13 @@ class ext_update {
 			list($publicKey, $privateKey) = $this->factory->getCryptoManager()->generateKeyPair();
 			$extConf['crypto.']['instance.']['publicKey'] = $publicKey;
 			$extConf['crypto.']['instance.']['privateKey'] = $privateKey;
-			$typo3Version = explode('.', TYPO3_version);
-			$majorVersion = intval($typo3Version[0]);
-			if ($majorVersion >= 6) {
-				$this->writeExtensionConfiguration($extConf);
-			} else {
-				$this->writeExtConf($extConf);
-			}
+			$this->writeExtensionConfiguration($extConf);
 			$content = "Success: Generated public / private key";
-		} catch(Exception $exception) {
+		} catch (Exception $exception) {
 			$content = 'Error: ' . $exception->getMessage();
 		}
 
 		return $content;
-	}
-
-	/**
-	 * Write back configuration
-	 *
-	 * @param array $extConf
-	 * @return void
-	 */
-	protected function writeExtConf($extConf) {
-		$install = new t3lib_install();
-		$install->allowUpdateLocalConf = 1;
-		$install->updateIdentity = 'Caretaker Instance installation';
-
-		$lines = $install->writeToLocalconf_control();
-		$install->setValueInLocalconfFile($lines, '$TYPO3_CONF_VARS[\'EXT\'][\'extConf\'][\'caretaker_instance\']', serialize($extConf));
-		$install->writeToLocalconf_control($lines);
-
-		t3lib_extMgm::removeCacheFiles();
 	}
 
 	/**
@@ -137,4 +109,3 @@ class ext_update {
 	}
 
 }
-?>

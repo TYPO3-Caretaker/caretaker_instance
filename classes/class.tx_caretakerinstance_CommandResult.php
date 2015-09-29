@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * The Command Result encapsulates the result of a Command execution.
  *
@@ -78,7 +76,7 @@ class tx_caretakerinstance_CommandResult {
 	 * Create a new Command Result object
 	 *
 	 * @param int|bool $status tx_caretakerinstance_CommandResult::status_ok or TRUE if execution was successful
-	 * @param array of tx_caretakerinstance_OperationResult $operationResults The results of the executed operations
+	 * @param array $operationResults of tx_caretakerinstance_OperationResult $operationResults The results of the executed operations
 	 * @param string $message An optional message for errors
 	 */
 	public function __construct($status, $operationResults = array(), $message = '') {
@@ -94,7 +92,7 @@ class tx_caretakerinstance_CommandResult {
 	}
 
 	/**
-	 * @return TRUE if the execution of the whole command was successful
+	 * @return bool TRUE if the execution of the whole command was successful
 	 */
 	public function isSuccessful() {
 		return $this->status === self::status_ok;
@@ -127,15 +125,16 @@ class tx_caretakerinstance_CommandResult {
 	public function toJson() {
 		$results = array();
 		if (is_array($this->operationResults)) {
+			/** @var tx_caretakerinstance_OperationResult $result */
 			foreach ($this->operationResults as $result) {
 				$results[] = $result->toArray();
 			}
 		}
 
 		$array = array(
-			'status' => $this->status,
-			'results' => $results,
-			'message' => $this->message
+				'status' => $this->status,
+				'results' => $results,
+				'message' => $this->message
 		);
 
 		return json_encode($array);
@@ -161,6 +160,4 @@ class tx_caretakerinstance_CommandResult {
 			return new tx_caretakerinstance_CommandResult(self::status_undefined, NULL, 'Cannot decode command result');
 		}
 	}
-
 }
-?>

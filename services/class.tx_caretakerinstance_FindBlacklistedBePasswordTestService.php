@@ -34,7 +34,6 @@
  *
  * $Id$
  */
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
 
 /**
  * Check if there are blacklisted passwords or users which use the same password (likely "test", "test", "1234" or something similar) in the be_users table
@@ -58,7 +57,7 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 	protected $valueDescription = '';
 
 	/**
-	 * Service type description in human readble form.
+	 * Service type description in human readable form.
 	 * @var string
 	 */
 	protected $typeDescription = 'Test that no users with blacklisted passwords exist on the instance.';
@@ -69,6 +68,9 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 	 */
 	protected $configurationInfoTemplate = '';
 
+	/**
+	 * @return tx_caretaker_TestResult
+	 */
 	public function runTest() {
 		$blacklistedPasswords = explode(chr(10), $this->getConfigValue('blacklist'));
 		$checkForDuplicatePasswords = $this->getConfigValue('check_duplicate_passwords');
@@ -81,9 +83,9 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 		$operationResult = $results[0];
 		if (is_object($operationResult) && $operationResult->isSuccessful()) {
 			return tx_caretaker_TestResult::create(
-				tx_caretaker_Constants::state_undefined,
-				0,
-				'FindBlacklistedBePassword is not supported if EXT:saltedpasswords is installed on instance.'
+					tx_caretaker_Constants::state_undefined,
+					0,
+					'FindBlacklistedBePassword is not supported if EXT:saltedpasswords is installed on instance.'
 			);
 		}
 
@@ -124,9 +126,9 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 
 			// Will check whether "password" is IN (subselect or comma separated list)
 			$sql_fields = array(
-				'password' => array(
-					'SELECT password FROM be_users WHERE disable = 0 AND deleted = 0 GROUP BY password HAVING COUNT(*) > 1' // subselect or comma separated values
-				)
+					'password' => array(
+							'SELECT password FROM be_users WHERE disable = 0 AND deleted = 0 GROUP BY password HAVING COUNT(*) > 1' // subselect or comma separated values
+					)
 			);
 
 			$operations[] = array('GetRecords', array('table' => 'be_users', 'field' => array_keys($sql_fields), 'value' => $sql_fields, 'checkEnableFields' => TRUE));
@@ -166,7 +168,7 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 			$submessages = array_unique($submessages, SORT_REGULAR);
 			asort($submessages);
 
-			if($checkForDuplicatePasswords) {
+			if ($checkForDuplicatePasswords) {
 				$text_reply = 'The following accounts have blacklisted or duplicate passwords: ';
 			} else {
 				$text_reply = 'The following accounts have blacklisted passwords: ';
@@ -183,4 +185,3 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
 }
-?>

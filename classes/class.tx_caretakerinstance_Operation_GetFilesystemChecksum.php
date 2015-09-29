@@ -34,9 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_IOperation.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * Returns a "fingerprint" of a given path, can be used to check if a file or folder has been changed
  *
@@ -61,6 +58,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		$getSingleChecksums = $this->getPath($parameter['getSingleChecksums']);
 
 		$checksum = '';
+		$md5s = NULL;
 
 		if ($path !== FALSE) {
 			if (is_dir($path)) {
@@ -71,7 +69,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		}
 		if (!empty($checksum)) {
 			$result = array(
-				'checksum' => $checksum,
+					'checksum' => $checksum,
 			);
 			if ($getSingleChecksums) {
 				$result['singleChecksums'] = $md5s;
@@ -86,8 +84,8 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 	 * Prepare path, resolve relative path and resolve EXT: path
 	 * check if path is allowed
 	 *
-	 * @param $path absolute or relative path or EXT:foobar/
-	 * @return string/bool FALSE if path is invalid, else the absolute path
+	 * @param string $path absolute or relative path or EXT:foobar/
+	 * @return string|bool FALSE if path is invalid, else the absolute path
 	 */
 	protected function getPath($path) {
 		if (substr($path, -1) === '/') {
@@ -101,9 +99,8 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		}
 
 		// getFileAbsFileName can't handle directory path with trailing / correctly
-
-		$path = t3lib_div::getFileAbsFileName($path);
-		if (t3lib_div::isAllowedAbsPath($path)) {
+		$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
+		if (\TYPO3\CMS\Core\Utility\GeneralUtility::isAllowedAbsPath($path)) {
 			return $path;
 		} else {
 			return FALSE;
@@ -113,7 +110,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 	/**
 	 * Get a md5 checksum of a given file
 	 *
-	 * @param $path file path
+	 * @param string $path file path
 	 * @return string/bool FALSE if path is not a file or md5 checksum of given file
 	 */
 	protected function getFileChecksum($path) {
@@ -127,7 +124,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 	/**
 	 * Get a md5 checksum of a given folder recursivly
 	 *
-	 * @param $path path of folder
+	 * @param string $path path of folder
 	 * @return string checksum
 	 */
 	protected function getFolderChecksum($path) {
@@ -136,7 +133,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		}
 		$md5s = array();
 		$d = dir($path);
-		while(FALSE !== ($entry = $d->read())) {
+		while (FALSE !== ($entry = $d->read())) {
 			if ($entry === '.' || $entry === '..' || $entry === '.svn' || $entry === '.git') {
 				continue;
 			}
@@ -152,10 +149,9 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 		asort($md5s);
 
 		return array(
-			md5(implode(',', $md5s)),
-			$md5s
+				md5(implode(',', $md5s)),
+				$md5s
 		);
 	}
 
 }
-?>

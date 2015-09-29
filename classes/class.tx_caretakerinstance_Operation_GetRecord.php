@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * An Operation that returns the first record matched by a field name and value as an array (excluding protected record details like be_user password).
  * This operation should be SQL injection safe. The table has to be mapped in the TCA.
@@ -56,8 +54,8 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	 * @var array
 	 */
 	protected $protectedFieldsByTable = array(
-		'be_users' => array('password', 'uc'),
-		'fe_users' => array('password')
+			'be_users' => array('password', 'uc'),
+			'fe_users' => array('password')
 	);
 
 	protected $implicitFields = array('uid', 'pid', 'deleted', 'hidden');
@@ -66,20 +64,14 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	 * Get record data from the given table and uid
 	 *
 	 * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
-	 * @return The first found record as an array or FALSE if no record was found
+	 * @return tx_caretakerinstance_OperationResult The first found record as an array or FALSE if no record was found
 	 */
 	public function execute($parameter = array()) {
 		$table = $parameter['table'];
 		$field = $parameter['field'];
 		$value = $parameter['value'];
 		$checkEnableFields = $parameter['checkEnableFields'] == TRUE;
-		$t3Version = floatval($GLOBALS['TYPO3_CONF_VARS']['SYS']['compat_version']);
-		if ($t3Version >= 6.0) {
-			\TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
-		} else {
-			$this->includeTCA();
-			t3lib_div::loadTCA($table);
-		}
+		\TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
 		if (!isset($GLOBALS['TCA'][$table])) {
 			return new tx_caretakerinstance_OperationResult(FALSE, 'Table [' . $table . '] not found in the TCA');
 		}
@@ -88,9 +80,9 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		}
 
 		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-			'*',
-			$table,
-			$field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
+				'*',
+				$table,
+				$field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
 
 		if ($result) {
 			$record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result);
@@ -117,17 +109,8 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	 */
 	protected function includeTCA() {
 		if (!$GLOBALS['TSFE']) {
-			if (version_compare(TYPO3_version, '6.0.0', '<')) {
-				require_once(PATH_tslib.'class.tslib_fe.php');
-
-				// require some additional stuff in TYPO3 4.1
-				require_once(PATH_t3lib.'class.t3lib_cs.php');
-				require_once(PATH_t3lib.'class.t3lib_userauth.php');
-				require_once(PATH_tslib.'class.tslib_feuserauth.php');
-			}
-
 			// Make new instance of TSFE object for initializing user:
-			$GLOBALS['TSFE'] = t3lib_div::makeInstance('tslib_fe', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
+			$GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
 			$GLOBALS['TSFE']->includeTCA();
 		}
 	}
@@ -144,24 +127,24 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 		$ctrl = $GLOBALS['TCA'][$table]['ctrl'];
 		$query = '';
 		if (is_array($ctrl)) {
-				// Delete field check:
+			// Delete field check:
 			if ($ctrl['delete']) {
 				$query .= ' AND ' . $table . '.' . $ctrl['delete'] . ' = 0';
 			}
 
-				// Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
+			// Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
 			if ($ctrl['versioningWS']) {
-				$query .=' AND ' . $table . '.t3ver_state <= 0'; // Shadow state for new items MUST be ignored!
+				$query .= ' AND ' . $table . '.t3ver_state <= 0'; // Shadow state for new items MUST be ignored!
 			}
 
-				// Enable fields:
-			if (is_array($ctrl['enablecolumns']))	{
+			// Enable fields:
+			if (is_array($ctrl['enablecolumns'])) {
 				if ($ctrl['enablecolumns']['disabled']) {
 					$field = $table . '.' . $ctrl['enablecolumns']['disabled'];
 					$query .= ' AND ' . $field . ' = 0';
 				}
 				if ($ctrl['enablecolumns']['starttime']) {
-					$field = $table.'.'.$ctrl['enablecolumns']['starttime'];
+					$field = $table . '.' . $ctrl['enablecolumns']['starttime'];
 					$query .= ' AND (' . $field . ' <= ' . time() . ')';
 				}
 				if ($ctrl['enablecolumns']['endtime']) {
@@ -174,4 +157,3 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 	}
 
 }
-?>

@@ -75,4 +75,3 @@ interface tx_caretakerinstance_IOperationManager {
 	function executeOperation($operationKey, $parameter = array());
 
 }
-?>

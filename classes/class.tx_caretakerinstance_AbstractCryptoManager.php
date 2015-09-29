@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once('class.tx_caretakerinstance_ICryptoManager.php');
-
 /**
  * An abstract base Crypto Manager implementation
  *
@@ -81,6 +79,4 @@ abstract class tx_caretakerinstance_AbstractCryptoManager implements tx_caretake
 			return FALSE;
 		}
 	}
-
 }
-?>

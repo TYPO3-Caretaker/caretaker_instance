@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * A sample Operation which returns the installed PHP version
  *
@@ -60,4 +58,3 @@ class tx_caretakerinstance_Operation_GetPHPVersion implements tx_caretakerinstan
 	}
 
 }
-?>

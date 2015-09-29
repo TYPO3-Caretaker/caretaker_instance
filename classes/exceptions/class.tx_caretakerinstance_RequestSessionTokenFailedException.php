@@ -47,4 +47,3 @@
  */
 class tx_caretakerinstance_RequestSessionTokenFailedException extends Exception {
 }
-?>

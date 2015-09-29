@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * A Operation which returns the current TYPO3 version
  *
@@ -53,8 +51,8 @@ class tx_caretakerinstance_Operation_GetDiskSpace implements tx_caretakerinstanc
 	public function execute($parameter = array()) {
 		$path = !empty($parameter['path']) ? $parameter['path'] : '/';
 		return new tx_caretakerinstance_OperationResult(true, array(
-			'total' => disk_total_space($path),
-			'free' => disk_free_space($path)
+				'total' => disk_total_space($path),
+				'free' => disk_free_space($path)
 		));
 	}
 }

@@ -34,10 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandRequest.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTimeoutException.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/exceptions/class.tx_caretakerinstance_RequestSessionTokenFailedException.php'));
-
 /**
  * Connect to an Instance and execute a Command (bunch of Operations)
  *
@@ -82,8 +78,6 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 * Executes a bunch of operation an a remote instance and takes care to secure/encrypt the communication
 	 *
 	 * @param $operations array
-	 * @param $baseurl string
-	 * @param $instancePublicKey string
 	 * @return tx_caretakerinstance_CommandResult
 	 */
 	public function executeOperations(array $operations) {
@@ -94,24 +88,24 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		try {
 			$sessionToken = $this->requestSessionToken();
 
-		} catch (tx_caretakerinstance_RequestSessionTimeoutException $e){
+		} catch (tx_caretakerinstance_RequestSessionTimeoutException $e) {
 			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Request Session Token failed: ' . $e->getMessage());
 
-		} catch (tx_caretakerinstance_RequestSessionTokenFailedException $e){
+		} catch (tx_caretakerinstance_RequestSessionTokenFailedException $e) {
 			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Request Session Token failed: ' . chr(10) . $e->getMessage());
 
-		} catch ( Exception $e ) {
+		} catch (Exception $e) {
 			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Unknown Exception:' . chr(10) . $e->getMessage());
 		}
 
 		$commandRequest = $this->buildCommandRequest(
-			$sessionToken,
-			$this->getInstancePublicKey(),
-			$this->getInstanceURL(),
-			$this->getDataFromOperations($operations)
+				$sessionToken,
+				$this->getInstancePublicKey(),
+				$this->getInstanceURL(),
+				$this->getDataFromOperations($operations)
 		);
 		$commandRequest->setSignature(
-			$this->getRequestSignature($commandRequest)
+				$this->getRequestSignature($commandRequest)
 		);
 
 		return $this->executeRequest($commandRequest);
@@ -125,15 +119,15 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 */
 	public function executeRequest($commandRequest) {
 		$httpRequestResult = $this->executeHttpRequest(
-			$commandRequest->getServerUrl(),
-			array(
-				'st' => $commandRequest->getSessionToken(),
-				'd' => $commandRequest->getData(),
-				's' => $commandRequest->getSignature()
-			)
+				$commandRequest->getServerUrl(),
+				array(
+						'st' => $commandRequest->getSessionToken(),
+						'd' => $commandRequest->getData(),
+						's' => $commandRequest->getSignature()
+				)
 		);
 
-		if (is_array($httpRequestResult) ){
+		if (is_array($httpRequestResult)) {
 			if ($httpRequestResult['info']['http_code'] === 200) {
 				$json = $this->securityManager->decodeResult($httpRequestResult['response']);
 				// TODO: check if valid json
@@ -143,19 +137,19 @@ class tx_caretakerinstance_RemoteCommandConnector {
 					if (!empty($httpRequestResult['response'])) {
 						$json = json_decode($httpRequestResult['response'], TRUE);
 						if ($json && $json['status'] == -1) {
-							return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Error while executing remote command: ' . $json['message'] . ' (' . $json['exception']['code'] . ')' );
+							return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Error while executing remote command: ' . $json['message'] . ' (' . $json['exception']['code'] . ')');
 						}
 					}
-					return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Cant decode remote command result' );
+					return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'Cant decode remote command result');
 				}
 			} else if ($httpRequestResult['info']['http_code'] === 0) {
 				// seems to be a timeout
-				return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'No Response/Timeout (Total-Time: ' . $httpRequestResult['info']['total_time'] . ')' );
+				return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_undefined, NULL, 'No Response/Timeout (Total-Time: ' . $httpRequestResult['info']['total_time'] . ')');
 			} else {
-				return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Invalid result: ' . $httpRequestResult['response'] . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
+				return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Invalid result: ' . $httpRequestResult['response'] . chr(10) . 'CURL Info: ' . var_export($httpRequestResult['info'], true));
 			}
 		} else {
-			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Invalid result request could not be executed' . chr(10) . 'CURL Info: ' . var_export( $httpRequestResult['info'], true) );
+			return $this->getCommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'Invalid result request could not be executed' . chr(10) . 'CURL Info: ' . var_export($httpRequestResult['info'], true));
 		}
 	}
 
@@ -170,18 +164,18 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 */
 	public function buildCommandRequest($sessionToken, $instancePublicKey, $url, $rawData) {
 		$encryptedData = json_encode(array(
-			'encrypted' => $this->cryptoManager->encrypt($rawData, $instancePublicKey),
+				'encrypted' => $this->cryptoManager->encrypt($rawData, $instancePublicKey),
 		));
 		return new tx_caretakerinstance_CommandRequest(
-			array(
-				'session_token' => $sessionToken,
-				'server_info' => array(
-					'server_key' => $instancePublicKey,
-					'server_url' => $url,
-				),
-				'data' => $encryptedData,
-				'raw' => $encryptedData
-			)
+				array(
+						'session_token' => $sessionToken,
+						'server_info' => array(
+								'server_key' => $instancePublicKey,
+								'server_url' => $url,
+						),
+						'data' => $encryptedData,
+						'raw' => $encryptedData
+				)
 		);
 	}
 
@@ -199,16 +193,18 @@ class tx_caretakerinstance_RemoteCommandConnector {
 
 	/**
 	 * Request a session token from a remote instance
-	 *
 	 * @return string
+	 * @throws tx_caretakerinstance_RequestSessionTimeoutException
+	 * @throws tx_caretakerinstance_RequestSessionTokenFailedException
 	 */
 	public function requestSessionToken() {
 		$requestUrl = $this->getInstanceURL() . '&rst=1';
 		$httpRequestResult = $this->executeHttpRequest($requestUrl);
 
 		if (is_array($httpRequestResult)
-		  && $httpRequestResult['info']['http_code'] === 200
-		  && preg_match('/^([0-9]{10}:[a-z0-9].*)$/', $httpRequestResult['response'], $matches)) {
+				&& $httpRequestResult['info']['http_code'] === 200
+				&& preg_match('/^([0-9]{10}:[a-z0-9].*)$/', $httpRequestResult['response'], $matches)
+		) {
 			return $matches[1];
 
 		} else if ($httpRequestResult['info']['http_code'] === 0) {
@@ -216,8 +212,8 @@ class tx_caretakerinstance_RemoteCommandConnector {
 
 		} else {
 			$msg = '- HTTP-URL: ' . $httpRequestResult['info']['url'] . chr(10) .
-				'- HTTP-Status: ' . $httpRequestResult['info']['http_code'] . chr(10) .
-				'- HTTP-Response: ' . $httpRequestResult['response'];
+					'- HTTP-Status: ' . $httpRequestResult['info']['http_code'] . chr(10) .
+					'- HTTP-Response: ' . $httpRequestResult['response'];
 			throw new tx_caretakerinstance_RequestSessionTokenFailedException($msg);
 		}
 	}
@@ -273,9 +269,9 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 */
 	protected function getDataFromOperations($operations) {
 		return json_encode(
-			array(
-				'operations' => $operations
-			)
+				array(
+						'operations' => $operations
+				)
 		);
 	}
 
@@ -300,8 +296,8 @@ class tx_caretakerinstance_RemoteCommandConnector {
 	 */
 	public function getRequestSignature($commandRequest) {
 		return $this->cryptoManager->createSignature(
-			$commandRequest->getDataForSignature(),
-			$this->securityManager->getPrivateKey()
+				$commandRequest->getDataForSignature(),
+				$this->securityManager->getPrivateKey()
 		);
 	}
 
@@ -332,18 +328,18 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		}
 
 		$headers = array(
-		    "Cache-Control: no-cache",
-		    "Pragma: no-cache"
+				"Cache-Control: no-cache",
+				"Pragma: no-cache"
 		);
 
 		if (is_array($postValues)) {
 			$postQuery = '';
-			foreach($postValues as $key => $value) {
+			foreach ($postValues as $key => $value) {
 				$postQuery .= urlencode($key) . '=' . urlencode($value) . '&';
 			}
 			rtrim($postQuery, '&');
 			// echo $postQuery;
-			$headers[] = 'Content-Length: '.strlen($postQuery);
+			$headers[] = 'Content-Length: ' . strlen($postQuery);
 			$headers[] = 'Expect:'; // fix Problem with lighthttp
 			curl_setopt($curl, CURLOPT_POST, count($postValues));
 			curl_setopt($curl, CURLOPT_POSTFIELDS, $postQuery);
@@ -358,10 +354,9 @@ class tx_caretakerinstance_RemoteCommandConnector {
 		curl_close($curl);
 
 		return array(
-		'response' => $response,
-		'info' => $info
+				'response' => $response,
+				'info' => $info
 		);
 	}
 
 }
-?>

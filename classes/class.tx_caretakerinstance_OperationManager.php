@@ -34,9 +34,6 @@
  * $Id$
  */
 
-require_once('class.tx_caretakerinstance_IOperationManager.php');
-require_once('class.tx_caretakerinstance_IOperation.php');
-
 /**
  * Operation manager for operation registration and execution.
  *
@@ -75,7 +72,7 @@ class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOpe
 	 */
 	function getOperation($operationKey) {
 		if (is_string($this->operations[$operationKey])) {
-			return t3lib_div::makeInstance($this->operations[$operationKey]);
+			return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($this->operations[$operationKey]);
 		} elseif (is_object($this->operations[$operationKey])) {
 			return $this->operations[$operationKey];
 		} else {
@@ -100,4 +97,3 @@ class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOpe
 	}
 
 }
-?>

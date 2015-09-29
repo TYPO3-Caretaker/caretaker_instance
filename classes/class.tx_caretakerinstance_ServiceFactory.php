@@ -34,12 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationManager.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_CommandService.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_SecurityManager.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OpenSSLCryptoManager.php'));
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_RemoteCommandConnector.php'));
-
 /**
  * Singleton factory as a dependency injection container
  *
@@ -59,6 +53,32 @@ class tx_caretakerinstance_ServiceFactory {
 	protected static $instance;
 
 	/**
+	 * @var tx_caretakerinstance_CommandService
+	 */
+	protected $commandService;
+
+
+	/**
+	 * @var tx_caretakerinstance_SecurityManager
+	 */
+	protected $securityManager;
+
+	/**
+	 * @var tx_caretakerinstance_OperationManager
+	 */
+	protected $operationManager;
+
+	/**
+	 * @var tx_caretakerinstance_OpenSSLCryptoManager
+	 */
+	protected $cryptoManager;
+
+	/**
+	 * @var tx_caretakerinstance_RemoteCommandConnector
+	 */
+	protected $remoteCommandConnector;
+
+	/**
 	 * Constructor
 	 */
 	public function __construct() {
@@ -70,7 +90,7 @@ class tx_caretakerinstance_ServiceFactory {
 	 * @return tx_caretakerinstance_ServiceFactory
 	 */
 	public static function getInstance() {
-		if(tx_caretakerinstance_ServiceFactory::$instance == null) {
+		if (tx_caretakerinstance_ServiceFactory::$instance == null) {
 			tx_caretakerinstance_ServiceFactory::$instance = new tx_caretakerinstance_ServiceFactory();
 
 		}
@@ -81,10 +101,10 @@ class tx_caretakerinstance_ServiceFactory {
 	 * @return tx_caretakerinstance_CommandService
 	 */
 	public function getCommandService() {
-		if($this->commandService == null) {
+		if ($this->commandService == null) {
 			$this->commandService = new tx_caretakerinstance_CommandService(
-				$this->getOperationManager(),
-				$this->getSecurityManager()
+					$this->getOperationManager(),
+					$this->getSecurityManager()
 			);
 		}
 		return $this->commandService;
@@ -94,7 +114,7 @@ class tx_caretakerinstance_ServiceFactory {
 	 * @return tx_caretakerinstance_SecurityManager
 	 */
 	public function getSecurityManager() {
-		if($this->securityManager == null) {
+		if ($this->securityManager == null) {
 			$this->securityManager = new tx_caretakerinstance_SecurityManager($this->getCryptoManager());
 			$this->securityManager->setPublicKey($this->extConf['crypto.']['instance.']['publicKey']);
 			$this->securityManager->setPrivateKey($this->extConf['crypto.']['instance.']['privateKey']);
@@ -113,8 +133,8 @@ class tx_caretakerinstance_ServiceFactory {
 
 			if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'])) {
 				foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] as $key => $operationRef) {
-					if(is_string($operationRef)) {
-						$operation = t3lib_div::getUserObj($operationRef);
+					if (is_string($operationRef)) {
+						$operation = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($operationRef);
 					} elseif ($operationRef instanceof tx_caretakerinstance_IOperation) {
 						$operation = $operationRef;
 					} else {
@@ -143,8 +163,8 @@ class tx_caretakerinstance_ServiceFactory {
 	public function getRemoteCommandConnector() {
 		if ($this->remoteCommandConnector == null) {
 			$this->remoteCommandConnector = new tx_caretakerinstance_RemoteCommandConnector(
-				$this->getCryptoManager(),
-				$this->getSecurityManager()
+					$this->getCryptoManager(),
+					$this->getSecurityManager()
 			);
 		}
 		return $this->remoteCommandConnector;
@@ -158,4 +178,3 @@ class tx_caretakerinstance_ServiceFactory {
 	}
 
 }
-?>

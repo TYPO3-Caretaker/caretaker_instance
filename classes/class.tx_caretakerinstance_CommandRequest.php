@@ -152,7 +152,7 @@ class tx_caretakerinstance_CommandRequest {
 	}
 
 	/**
-	 * @param string The signature
+	 * @param string $signature
 	 * @return void
 	 */
 	public function setSignature($signature) {
@@ -164,7 +164,7 @@ class tx_caretakerinstance_CommandRequest {
 	 * @return mixed The entry for the key in the Command Request data
 	 */
 	public function getData($key = null) {
-		if($key != null) {
+		if ($key != null) {
 			return $this->data[$key];
 		} else {
 			return $this->data;
@@ -188,4 +188,3 @@ class tx_caretakerinstance_CommandRequest {
 		return $this->getSessionToken() . '$' . $this->getRawData();
 	}
 }
-?>

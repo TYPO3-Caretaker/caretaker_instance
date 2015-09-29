@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
-
 /**
  * Check for TYPO3 version
  *
@@ -47,8 +45,11 @@ require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_care
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase{
+class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase {
 
+	/**
+	 * @return tx_caretaker_TestResult
+	 */
 	public function runTest() {
 		$minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'), $this->getConfigValue('allow_unstable'));
 		$maxVersion = $this->checkForLatestVersion($this->getConfigValue('max_version'), $this->getConfigValue('allow_unstable'));
@@ -79,9 +80,9 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 		}
 
 		$checkResult = $this->checkVersionRange(
-			$version,
-			$minVersion,
-			$maxVersion);
+				$version,
+				$minVersion,
+				$maxVersion);
 
 		if ($checkResult) {
 			$message = 'TYPO3 version ' . $version . ' is installed';
@@ -109,13 +110,13 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 	protected function checkForLatestVersion($versionString, $allowUnstable = FALSE) {
 		if (strpos($versionString, '.latest') !== FALSE) {
 			$versionDigits = explode('.', $versionString, 3);
-			$latestVersions = t3lib_div::makeInstance('t3lib_Registry')->get('tx_caretaker', $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable');
+			$latestVersions = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Registry')->get('tx_caretaker', $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable');
 			$newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
 
 			if (!empty($newVersionString)) {
 				$versionString = $newVersionString;
 			} else {
-					// if we reach this point, no "current version was "latest" was found. This can be caused by a not running TYPO3 Version update task.
+				// if we reach this point, no "current version was "latest" was found. This can be caused by a not running TYPO3 Version update task.
 				return FALSE;
 			}
 		}
@@ -124,7 +125,6 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php']);
 }
-?>

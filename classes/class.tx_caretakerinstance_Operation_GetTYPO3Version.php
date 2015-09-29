@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'classes/class.tx_caretakerinstance_OperationResult.php'));
-
 /**
  * A Operation which returns the current TYPO3 version
  *
@@ -58,4 +56,3 @@ class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinst
 	}
 
 }
-?>

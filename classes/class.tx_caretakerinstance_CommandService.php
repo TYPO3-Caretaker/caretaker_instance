@@ -34,9 +34,6 @@
  * $Id$
  */
 
-require_once('class.tx_caretakerinstance_CommandRequest.php');
-require_once('class.tx_caretakerinstance_CommandResult.php');
-
 /**
  * The Command Service can execute Commands and
  * is a coarse front service for the caretaker instance.
@@ -85,12 +82,12 @@ class tx_caretakerinstance_CommandService {
 	 * @return tx_caretakerinstance_CommandResult The command result object
 	 */
 	public function executeCommand(tx_caretakerinstance_CommandRequest $commandRequest) {
-		if($this->securityManager->validateRequest($commandRequest)) {
-			if($this->securityManager->decodeRequest($commandRequest)) {
+		if ($this->securityManager->validateRequest($commandRequest)) {
+			if ($this->securityManager->decodeRequest($commandRequest)) {
 				$operations = $commandRequest->getData('operations');
 
 				$results = array();
-				foreach($operations as $operation) {
+				foreach ($operations as $operation) {
 					$results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
 				}
 				return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_ok, $results);
@@ -124,4 +121,3 @@ class tx_caretakerinstance_CommandService {
 	}
 
 }
-?>

@@ -34,8 +34,6 @@
  * $Id$
  */
 
-require_once(t3lib_extMgm::extPath('caretaker_instance', 'services/class.tx_caretakerinstance_RemoteTestServiceBase.php'));
-
 /**
  * Check if given BE-Users exists
  *
@@ -67,13 +65,15 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 	 */
 	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:backend_user_test_configuration';
 
-
+	/**
+	 * @return tx_caretaker_TestResult
+	 */
 	public function runTest() {
 		$blacklistedUsernames = explode(chr(10), $this->getConfigValue('blacklist'));
 
 		$operations = array();
 		foreach ($blacklistedUsernames as $username) {
-			$username = trim( $username );
+			$username = trim($username);
 			if (strlen($username)) {
 				$operations[] = array('GetRecord', array('table' => 'be_users', 'field' => 'username', 'value' => $username, 'checkEnableFields' => TRUE));
 			}
@@ -113,7 +113,6 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
 	}
 }
 
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php'])	{
+if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']) {
 	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
 }
-?>
