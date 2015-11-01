@@ -22,6 +22,7 @@
  *
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
  * This is a file of the caretaker project.
@@ -67,6 +68,10 @@ try {
 		} else {
 			header('HTTP/1.0 500 Invalid request');
 		}
+		// handle data string correctly, if typo3 added slashes to the post vars
+		if (VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getCurrentTypo3Version()) < 7005000 && !get_magic_quotes_gpc()) {
+			$data = stripslashes($data);
+		}
 		$request = new tx_caretakerinstance_CommandRequest(
 				array(
 						'session_token' => $sessionToken,
@@ -74,7 +79,7 @@ try {
 								'host_address' => $remoteAddress
 						),
 						'data' => array(),
-						'raw' => stripslashes($data),
+						'raw' => $data,
 						'signature' => $signature
 				));
 
