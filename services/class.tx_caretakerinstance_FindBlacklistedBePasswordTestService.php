@@ -34,9 +34,11 @@
  *
  * $Id$
  */
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 /**
- * Check if there are blacklisted passwords or users which use the same password (likely "test", "test", "1234" or something similar) in the be_users table
+ * Check if there are blacklisted passwords or users which use the same password (likely "test", "test", "1234" or
+ * something similar) in the be_users table
  *
  * @author Martin Ficzel <martin@work.de>
  * @author Thomas Hempel <thomas@work.de>
@@ -89,95 +91,114 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
 			);
 		}
 
-		$operations = array();
-		foreach ($blacklistedPasswords as $password) {
-			$password = trim($password);
-			if (strlen($password)) {
-				$operations[] = array('GetRecords', array('table' => 'be_users', 'field' => 'password', 'value' => md5($password), 'checkEnableFields' => TRUE));
-			}
-		}
+        // check version of caretaker_instance extension and use "GetRecord" instead of "GetRecords" before version 0.5.2
+        $operations = array();
+        $operations[] = array('GetExtensionVersion', array('extensionKey' => 'caretaker_instance'));
+        $commandResult = $this->executeRemoteOperations($operations);
+        if ($commandResult instanceof tx_caretakerinstance_CommandResult && $commandResult->getStatus() == 0) {
+            $getRecordsCommand = 'GetRecords';
+            /** @var tx_caretakerinstance_OperationResult $operationResult */
+            foreach($commandResult->getOperationResults() as $operationResult) {
+                if ($operationResult->isSuccessful()) {
+                    $version = VersionNumberUtility::convertVersionNumberToInteger($operationResult->getValue());
+                    if ($version < VersionNumberUtility::convertVersionNumberToInteger('0.5.2')) {
+                        $getRecordsCommand = 'GetRecord';
+                    }
+                }
+            }
 
-		$commandResult = $this->executeRemoteOperations($operations);
+            $operations = array();
+            foreach ($blacklistedPasswords as $password) {
+                $password = trim($password);
+                if (strlen($password)) {
+                    $operations[] = array($getRecordsCommand, array('table' => 'be_users', 'field' => 'password', 'value' => md5($password), 'checkEnableFields' => TRUE));
+                }
+            }
 
-		if (!$this->isCommandResultSuccessful($commandResult)) {
-			return $this->getFailedCommandResultTestResult($commandResult);
-		}
+            $commandResult = $this->executeRemoteOperations($operations);
 
-		$careless_users = array();
+            if (!$this->isCommandResultSuccessful($commandResult)) {
+                return $this->getFailedCommandResultTestResult($commandResult);
+            }
 
-		$results = $commandResult->getOperationResults();
-		foreach ($results as $operationResult) {
-			if ($operationResult->isSuccessful()) {
-				$users = $operationResult->getValue();
-				if ($users !== FALSE) {
-					foreach ($users as $user) {
-						$careless_users[] = $user;
-					}
-				}
-			} else {
-				return $this->getFailedOperationResultTestResult($operationResult);
-			}
-		}
+            $careless_users = array();
 
-		if ($checkForDuplicatePasswords) {
-			// clean the preceding operations
-			unset($operations);
-			$operations = array();
+            $results = $commandResult->getOperationResults();
+            foreach ($results as $operationResult) {
+                if ($operationResult->isSuccessful()) {
+                    $users = $operationResult->getValue();
+                    if ($users !== FALSE) {
+                        foreach ($users as $user) {
+                            $careless_users[] = $user;
+                        }
+                    }
+                } else {
+                    return $this->getFailedOperationResultTestResult($operationResult);
+                }
+            }
 
-			// Will check whether "password" is IN (subselect or comma separated list)
-			$sql_fields = array(
-					'password' => array(
-							'SELECT password FROM be_users WHERE disable = 0 AND deleted = 0 GROUP BY password HAVING COUNT(*) > 1' // subselect or comma separated values
-					)
-			);
+            if ($checkForDuplicatePasswords) {
+                // clean the preceding operations
+                unset($operations);
+                $operations = array();
 
-			$operations[] = array('GetRecords', array('table' => 'be_users', 'field' => array_keys($sql_fields), 'value' => $sql_fields, 'checkEnableFields' => TRUE));
+                // Will check whether "password" is IN (subselect or comma separated list)
+                $sql_fields = array(
+                    'password' => array(
+                        'SELECT password FROM be_users WHERE disable = 0 AND deleted = 0 GROUP BY password HAVING COUNT(*) > 1' // subselect or comma separated values
+                    )
+                );
 
-			$commandResult = $this->executeRemoteOperations($operations);
+                $operations[] = array($getRecordsCommand, array('table' => 'be_users', 'field' => array_keys($sql_fields), 'value' => $sql_fields, 'checkEnableFields' => TRUE));
 
-			if (!$this->isCommandResultSuccessful($commandResult)) {
-				return $this->getFailedCommandResultTestResult($commandResult);
-			}
+                $commandResult = $this->executeRemoteOperations($operations);
+
+                if (!$this->isCommandResultSuccessful($commandResult)) {
+                    return $this->getFailedCommandResultTestResult($commandResult);
+                }
 
 
-			$results = $commandResult->getOperationResults();
-			foreach ($results as $operationResult) {
-				if ($operationResult->isSuccessful()) {
+                $results = $commandResult->getOperationResults();
+                foreach ($results as $operationResult) {
+                    if ($operationResult->isSuccessful()) {
 
-					$users = $operationResult->getValue();
-					if ($users !== FALSE) {
-						foreach ($users as $user) {
-							$careless_users[] = $user;
-						}
-					}
-				} else {
-					return $this->getFailedOperationResultTestResult($operationResult);
-				}
-			}
-		}
+                        $users = $operationResult->getValue();
+                        if ($users !== FALSE) {
+                            foreach ($users as $user) {
+                                $careless_users[] = $user;
+                            }
+                        }
+                    } else {
+                        return $this->getFailedOperationResultTestResult($operationResult);
+                    }
+                }
+            }
 
-		// Check if multiple users have the same password, if so then add them to $careless_users array.
-		if (count($careless_users) > 0) {
+            // Check if multiple users have the same password, if so then add them to $careless_users array.
+            if (count($careless_users) > 0) {
 
-			$submessages = array();
-			foreach ($careless_users as $user) {
-				$submessages[] = new tx_caretaker_ResultMessage($user['username']);
-			}
+                $submessages = array();
+                foreach ($careless_users as $user) {
+                    $submessages[] = new tx_caretaker_ResultMessage($user['username']);
+                }
 //			// Remove dublets
 
-			$submessages = array_unique($submessages, SORT_REGULAR);
-			asort($submessages);
+                $submessages = array_unique($submessages, SORT_REGULAR);
+                asort($submessages);
 
-			if ($checkForDuplicatePasswords) {
-				$text_reply = 'The following accounts have blacklisted or duplicate passwords: ';
-			} else {
-				$text_reply = 'The following accounts have blacklisted passwords: ';
-			}
+                if ($checkForDuplicatePasswords) {
+                    $text_reply = 'The following accounts have blacklisted or duplicate passwords: ';
+                } else {
+                    $text_reply = 'The following accounts have blacklisted passwords: ';
+                }
 
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $text_reply, $submessages);
-		}
+                return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $text_reply, $submessages);
+            }
 
-		return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, '');
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, '');
+        } else {
+            return $this->getFailedCommandResultTestResult($commandResult);
+        }
 	}
 
 }
