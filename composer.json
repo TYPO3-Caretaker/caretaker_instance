@@ -3,5 +3,11 @@
     "description": "TYPO3 caretaker instance",
     "type": "typo3-cms-extension",
     "homepage": "https://github.com/TYPO3-Caretaker/",
-    "version": "0.7.4"
+    "version": "0.7.4",
+    "autoload": {
+        "classmap": [
+            "classes",
+            "services"
+        ]
+    }
 }
