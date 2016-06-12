@@ -74,7 +74,7 @@ class ext_update {
 			$extConf['crypto.']['instance.']['publicKey'] = $publicKey;
 			$extConf['crypto.']['instance.']['privateKey'] = $privateKey;
 			$this->writeExtensionConfiguration($extConf);
-			$content = "Success: Generated public / private key";
+			$content = "Success: Generated public / private key<br /><br />Public key:<br />" . $publicKey;
 		} catch (Exception $exception) {
 			$content = 'Error: ' . $exception->getMessage();
 		}
