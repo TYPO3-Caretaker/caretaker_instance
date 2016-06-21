@@ -237,10 +237,32 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 	 */
 	public function getLatestExtensionTerInfos($ext_key, $ext_version) {
 		$objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+
+		/** @var TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository $repo */
 		$repo = $objectManager->get("TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository");
 		$repo->initializeObject();
 
-		$extension = $repo->findHighestAvailableVersion($ext_key);
+		if ($this->isTYPO3VersionIgnored()) {
+			// get last version
+			$extension = $repo->findHighestAvailableVersion($ext_key);
+		} else {
+			// get all versions of the extension
+			$extensionAllVersions = $repo->findByExtensionKeyOrderedByVersion($ext_key)->toArray();
+
+			// find last highest version for running TYPO3 version
+			/** @var TYPO3\CMS\Extensionmanager\Domain\Model\Extension $extension */
+			foreach ($extensionAllVersions as $extensionVersion) {
+				/** @var TYPO3\CMS\Extensionmanager\Domain\Model\Dependency $dependency */
+				foreach ($extensionVersion->getDependencies() as $dependency) {
+					if ($dependency->getIdentifier() == 'typo3'
+						&& $this->checkVersionRange(TYPO3_version, $dependency->getLowestVersion(), $dependency->getHighestVersion())
+					) {
+						$extension = $extensionVersion;
+						break 2;
+					}
+				}
+			}
+		}
 
 		if ($extension === null || !$extension instanceof \TYPO3\CMS\Extensionmanager\Domain\Model\Extension) {
 			return false;
@@ -290,6 +312,13 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 	}
 
 	/**
+	 * @return bool
+	 */
+	protected function isTYPO3VersionIgnored() {
+		return $this->getConfigValue('only_for_running_typo3_version') != 1;
+	}
+
+	/**
 	 * @param $extensionVersion
 	 * @return mixed
 	 */
@@ -299,6 +328,32 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 		}
 		// If not matched, return given version
 		return $extensionVersion;
+	}
+
+	/**
+	 * Check if the given version is within the minimum and maximum version
+	 *
+	 * @param string $actualVersion Version to compare to min and max
+	 * @param string $minVersion Minimum version that is required.
+	 *                              May be empty.
+	 * @param string $maxVersion Maximum version that is required.
+	 *                              May be empty.
+	 *
+	 * @return boolean TRUE if the actual version is within min and max.
+	 */
+	public function checkVersionRange($actualVersion, $minVersion, $maxVersion) {
+		if ($minVersion != '') {
+			if (!version_compare($actualVersion, $minVersion, '>=')) {
+				return FALSE;
+			}
+		}
+		if ($maxVersion != '') {
+			if (!version_compare($actualVersion, $maxVersion, '<=')) {
+				return FALSE;
+			}
+		}
+
+		return TRUE;
 	}
 }
 
