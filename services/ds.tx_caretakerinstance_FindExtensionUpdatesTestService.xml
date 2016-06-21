@@ -88,6 +88,15 @@
 					</config>
 				</TCEforms>
 			</ignore_extension_version_suffix>
+
+			<only_for_running_typo3_version>
+				<TCEforms>
+					<label>Should extension versions not for running TYPO3 version be ignored?</label>
+					<config>
+						<type>check</type>
+					</config>
+				</TCEforms>
+			</only_for_running_typo3_version>
 		</el>
 	</ROOT>
 </T3DataStructure>
