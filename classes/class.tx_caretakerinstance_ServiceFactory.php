@@ -173,7 +173,7 @@ class tx_caretakerinstance_ServiceFactory {
 	/**
 	 * Destroy the factory instance
 	 */
-	public function destroy() {
+	public static function destroy() {
 		self::$instance = null;
 	}
 

@@ -1,4 +1,6 @@
 <?php
+namespace Caretaker\CaretakerInstance\Tests\Unit\Fixtures;
+
 /***************************************************************
  * Copyright notice
  *
@@ -33,15 +35,13 @@
  *
  * $Id$
  */
+class DummyOperation implements \tx_caretakerinstance_IOperation {
 
-class tx_caretakerinstance_TYPO3VersionTestServiceTest extends tx_phpunit_testcase {
-	public function testVersionWithAlphaIsHigherThanLowerVersions() {
-		$service = new tx_caretakerinstance_TYPO3VersionTestService();
-		$result = $service->checkVersionRange(
-			'4.3.0alpha3', // Actual version
-			'4.2.8', // Minimal allowed version
-			'' // Maximal allowed version
-		);
-		$this->assertTrue($result);
+	/**
+	 * @param array $parameter
+	 * @return \tx_caretakerinstance_OperationResult
+	 */
+	function execute($parameter = array()) {
+		return new \tx_caretakerinstance_OperationResult(true, $parameter['foo']);
 	}
 }
