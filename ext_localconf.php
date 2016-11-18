@@ -52,9 +52,16 @@ $operations = array(
 		'CheckPathExists',
 		'GetDiskSpace',
 );
-foreach ($operations as $operationKey) {
-	$TYPO3_CONF_VARS['EXTCONF']['caretaker_instance']['operations'][$operationKey] =
-			'EXT:caretaker_instance/classes/class.tx_caretakerinstance_Operation_' . $operationKey . '.php:&tx_caretakerinstance_Operation_' . $operationKey;
+if (TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(TYPO3\CMS\Core\Utility\VersionNumberUtility::getCurrentTypo3Version()) < 8000000) {
+    foreach ($operations as $operationKey) {
+        $TYPO3_CONF_VARS['EXTCONF']['caretaker_instance']['operations'][$operationKey] =
+                'EXT:caretaker_instance/classes/class.tx_caretakerinstance_Operation_' . $operationKey . '.php:&tx_caretakerinstance_Operation_' . $operationKey;
+    }
+} else {
+    foreach ($operations as $operationKey) {
+        // register operations without file path for CMS 8 or higher
+        $TYPO3_CONF_VARS['EXTCONF']['caretaker_instance']['operations'][$operationKey] = 'tx_caretakerinstance_Operation_' . $operationKey;
+    }
 }
 
 require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance') . '/ext_conf_include.php');
