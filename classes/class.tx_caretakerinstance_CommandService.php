@@ -82,21 +82,25 @@ class tx_caretakerinstance_CommandService {
 	 * @return tx_caretakerinstance_CommandResult The command result object
 	 */
 	public function executeCommand(tx_caretakerinstance_CommandRequest $commandRequest) {
-		if ($this->securityManager->validateRequest($commandRequest)) {
-			if ($this->securityManager->decodeRequest($commandRequest)) {
-				$operations = $commandRequest->getData('operations');
+        try {
+            $this->securityManager->validateRequest($commandRequest);
+            if ($this->securityManager->decodeRequest($commandRequest)) {
+                $operations = $commandRequest->getData('operations');
 
-				$results = array();
-				foreach ($operations as $operation) {
-					$results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
-				}
-				return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_ok, $results);
-			} else {
-				return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'The request could not be decrypted');
-			}
-		} else {
-			return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'The request could not be certified');
-		}
+                $results = array();
+                foreach ($operations as $operation) {
+                    $results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
+                }
+                return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_ok, $results);
+            } else {
+                return new tx_caretakerinstance_CommandResult(
+                    tx_caretakerinstance_CommandResult::status_error, NULL, 'The request could not be decrypted');
+            }
+        } catch(Exception $exception) {
+            return new tx_caretakerinstance_CommandResult(
+                tx_caretakerinstance_CommandResult::status_error, NULL,
+                'The request could not be certified (' . $exception->getMessage() . ')');
+        }
 	}
 
 	/**
