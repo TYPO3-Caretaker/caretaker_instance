@@ -45,49 +45,50 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-interface tx_caretakerinstance_ISecurityManager {
+interface tx_caretakerinstance_ISecurityManager
+{
 
-	/**
-	 * Decode a Command Request (decrypt, merge data)
-	 *
-	 * @param tx_caretakerinstance_CommandRequest $commandRequest
-	 */
-	function decodeRequest(tx_caretakerinstance_CommandRequest $commandRequest);
+    /**
+     * Decode a Command Request (decrypt, merge data)
+     *
+     * @param tx_caretakerinstance_CommandRequest $commandRequest
+     */
+    function decodeRequest(tx_caretakerinstance_CommandRequest $commandRequest);
 
-	/**
-	 * Validate a Command Request (check session token, host address)
-	 *
-	 * @param tx_caretakerinstance_CommandRequest $commandRequest
-	 * @throws Exception
-	 */
-	function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest);
+    /**
+     * Validate a Command Request (check session token, host address)
+     *
+     * @param tx_caretakerinstance_CommandRequest $commandRequest
+     * @throws Exception
+     */
+    function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest);
 
-	/**
-	 * Create a new session token for allowed hosts
-	 *
-	 * @param string $clientHostAddress
-	 */
-	function createSessionToken($clientHostAddress);
+    /**
+     * Create a new session token for allowed hosts
+     *
+     * @param string $clientHostAddress
+     */
+    function createSessionToken($clientHostAddress);
 
-	/**
-	 * Encode the result data
-	 *
-	 * @param string $resultData The Command Result data (e.g. JSON)
-	 * @return string The encrypted Command Result data
-	 */
-	function encodeResult($resultData);
+    /**
+     * Encode the result data
+     *
+     * @param string $resultData The Command Result data (e.g. JSON)
+     * @return string The encrypted Command Result data
+     */
+    function encodeResult($resultData);
 
-	/**
-	 * Decode the result data
-	 *
-	 * @param string $encryptedString
-	 * @return string
-	 */
-	function decodeResult($encryptedString);
+    /**
+     * Decode the result data
+     *
+     * @param string $encryptedString
+     * @return string
+     */
+    function decodeResult($encryptedString);
 
-	/**
-	 * @return string
-	 */
-	function getPrivateKey();
+    /**
+     * @return string
+     */
+    function getPrivateKey();
 
 }
