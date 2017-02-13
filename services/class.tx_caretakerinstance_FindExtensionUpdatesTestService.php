@@ -75,8 +75,9 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
     {
         $location_list = $this->getLocationList();
 
-        $operation = array('GetExtensionList', array('locations' => $location_list));
-        $operations = array($operation);
+        $operations = array();
+        $operations[] = array('GetExtensionList', array('locations' => $location_list));
+        $operations[] = array('GetTYPO3Version');
 
         $commandResult = $this->executeRemoteOperations($operations);
         if (!$this->isCommandResultSuccessful($commandResult)) {
@@ -84,19 +85,30 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
         }
 
         $results = $commandResult->getOperationResults();
-        $operationResult = $results[0];
+        $extensionListResult = $results[0];
 
-        if (!$operationResult->isSuccessful()) {
-            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Remote operation failed: ' . $operationResult->getValue());
+        if (!$extensionListResult->isSuccessful()) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Remote operation failed: ' . $extensionListResult->getValue());
         }
 
-        $extensionList = $operationResult->getValue();
+        $extensionList = $extensionListResult->getValue();
+
+        $typo3Version = '';
+        if (!$this->isTYPO3VersionIgnored()) {
+            $typo3VersionResult = $results[1];
+
+            if (!$typo3VersionResult->isSuccessful()) {
+                return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Remote operation failed: ' . $typo3VersionResult->getValue());
+            }
+
+            $typo3Version = $typo3VersionResult->getValue();
+        }
 
         $errors = array();
         $warnings = array();
         $oks = array();
         foreach ($extensionList as $extension) {
-            $this->checkExtension($extension, $errors, $warnings, $oks);
+            $this->checkExtension($extension, $errors, $warnings, $oks, $typo3Version);
         }
 
         // Return error if insecure extensions are installed
@@ -180,8 +192,9 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
      * @param array $errors
      * @param array $warnings
      * @param array $oks
+     * @param string $typo3Version
      */
-    public function checkExtension($extension, &$errors, &$warnings, &$oks)
+    public function checkExtension($extension, &$errors, &$warnings, &$oks, $typo3Version = '')
     {
         $ext_key = $extension['ext_key'];
         $ext_version = $extension['version'];
@@ -196,15 +209,15 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
         }
 
         // Find extension in TER
-        $ter_info = $this->getLatestExtensionTerInfos($ext_key, $ext_version);
+        $ter_info = $this->getLatestExtensionTerInfos($ext_key, $ext_version, $typo3Version);
 
         // Ext is in TER
         if ($ter_info) {
             $message = 'LLL:EXT:caretaker_instance/locallang.xml:find_extension_updates_test_detailinfo';
             $value = array(
-                'ext_key' => $extension['ext_key'],
-                'ext_version' => $extension['version'],
-                'ter_version' => $ter_info['version'],
+                    'ext_key' => $extension['ext_key'],
+                    'ext_version' => $extension['version'],
+                    'ter_version' => $ter_info['version'],
             );
 
             if ($this->checkVersionRange($ext_version, $ter_info['version'], '')) {
@@ -240,9 +253,9 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
                 }
         } else {
             $value = array(
-                'ext_key' => $extension['ext_key'],
-                'ext_version' => $extension['version'],
-                'ter_version' => 'unknown',
+                    'ext_key' => $extension['ext_key'],
+                    'ext_version' => $extension['version'],
+                    'ter_version' => 'unknown',
             );
             $message = 'LLL:EXT:caretaker_instance/locallang.xml:find_extension_updates_test_detailinfo';
             $oks[] = array('message' => $message, 'values' => $value);
@@ -252,9 +265,10 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
     /**
      * @param string $ext_key
      * @param string $ext_version
+     * @param string $typo3Version
      * @return bool
      */
-    public function getLatestExtensionTerInfos($ext_key, $ext_version)
+    public function getLatestExtensionTerInfos($ext_key, $ext_version, $typo3Version = '')
     {
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 
@@ -275,7 +289,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
                 /** @var TYPO3\CMS\Extensionmanager\Domain\Model\Dependency $dependency */
                 foreach ($extensionVersion->getDependencies() as $dependency) {
                     if ($dependency->getIdentifier() == 'typo3'
-                        && $this->checkVersionRange(TYPO3_version, $dependency->getLowestVersion(), $dependency->getHighestVersion())
+                        && $this->checkVersionRange($typo3Version, $dependency->getLowestVersion(), $dependency->getHighestVersion())
                     ) {
                         $extension = $extensionVersion;
                         break 2;
@@ -288,12 +302,10 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
             return false;
         }
 
-        $ext_infos = array(
-            array(
+        $ext_infos = array(array(
                 'extkey' => $extension->getExtensionKey(),
                 'version' => $extension->getVersion(),
-            ),
-        );
+        ));
 
         if (!is_array($ext_infos)) {
             return false;
@@ -303,7 +315,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
         $latestVersion = null;
         foreach ($ext_infos as $ext_info) {
             if ($latestVersion === null
-                || version_compare($ext_info['version'], $latestVersion, '>')
+                    || version_compare($ext_info['version'], $latestVersion, '>')
             ) {
                 $latestVersion = $ext_info['version'];
                 $result = $ext_info;
