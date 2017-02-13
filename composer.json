@@ -4,11 +4,10 @@
   "type": "typo3-cms-extension",
   "homepage": "https://github.com/TYPO3-Caretaker/",
   "require": {
-    "typo3/cms-core": "^6.2.14|^7.6.0",
-    "typo3/cms": "*"
+    "typo3/cms-core": "^6.2.14|^7.6.0"
   },
   "require-dev": {
-    "namelesscoder/typo3-repository-client": "1.1.x-dev",
+    "namelesscoder/typo3-repository-client": "^1.1",
     "mikey179/vfsStream": "1.4.*@dev",
     "phpunit/phpunit": "~4.7.0"
   },
