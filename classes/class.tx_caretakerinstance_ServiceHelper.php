@@ -43,13 +43,10 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker
  */
 class tx_caretakerinstance_ServiceHelper
 {
-
-    public static $deferredTestServicesToRegister = [];
+    public static $deferredTestServicesToRegister = array();
 
     /**
      * Adds a service for caretaker. The service is registered and the type and flexform is added to the testconf
@@ -64,18 +61,16 @@ class tx_caretakerinstance_ServiceHelper
     {
         if ($GLOBALS['T3_SERVICES']['caretaker_test_service'] === null) {
             // EXT:caretaker not yet loaded. Memorize the data for later registration
-            self::$deferredTestServicesToRegister[$extKey . $path . $key] = [
+            self::$deferredTestServicesToRegister[$extKey . $path . $key] = array(
                 $extKey,
                 $path,
                 $key,
                 $title,
                 $description,
-            ];
+            );
 
             return;
-        } else {
-            tx_caretaker_ServiceHelper::registerCaretakerTestService($extKey, $path, $key, $title, $description);
         }
+        tx_caretaker_ServiceHelper::registerCaretakerTestService($extKey, $path, $key, $title, $description);
     }
-
 }

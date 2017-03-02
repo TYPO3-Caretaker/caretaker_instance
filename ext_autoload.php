@@ -4,7 +4,7 @@
 
 $extensionPath = \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance');
 $extensionClassesPath = $extensionPath . 'classes/';
-return [
+return array(
     'tx_caretakerinstance_abstractcryptomanager' => $extensionClassesPath . 'class.tx_caretakerinstance_AbstractCryptoManager.php',
     'tx_caretakerinstance_backendusertestservice' => $extensionPath . 'services/class.tx_caretakerinstance_BackendUserTestService.php',
     'tx_caretakerinstance_base64cryptomanager' => $extensionClassesPath . 'class.tx_caretakerinstance_Base64CryptoManager.php',
@@ -57,5 +57,4 @@ return [
     'tx_caretakerinstance_servicestest' => $extensionPath . 'tests/class.tx_caretakerinstance_ServicesTest.php',
     'tx_caretakerinstance_typo3versiontestservice' => $extensionPath . 'services/class.tx_caretakerinstance_TYPO3VersionTestService.php',
     'tx_caretakerinstance_typo3versiontestservicetest' => $extensionPath . 'tests/class.tx_caretakerinstance_TYPO3VersionTestServiceTest.php',
-];
-?>
+);

@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase
 {
-
     /**
      * Value Description
      *
@@ -78,8 +75,8 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
     {
         $location_list = $this->getLocationList();
 
-        $operation = ['GetExtensionList', ['locations' => $location_list]];
-        $operations = [$operation];
+        $operation = array('GetExtensionList', array('locations' => $location_list));
+        $operations = array($operation);
 
         $commandResult = $this->executeRemoteOperations($operations);
         if (!$this->isCommandResultSuccessful($commandResult)) {
@@ -95,8 +92,8 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
 
         $extensionList = $operationResult->getValue();
 
-        $errors = [];
-        $warnings = [];
+        $errors = array();
+        $warnings = array();
         foreach ($extensionList as $extension) {
             $this->checkExtension($extension, $errors, $warnings);
         }
@@ -111,8 +108,8 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
         $num_errors = count($errors);
         $num_warnings = count($warnings);
 
-        $submessages = [];
-        $values = ['num_errors' => $num_errors, 'num_warnings' => $num_warnings];
+        $submessages = array();
+        $values = array('num_errors' => $num_errors, 'num_warnings' => $num_warnings);
 
         // add error submessages
         if ($num_errors > 0) {
@@ -145,7 +142,6 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
 
             return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, $value, $message, $submessages);
         }
-
     }
 
     /**
@@ -154,7 +150,7 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
     public function getLocationList()
     {
         $locationCode = (int)$this->getConfigValue('check_extension_locations');
-        $locationList = [];
+        $locationList = array();
         if ($locationCode & 1) {
             $locationList[] = 'system';
         }
@@ -193,15 +189,15 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
         $ext_blacklist = $this->getCustomExtensionBlacklist();
         if (in_array($ext_key, $ext_blacklist)) {
             if ($ext_installed) {
-                $errors[] = [
+                $errors[] = array(
                     'message' => 'LLL:EXT:caretaker_instance/locallang.xml:blacklisted_extension_installed',
                     'values' => $extension,
-                ];
+                );
             } else {
-                $errors[] = [
+                $errors[] = array(
                     'message' => 'LLL:EXT:caretaker_instance/locallang.xml:blacklisted_extension_present',
                     'values' => $extension,
-                ];
+                );
             }
 
             return;
@@ -214,7 +210,7 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
         if (is_array($ter_info)) {
             // Ext is reviewed as secure or not reviewed at all
             if ($ter_info['reviewstate'] > -1) {
-                return [0, ''];
+                return array(0, '');
             }
 
             // Ext is installed
@@ -224,12 +220,12 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
                 switch ($handling) {
                     // Warning
                     case 1:
-                        $warnings[] = ['message' => $message, 'values' => $extension];
+                        $warnings[] = array('message' => $message, 'values' => $extension);
 
                         return;
                     // Error
                     case 2:
-                        $errors[] = ['message' => $message, 'values' => $extension];
+                        $errors[] = array('message' => $message, 'values' => $extension);
 
                         return;
                     // Ignore
@@ -243,12 +239,12 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
                 switch ($handling) {
                     // Warning
                     case 1:
-                        $warnings[] = ['message' => $message, 'values' => $extension];
+                        $warnings[] = array('message' => $message, 'values' => $extension);
 
                         return;
                     // Error
                     case 2:
-                        $errors[] = ['message' => $message, 'values' => $extension];
+                        $errors[] = array('message' => $message, 'values' => $extension);
 
                         return;
                     // Ignore
@@ -258,19 +254,18 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
             }
         } // Ext is not in TER
         else {
-
             $handling = $this->getCustomExtensionErrorHandling();
             $message = 'LLL:EXT:caretaker_instance/locallang.xml:insecure_extension_detail_unknown';
 
             switch ($handling) {
                 // Warning
                 case 1:
-                    $warnings[] = ['message' => $message, 'values' => $extension];
+                    $warnings[] = array('message' => $message, 'values' => $extension);
 
                     return;
                 // Error
                 case 2:
-                    $errors[] = ['message' => $message, 'values' => $extension];
+                    $errors[] = array('message' => $message, 'values' => $extension);
 
                     return;
                 // Ignore
@@ -288,7 +283,7 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
     public function getExtensionTerInfos($ext_key, $ext_version)
     {
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-        $repo = $objectManager->get("TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository");
+        $repo = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
         $repo->initializeObject();
 
         $extension = $repo->findOneByExtensionKeyAndVersion($ext_key, $ext_version);
@@ -297,11 +292,11 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
             return false;
         }
 
-        return [
+        return array(
             'extkey' => $extension->getExtensionKey(),
             'version' => $extension->getVersion(),
             'reviewstate' => $extension->getReviewState(),
-        ];
+        );
     }
 
     /**

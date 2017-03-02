@@ -42,32 +42,29 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 interface tx_caretakerinstance_ISecurityManager
 {
-
     /**
      * Decode a Command Request (decrypt, merge data)
      *
      * @param tx_caretakerinstance_CommandRequest $commandRequest
      */
-    function decodeRequest(tx_caretakerinstance_CommandRequest $commandRequest);
+    public function decodeRequest(tx_caretakerinstance_CommandRequest $commandRequest);
 
     /**
      * Validate a Command Request (check session token, host address)
      *
      * @param tx_caretakerinstance_CommandRequest $commandRequest
      */
-    function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest);
+    public function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest);
 
     /**
      * Create a new session token for allowed hosts
      *
      * @param string $clientHostAddress
      */
-    function createSessionToken($clientHostAddress);
+    public function createSessionToken($clientHostAddress);
 
     /**
      * Encode the result data
@@ -75,7 +72,7 @@ interface tx_caretakerinstance_ISecurityManager
      * @param string $resultData The Command Result data (e.g. JSON)
      * @return string The encrypted Command Result data
      */
-    function encodeResult($resultData);
+    public function encodeResult($resultData);
 
     /**
      * Decode the result data
@@ -83,11 +80,10 @@ interface tx_caretakerinstance_ISecurityManager
      * @param string $encryptedString
      * @return string
      */
-    function decodeResult($encryptedString);
+    public function decodeResult($encryptedString);
 
     /**
      * @return string
      */
-    function getPrivateKey();
-
+    public function getPrivateKey();
 }

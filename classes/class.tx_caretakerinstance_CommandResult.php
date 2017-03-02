@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CommandResult
 {
-
     /**
      * @const int
      * @see tx_caretaker_Constants
@@ -80,12 +77,12 @@ class tx_caretakerinstance_CommandResult
      * @param array $operationResults of tx_caretakerinstance_OperationResult $operationResults The results of the executed operations
      * @param string $message An optional message for errors
      */
-    public function __construct($status, $operationResults = [], $message = '')
+    public function __construct($status, $operationResults = array(), $message = '')
     {
         $this->status = $status;
         if ($status === true) {
             $this->status = self::status_ok;
-        } else if ($status === false) {
+        } elseif ($status === false) {
             $this->status = self::status_error;
         }
 
@@ -130,7 +127,7 @@ class tx_caretakerinstance_CommandResult
      */
     public function toJson()
     {
-        $results = [];
+        $results = array();
         if (is_array($this->operationResults)) {
             /** @var tx_caretakerinstance_OperationResult $result */
             foreach ($this->operationResults as $result) {
@@ -138,11 +135,11 @@ class tx_caretakerinstance_CommandResult
             }
         }
 
-        $array = [
+        $array = array(
             'status' => $this->status,
             'results' => $results,
             'message' => $this->message,
-        ];
+        );
 
         return json_encode($array);
     }
@@ -158,14 +155,13 @@ class tx_caretakerinstance_CommandResult
         $data = json_decode($json, true);
 
         if (is_array($data)) {
-            $results = [];
+            $results = array();
             foreach ($data['results'] as $key => $result) {
                 $results[] = new tx_caretakerinstance_OperationResult($result['status'], $result['value']);
             }
 
-            return new tx_caretakerinstance_CommandResult($data['status'], $results, $data['message']);
-        } else {
-            return new tx_caretakerinstance_CommandResult(self::status_undefined, null, 'Cannot decode command result');
+            return new self($data['status'], $results, $data['message']);
         }
+        return new self(self::status_undefined, null, 'Cannot decode command result');
     }
 }

@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_RemoteTestServiceBase
 {
-
     /**
      * Value Description
      *
@@ -76,14 +73,14 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
     {
         $blacklistedUsernames = explode(chr(10), $this->getConfigValue('blacklist'));
 
-        $operations = [];
+        $operations = array();
         foreach ($blacklistedUsernames as $username) {
             $username = trim($username);
             if (strlen($username)) {
-                $operations[] = [
+                $operations[] = array(
                     'GetRecord',
-                    ['table' => 'be_users', 'field' => 'username', 'value' => $username, 'checkEnableFields' => true],
-                ];
+                    array('table' => 'be_users', 'field' => 'username', 'value' => $username, 'checkEnableFields' => true),
+                );
             }
         }
 
@@ -93,7 +90,7 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
             return $this->getFailedCommandResultTestResult($commandResult);
         }
 
-        $usernames = [];
+        $usernames = array();
 
         $results = $commandResult->getOperationResults();
         foreach ($results as $operationResult) {
@@ -107,7 +104,7 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
             }
         }
 
-        $blacklistedUsernamesFound = [];
+        $blacklistedUsernamesFound = array();
         foreach ($blacklistedUsernames as $username) {
             if (in_array($username, $usernames)) {
                 $blacklistedUsernamesFound[] = $username;

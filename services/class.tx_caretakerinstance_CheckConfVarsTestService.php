@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance_RemoteTestServiceBase
 {
-
     /**
      * Value Description
      *
@@ -75,7 +72,7 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
     public function runTest()
     {
         $checkConfVars = explode(chr(10), $this->getConfigValue('checkConfVars'));
-        $operations = [];
+        $operations = array();
         foreach ($checkConfVars as $checkConfVar) {
             $checkConfVar = trim($checkConfVar);
 
@@ -85,11 +82,10 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
             }
 
             // detect comparison Opertor by regex
-            $matches = [];
+            $matches = array();
             preg_match('/([a-zA-Z0-9\|_]+)[\s]*([\=\!\<\>]{1,2})[\s]*(.*)/', $checkConfVar, $matches);
 
             if ($matches[1] && $matches[2] && isset($matches[3])) {
-
                 $path = trim($matches[1]);
                 $operator = trim($matches[2]);
                 $value = trim($matches[3]);
@@ -100,35 +96,34 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
                 }
 
                 if ($path && $operator) {
-                    $operations[] = [
+                    $operations[] = array(
                         'MatchPredefinedVariable',
-                        [
+                        array(
                             'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
                             'usingRegexp' => false,
                             'match' => $value,
                             'comparisonOperator' => $operator,
-                        ],
-                    ];
+                        ),
+                    );
                 }
             } // compare regex on :regex:
-            else if (strpos($checkConfVar, ':regex:') > 0) {
+            elseif (strpos($checkConfVar, ':regex:') > 0) {
                 list($path, $value) = explode(':regex:', $checkConfVar);
                 $path = trim($path);
                 $value = trim($value);
 
                 if ($path && $value) {
-                    $operations[] = [
+                    $operations[] = array(
                         'MatchPredefinedVariable',
-                        [
+                        array(
                             'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
                             'usingRegexp' => true,
                             'match' => $value,
                             'comparisonOperator' => false,
-                        ],
-                    ];
+                        ),
+                    );
                 }
             }
-
         }
 
         if (count($operations) == 0) {
@@ -141,8 +136,8 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
         }
 
         $results = $commandResult->getOperationResults();
-        $success = [];
-        $failures = [];
+        $success = array();
+        $failures = array();
 
         foreach ($results as $key => $operationResult) {
             if ($operationResult->isSuccessful()) {
@@ -181,9 +176,8 @@ class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance
             $msg_failures .= chr(10) . 'Not Matched Conditions: ' . chr(10) . implode(chr(10), $failures);
 
             return tx_caretaker_TestResult::create(intval($resultNoMatch), 0, $msg_failures . chr(10) . $msg_success);
-        } else {
-            return tx_caretaker_TestResult::create(intval($resultMatch), 0, $msg_success);
         }
+        return tx_caretaker_TestResult::create(intval($resultMatch), 0, $msg_success);
     }
 }
 

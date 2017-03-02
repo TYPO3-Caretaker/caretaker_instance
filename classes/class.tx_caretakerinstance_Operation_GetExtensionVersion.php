@@ -42,19 +42,16 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretakerinstance_IOperation
 {
-
     /**
      * Get the extension version of the given extension by extension key
      *
      * @param array $parameter None
      * @return tx_caretakerinstance_OperationResult The extension version
      */
-    public function execute($parameter = [])
+    public function execute($parameter = array())
     {
         $extensionKey = $parameter['extensionKey'];
 
@@ -67,9 +64,7 @@ class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretaker
 
         if (is_array($EM_CONF[$extensionKey])) {
             return new tx_caretakerinstance_OperationResult(true, $EM_CONF[$extensionKey]['version']);
-        } else {
-            return new tx_caretakerinstance_OperationResult(false, 'Cannot read EM_CONF for extension [' . $extensionKey . ']');
         }
+        return new tx_caretakerinstance_OperationResult(false, 'Cannot read EM_CONF for extension [' . $extensionKey . ']');
     }
-
 }

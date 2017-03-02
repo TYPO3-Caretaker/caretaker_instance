@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase
 {
-
     /**
      * Value Description
      *
@@ -80,8 +77,8 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
             return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute extension test without extension key');
         }
 
-        $operation = ['GetExtensionVersion', ['extensionKey' => $extensionKey]];
-        $operations = [$operation];
+        $operation = array('GetExtensionVersion', array('extensionKey' => $extensionKey));
+        $operations = array($operation);
 
         $commandResult = $this->executeRemoteOperations($operations);
 
@@ -127,23 +124,21 @@ class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_Rem
      * @param string $requirement
      * @param string $minVersion
      * @param string $maxVersion
-     * @return bool
      * @throws Exception
+     * @return bool
      */
     public function checkVersionForRequirementAndVersionRange($actualValue, $requirement, $minVersion, $maxVersion)
     {
         if ($requirement == 'none') {
             if ($actualValue) {
                 return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
-            } else {
-                return true;
             }
+            return true;
         } elseif ($requirement == 'required') {
             if (!$actualValue) {
                 return false;
-            } else {
-                return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
             }
+            return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
         } elseif ($requirement == 'forbidden') {
             return !$actualValue;
         } elseif ($requirement == 'evil') {

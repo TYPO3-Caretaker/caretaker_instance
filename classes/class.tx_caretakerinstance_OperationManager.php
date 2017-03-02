@@ -44,12 +44,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOperationManager
 {
-
     /**
      * @var array of tx_caretakerinstance_IOperation
      */
@@ -61,7 +58,7 @@ class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOpe
      * @param string $operationKey The key of the operation (All lowercase, underscores)
      * @param string|object $operation Operation instance or class
      */
-    function registerOperation($operationKey, $operation)
+    public function registerOperation($operationKey, $operation)
     {
         $this->operations[$operationKey] = $operation;
     }
@@ -70,17 +67,16 @@ class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOpe
      * Get a registered operation as instance
      *
      * @param string $operationKey
-     * @return tx_caretakerinstance_IOperation|boolean The operation instance or FALSE if not registered
+     * @return tx_caretakerinstance_IOperation|bool The operation instance or FALSE if not registered
      */
-    function getOperation($operationKey)
+    public function getOperation($operationKey)
     {
         if (is_string($this->operations[$operationKey])) {
             return \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($this->operations[$operationKey]);
         } elseif (is_object($this->operations[$operationKey])) {
             return $this->operations[$operationKey];
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -90,14 +86,12 @@ class tx_caretakerinstance_OperationManager implements tx_caretakerinstance_IOpe
      * @param array $parameter
      * @return tx_caretakerinstance_OperationResult
      */
-    function executeOperation($operationKey, $parameter = [])
+    public function executeOperation($operationKey, $parameter = array())
     {
         $operation = $this->getOperation($operationKey);
         if ($operation) {
             return $operation->execute($parameter);
-        } else {
-            return new tx_caretakerinstance_OperationResult(false, 'Operation [' . $operationKey . '] unknown');
         }
+        return new tx_caretakerinstance_OperationResult(false, 'Operation [' . $operationKey . '] unknown');
     }
-
 }

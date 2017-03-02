@@ -44,26 +44,23 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_IOperation
 {
-
     /**
      * An array of tables and table fields that should be cleared before sending.
      *
      * @var array
      */
-    protected $protectedFieldsByTable = [
-        'be_users' => ['password', 'uc'],
-        'fe_users' => ['password'],
-    ];
+    protected $protectedFieldsByTable = array(
+        'be_users' => array('password', 'uc'),
+        'fe_users' => array('password'),
+    );
 
     /**
      * @var array
      */
-    protected $implicitFields = ['uid', 'pid', 'deleted', 'hidden'];
+    protected $implicitFields = array('uid', 'pid', 'deleted', 'hidden');
 
     /**
      * Get record data from the given table and uid
@@ -120,7 +117,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
      * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
      * @return tx_caretakerinstance_OperationResult A set of records as an array or FALSE if no record was found
      */
-    public function execute($parameter = [])
+    public function execute($parameter = array())
     {
         $table = $parameter['table'];
         $field = $parameter['field'];
@@ -159,21 +156,19 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
             $result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
                 '*', $table, $field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
         } else {
-
-            $arrSql = [];
-            $arrSql['SELECT'] = "*";
+            $arrSql = array();
+            $arrSql['SELECT'] = '*';
             $arrSql['FROM'] = $table;
-            $arrSql['WHERE'] = "";
+            $arrSql['WHERE'] = '';
 
             $firstField = true;
             foreach ($value as $key => $val) {
-
                 if (!$firstField) {
-                    $arrSql['WHERE'] .= " AND ";
+                    $arrSql['WHERE'] .= ' AND ';
                 }
 
                 if (is_array($val)) {
-                    $arrSql['WHERE'] .= "$key IN (" . join(",", $val) . ")"; // @TODO Make sure there are no loop holes in the generated SQL query...
+                    $arrSql['WHERE'] .= "$key IN (" . implode(',', $val) . ')'; // @TODO Make sure there are no loop holes in the generated SQL query...
                 } else {
                     $arrSql['WHERE'] .= "$key = " . $GLOBALS['TYPO3_DB']->fullQuoteStr($val, $table);
                 }
@@ -190,7 +185,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
         }
 
         if ($result) {
-            $records = [];
+            $records = array();
             while (false !== ($record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result))) {
                 if ($record !== false) {
                     if (isset($this->protectedFieldsByTable[$table])) {
@@ -207,9 +202,8 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
             }
 
             return new tx_caretakerinstance_OperationResult(true, $records);
-        } else {
-            return new tx_caretakerinstance_OperationResult(false, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
         }
+        return new tx_caretakerinstance_OperationResult(false, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
     }
 
     /**
@@ -234,7 +228,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
      * @param $table
      * @return string The query to append
      */
-    function enableFields($table)
+    public function enableFields($table)
     {
         $ctrl = $GLOBALS['TCA'][$table]['ctrl'];
         $query = '';

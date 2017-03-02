@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_TestServiceBase
 {
-
     /**
      * Execute a list of operations on the configured instance.
      *
@@ -57,7 +54,7 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
      * </code>
      *
      * @param $operations Array of array of operations
-     * @return tx_caretakerinstance_CommandResult|boolean
+     * @return tx_caretakerinstance_CommandResult|bool
      */
     protected function executeRemoteOperations($operations)
     {
@@ -72,7 +69,7 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
      * Is the command result successful
      *
      * @param tx_caretakerinstance_CommandResult $commandResult
-     * @return boolean
+     * @return bool
      */
     protected function isCommandResultSuccessful($commandResult)
     {
@@ -118,7 +115,7 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
      * @param string $maxVersion Maximum version that is required.
      *                              May be empty.
      *
-     * @return boolean TRUE if the actual version is within min and max.
+     * @return bool TRUE if the actual version is within min and max.
      */
     public function checkVersionRange($actualVersion, $minVersion, $maxVersion)
     {

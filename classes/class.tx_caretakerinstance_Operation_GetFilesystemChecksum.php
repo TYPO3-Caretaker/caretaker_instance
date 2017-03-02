@@ -42,19 +42,16 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretakerinstance_IOperation
 {
-
     /**
      * Get the file / folder checksum of a given path
      *
      * @param array $parameter Path to a file or folder
      * @return The checksum of the given folder or file
      */
-    public function execute($parameter = [])
+    public function execute($parameter = array())
     {
         $path = $this->getPath($parameter['path']);
         $getSingleChecksums = $this->getPath($parameter['getSingleChecksums']);
@@ -70,17 +67,16 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
             }
         }
         if (!empty($checksum)) {
-            $result = [
+            $result = array(
                 'checksum' => $checksum,
-            ];
+            );
             if ($getSingleChecksums) {
                 $result['singleChecksums'] = $md5s;
             }
 
             return new tx_caretakerinstance_OperationResult(true, $result);
-        } else {
-            return new tx_caretakerinstance_OperationResult(false, 'Error: can\'t calculate checksum for file or folder');
         }
+        return new tx_caretakerinstance_OperationResult(false, 'Error: can\'t calculate checksum for file or folder');
     }
 
     /**
@@ -106,9 +102,8 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
         $path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
         if (\TYPO3\CMS\Core\Utility\GeneralUtility::isAllowedAbsPath($path)) {
             return $path;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -138,7 +133,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
         if (!is_dir($path)) {
             return $this->getFileChecksum($path);
         }
-        $md5s = [];
+        $md5s = array();
         $d = dir($path);
         while (false !== ($entry = $d->read())) {
             if ($entry === '.' || $entry === '..' || $entry === '.svn' || $entry === '.git') {
@@ -155,10 +150,9 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
 
         asort($md5s);
 
-        return [
+        return array(
             md5(implode(',', $md5s)),
             $md5s,
-        ];
+        );
     }
-
 }

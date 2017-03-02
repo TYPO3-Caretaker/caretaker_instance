@@ -39,23 +39,20 @@
  *
  * @author Tobias Liebig <tobias.liebig@typo3.org>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetDiskSpace implements tx_caretakerinstance_IOperation
 {
-
     /**
      * @param array $parameter
      * @return tx_caretakerinstance_OperationResult
      */
-    public function execute($parameter = [])
+    public function execute($parameter = array())
     {
         $path = !empty($parameter['path']) ? $parameter['path'] : '/';
 
-        return new tx_caretakerinstance_OperationResult(true, [
+        return new tx_caretakerinstance_OperationResult(true, array(
             'total' => disk_total_space($path),
             'free' => disk_free_space($path),
-        ]);
+        ));
     }
 }

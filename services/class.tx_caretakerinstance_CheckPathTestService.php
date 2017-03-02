@@ -39,12 +39,9 @@
  *
  * @author Felix Oertel <oertel@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_RemoteTestServiceBase
 {
-
     /**
      * @return tx_caretaker_TestResult
      */
@@ -64,8 +61,8 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
 
         // prepare tests
         $paths = explode(chr(10), $paths);
-        foreach ($paths AS $path) {
-            $operations[] = ['CheckPathExists', $path];
+        foreach ($paths as $path) {
+            $operations[] = array('CheckPathExists', $path);
         }
         // run
         $commandResult = $this->executeRemoteOperations($operations);
@@ -77,18 +74,16 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
 
         // process resultset
         $resultset = $commandResult->getOperationResults();
-        foreach ($resultset AS $result) {
+        foreach ($resultset as $result) {
             $resValue = $result->getValue();
 
             if (!$result->isSuccessful() && !$inverse) {
                 $msg[] = $resValue['path'] . ' does not exist';
                 $resultState = tx_caretaker_Constants::state_error;
-
-            } else if ($result->isSuccessful() && $inverse) {
+            } elseif ($result->isSuccessful() && $inverse) {
                 $msg[] = $resValue['path'] . ' does exist';
                 $resultState = tx_caretaker_Constants::state_error;
-
-            } else if ($result->isSuccessful() && $type && ($type != $resValue['type'])) {
+            } elseif ($result->isSuccessful() && $type && ($type != $resValue['type'])) {
                 $msg[] = $resValue['path'] . ' exists, but is a ' . $resValue['type'];
                 $resultState = tx_caretaker_Constants::state_error;
             }
@@ -104,7 +99,7 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
                     ) {
                         $resultState = tx_caretaker_Constants::state_error;
                         $msg[] = $resValue['path'] . ' is ' . ($fileIsYounger ? 'younger' : 'older') . ' than ' . $time . ' seconds';
-                    } else if ($inverse) {
+                    } elseif ($inverse) {
                         // if we do time checks, the file exists, but it should not ($inverse), it's only a warning
                         $resultState = tx_caretaker_Constants::state_warning;
                     }
@@ -118,9 +113,8 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
                 0,
                 implode(chr(10), $msg)
             );
-        } else {
-            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 1);
         }
+        return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 1);
     }
 }
 

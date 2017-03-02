@@ -44,27 +44,24 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 interface tx_caretakerinstance_IOperationManager
 {
-
     /**
      * Register a new operation with the given key.
      *
      * @param string $operationKey The key of the operation (All lowercase, underscores)
      * @param string|object $operation Operation instance or class
      */
-    function registerOperation($operationKey, $operation);
+    public function registerOperation($operationKey, $operation);
 
     /**
      * Get a registered operation as instance by key
      *
      * @param string $operationKey
-     * @return tx_caretakerinstance_IOperation|boolean The Operation instance or FALSE if not registered
+     * @return tx_caretakerinstance_IOperation|bool The Operation instance or FALSE if not registered
      */
-    function getOperation($operationKey);
+    public function getOperation($operationKey);
 
     /**
      * Execute an Operation by key with optional parameters
@@ -73,6 +70,5 @@ interface tx_caretakerinstance_IOperationManager
      * @param array $parameter
      * @return tx_caretakerinstance_OperationResult
      */
-    function executeOperation($operationKey, $parameter = []);
-
+    public function executeOperation($operationKey, $parameter = array());
 }

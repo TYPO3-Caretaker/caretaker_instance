@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecurityManager
 {
-
     /**
      * Public key of this instance
      *
@@ -106,7 +103,7 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
      * - Encrypted data signature
      *
      * @param tx_caretakerinstance_CommandRequest $commandRequest
-     * @return boolean
+     * @return bool
      */
     public function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest)
     {
@@ -136,7 +133,7 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
      * Decrypt and merge encrypted data for the command request
      *
      * @param tx_caretakerinstance_CommandRequest $commandRequest
-     * @return boolean TRUE if the command request could be decrypted
+     * @return bool TRUE if the command request could be decrypted
      */
     public function decodeRequest(tx_caretakerinstance_CommandRequest $commandRequest)
     {
@@ -277,5 +274,4 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
     {
         return $this->cryptoManager->decrypt($encryptedData, $this->privateKey);
     }
-
 }

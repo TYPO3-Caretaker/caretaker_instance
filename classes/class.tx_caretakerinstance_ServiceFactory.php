@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_ServiceFactory
 {
-
     /**
      * @var tx_caretakerinstance_ServiceFactory
      */
@@ -92,12 +89,11 @@ class tx_caretakerinstance_ServiceFactory
      */
     public static function getInstance()
     {
-        if (tx_caretakerinstance_ServiceFactory::$instance == null) {
-            tx_caretakerinstance_ServiceFactory::$instance = new tx_caretakerinstance_ServiceFactory();
-
+        if (self::$instance == null) {
+            self::$instance = new self();
         }
 
-        return tx_caretakerinstance_ServiceFactory::$instance;
+        return self::$instance;
     }
 
     /**
@@ -145,9 +141,9 @@ class tx_caretakerinstance_ServiceFactory
                         $operation = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($operationRef);
                     } elseif ($operationRef instanceof tx_caretakerinstance_IOperation) {
                         $operation = $operationRef;
-                    } else {
-                        // TODO log error if some strange value is registered
                     }
+                        // TODO log error if some strange value is registered
+
                     $this->operationManager->registerOperation($key, $operation);
                 }
             }
@@ -190,5 +186,4 @@ class tx_caretakerinstance_ServiceFactory
     {
         self::$instance = null;
     }
-
 }

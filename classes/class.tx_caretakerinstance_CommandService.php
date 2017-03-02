@@ -47,12 +47,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CommandService
 {
-
     /**
      * @var tx_caretakerinstance_ISecurityManager
      */
@@ -89,18 +86,16 @@ class tx_caretakerinstance_CommandService
             if ($this->securityManager->decodeRequest($commandRequest)) {
                 $operations = $commandRequest->getData('operations');
 
-                $results = [];
+                $results = array();
                 foreach ($operations as $operation) {
                     $results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
                 }
 
                 return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_ok, $results);
-            } else {
-                return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be decrypted');
             }
-        } else {
-            return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be certified');
+            return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be decrypted');
         }
+        return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be certified');
     }
 
     /**
@@ -126,5 +121,4 @@ class tx_caretakerinstance_CommandService
 
         return $this->securityManager->encodeResult($json);
     }
-
 }

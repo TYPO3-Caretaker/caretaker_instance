@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_AbstractCryptoManager
 {
-
     /**
      * Constructor
      */
@@ -64,8 +61,8 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
      *
      * @param $data string The data to encrypt
      * @param $publicKey string The public key for encryption (as PEM formatted string)
-     * @return string The encrypted data
      * @throws Exception
+     * @return string The encrypted data
      */
     public function encrypt($data, $publicKey)
     {
@@ -74,7 +71,7 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
             throw new \Exception('Public key missing', 1423738632);
         }
 
-        openssl_seal($data, $cryptedData, $envelopeKeys, [$publicKey]);
+        openssl_seal($data, $cryptedData, $envelopeKeys, array($publicKey));
 
         $envelopeKey = $envelopeKeys[0];
 
@@ -88,8 +85,8 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
      *
      * @param $data string The data to decrypt
      * @param string $privateKey The private key for decryption (as PEM formatted string)
-     * @return string The decrypted data
      * @throws Exception
+     * @return string The decrypted data
      */
     public function decrypt($data, $privateKey)
     {
@@ -113,8 +110,8 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
      *
      * @param string $data
      * @param string $privateKey The private key in PEM form
-     * @return string
      * @throws Exception
+     * @return string
      */
     public function createSignature($data, $privateKey)
     {
@@ -135,8 +132,8 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
      * @param string $data
      * @param string $signature
      * @param string $publicKey The private key in PEM form
-     * @return string
      * @throws Exception
+     * @return string
      */
     public function verifySignature($data, $signature, $publicKey)
     {
@@ -154,8 +151,8 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
     /**
      * Generate a new key pair
      *
-     * @return array Public and private key as string
      * @throws Exception
+     * @return array Public and private key as string
      */
     public function generateKeyPair()
     {
@@ -170,7 +167,7 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
         $publicKey = openssl_pkey_get_details($keyPair);
         $publicKey = $publicKey['key'];
 
-        return [$this->encodeKey($publicKey), $this->encodeKey($privateKey)];
+        return array($this->encodeKey($publicKey), $this->encodeKey($privateKey));
     }
 
     /**
@@ -194,5 +191,4 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
     {
         return str_replace('|', "\n", $key);
     }
-
 }

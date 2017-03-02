@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caretakerinstance_IOperation
 {
-
     /**
      * Check if the key matches the variable. Nested keys can be given
      * using the | separator. To prevent information disclosure, the key
@@ -56,9 +53,8 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
      * @param array $parameter key, match, usingRegexp, comparisonOperator
      * @return tx_caretakerinstance_OperationResult The current PHP version
      */
-    public function execute($parameter = [])
+    public function execute($parameter = array())
     {
-
         $keyPath = explode('|', $parameter['key']);
         $value = $this->getValueForKeyPath($keyPath);
 
@@ -66,21 +62,20 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
         if ($parameter['usingRegexp']) {
             $success = (preg_match($parameter['match'], $value) >= 1);
         } else {
-
             switch ($parameter['comparisonOperator']) {
-                case ':regex:' :
+                case ':regex:':
                     $success = (preg_match($parameter['match'], $value) >= 1);
                     break;
-                case '>=' :
+                case '>=':
                     $success = ($parameter['match'] >= $value);
                     break;
-                case '<=' :
+                case '<=':
                     $success = ($parameter['match'] <= $value);
                     break;
-                case '>' :
+                case '>':
                     $success = ($parameter['match'] > $value);
                     break;
-                case '<' :
+                case '<':
                     $success = ($parameter['match'] < $value);
                     break;
                 case '!=':
@@ -100,7 +95,7 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
     /**
      *
      * @param array $keyPath
-     * @return boolean
+     * @return bool
      */
     protected function getValueForKeyPath(array $keyPath)
     {
@@ -161,5 +156,4 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
 
         return $value;
     }
-
 }

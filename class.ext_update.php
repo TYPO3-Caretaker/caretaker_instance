@@ -38,23 +38,19 @@
  * Extension manager update class to generate public / private key pairs.
  *
  * @author        Christopher Hlubek <hlubek@networkteam.com>
- * @package        TYPO3
- * @subpackage    tx_caretakerinstance
  */
 class ext_update
 {
-
     /**
      * @var tx_caretakerinstance_ServiceFactory
      */
     protected $factory;
 
     /**
-     * @return boolean Whether the update should be shown / allowed
+     * @return bool Whether the update should be shown / allowed
      */
     public function access()
     {
-
         $extConf = $this->getExtConf();
 
         $show = !strlen($extConf['crypto.']['instance.']['publicKey']) ||
@@ -78,7 +74,7 @@ class ext_update
             $extConf['crypto.']['instance.']['publicKey'] = $publicKey;
             $extConf['crypto.']['instance.']['privateKey'] = $privateKey;
             $this->writeExtensionConfiguration($extConf);
-            $content = "Success: Generated public / private key<br /><br />Public key:<br />" . $publicKey;
+            $content = 'Success: Generated public / private key<br /><br />Public key:<br />' . $publicKey;
         } catch (Exception $exception) {
             $content = 'Error: ' . $exception->getMessage();
         }
@@ -109,10 +105,9 @@ class ext_update
     {
         $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance']);
         if (!$extConf) {
-            $extConf = [];
+            $extConf = array();
         }
 
         return $extConf;
     }
-
 }

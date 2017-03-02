@@ -42,27 +42,24 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerinstance_IOperation
 {
-
     /**
      * @var array Available extension scopes
      */
-    protected $scopes = ['system', 'global', 'local'];
+    protected $scopes = array('system', 'global', 'local');
 
     /**
      *
      * @param array $parameter Array of extension locations as string (system, global, local)
      * @return tx_caretakerinstance_OperationResult The extension list
      */
-    public function execute($parameter = [])
+    public function execute($parameter = array())
     {
         $locations = $parameter['locations'];
         if (is_array($locations) && count($locations) > 0) {
-            $extensionList = [];
+            $extensionList = array();
             foreach ($locations as $scope) {
                 if (in_array($scope, $this->scopes)) {
                     $extensionList = array_merge($extensionList, $this->getExtensionListForScope($scope));
@@ -70,10 +67,8 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
             }
 
             return new tx_caretakerinstance_OperationResult(true, $extensionList);
-        } else {
-            return new tx_caretakerinstance_OperationResult(false, 'No extension locations given');
         }
-
+        return new tx_caretakerinstance_OperationResult(false, 'No extension locations given');
     }
 
     /**
@@ -104,18 +99,18 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
      * Get the list of extensions in the given scope
      *
      * @param string $scope
-     * @return boolean
+     * @return bool
      */
     protected function getExtensionListForScope($scope)
     {
         $path = $this->getPathForScope($scope);
-        $extensionInfo = [];
+        $extensionInfo = array();
         if (@is_dir($path)) {
             $extensionFolders = \TYPO3\CMS\Core\Utility\GeneralUtility::get_dirs($path);
             if (is_array($extensionFolders)) {
                 foreach ($extensionFolders as $extKey) {
                     $extensionInfo[$extKey]['ext_key'] = $extKey;
-                    $extensionInfo[$extKey]['installed'] = (boolean)\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey);
+                    $extensionInfo[$extKey]['installed'] = (bool)\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey);
 
                     if (@is_file($path . $extKey . '/ext_emconf.php')) {
                         $_EXTKEY = $extKey;
@@ -135,5 +130,4 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
 
         return $extensionInfo;
     }
-
 }

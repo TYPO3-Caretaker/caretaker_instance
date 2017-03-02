@@ -73,15 +73,15 @@ try {
             $data = stripslashes($data);
         }
         $request = new tx_caretakerinstance_CommandRequest(
-            [
+            array(
                 'session_token' => $sessionToken,
-                'client_info' => [
+                'client_info' => array(
                     'host_address' => $remoteAddress,
-                ],
-                'data' => [],
+                ),
+                'data' => array(),
                 'raw' => $data,
                 'signature' => $signature,
-            ]);
+            ));
 
         $result = $commandService->executeCommand($request);
 
@@ -90,13 +90,13 @@ try {
         echo $commandService->wrapCommandResult($result);
     }
 } catch (Exception $exception) {
-    echo json_encode([
+    echo json_encode(array(
         'status' => tx_caretakerinstance_CommandResult::status_undefined,
-        'exception' => [
+        'exception' => array(
             'code' => $exception->getCode(),
-        ],
+        ),
         'message' => $exception->getMessage(),
-    ]);
+    ));
 }
 
 exit;

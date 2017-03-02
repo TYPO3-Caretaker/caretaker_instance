@@ -43,8 +43,6 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * @author        Christopher Hlubek <hlubek (at) networkteam.com>
  * @author        Tobias Liebig <liebig (at) networkteam.com>
- * @package        TYPO3
- * @subpackage    \tx_caretakerinstance
  */
 class OperationManagerTest extends UnitTestCase
 {
@@ -85,15 +83,15 @@ class OperationManagerTest extends UnitTestCase
     {
         $operationManager = new \tx_caretakerinstance_OperationManager();
 
-        $operation = $this->getMock('\tx_caretakerinstance_IOperation', ['execute']);
+        $operation = $this->getMock('\tx_caretakerinstance_IOperation', array('execute'));
         $operation->expects($this->once())
             ->method('execute')
-            ->with($this->equalTo(['foo' => 'bar']))
+            ->with($this->equalTo(array('foo' => 'bar')))
             ->will($this->returnValue(new \tx_caretakerinstance_OperationResult(true, 'bar')));
 
         $operationManager->registerOperation('mock', $operation);
 
-        $result = $operationManager->executeOperation('mock', ['foo' => 'bar']);
+        $result = $operationManager->executeOperation('mock', array('foo' => 'bar'));
         $this->assertTrue($result->isSuccessful());
         $this->assertEquals('bar', $result->getValue());
     }

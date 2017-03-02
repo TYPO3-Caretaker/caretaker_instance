@@ -42,21 +42,17 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetPHPVersion implements tx_caretakerinstance_IOperation
 {
-
     /**
      * Get the current PHP version
      *
      * @param array $parameter None
      * @return the current PHP version
      */
-    public function execute($parameter = [])
+    public function execute($parameter = array())
     {
         return new tx_caretakerinstance_OperationResult(true, phpversion());
     }
-
 }

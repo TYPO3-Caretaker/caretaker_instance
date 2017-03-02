@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase
 {
-
     /**
      * @return tx_caretaker_TestResult
      */
@@ -64,8 +61,8 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
             return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'No TYPO3 version information available. Please add "TYPO3 Versionnumbers Update" to your scheduler queue.');
         }
 
-        $operation = ['GetTYPO3Version'];
-        $operations = [$operation];
+        $operation = array('GetTYPO3Version');
+        $operations = array($operation);
 
         $commandResult = $this->executeRemoteOperations($operations);
 

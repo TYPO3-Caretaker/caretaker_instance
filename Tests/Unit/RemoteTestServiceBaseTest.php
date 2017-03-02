@@ -38,7 +38,7 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * $Id$
  */
-class RemoteTestServiceTest extends UnitTestCase
+class RemoteTestServiceBaseTest extends UnitTestCase
 {
     /**
      * @var RemoteTestServiceTestBaseImpl
@@ -204,5 +204,4 @@ class RemoteTestServiceTest extends UnitTestCase
             '.0 > .0rc1'
         );
     }
-
 }

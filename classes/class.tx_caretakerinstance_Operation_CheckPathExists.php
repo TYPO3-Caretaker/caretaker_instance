@@ -39,12 +39,9 @@
  *
  * @author Felix Oertel <oertel@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinstance_IOperation
 {
-
     /**
      * execute operation (checkPathExists)
      *
@@ -61,20 +58,19 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
             $time = filemtime($path);
             $size = filesize($path);
 
-            return new tx_caretakerinstance_OperationResult(true, [
+            return new tx_caretakerinstance_OperationResult(true, array(
                 'type' => 'file',
                 'path' => $parameter,
                 'time' => $time,
                 'size' => $size,
-            ]);
+            ));
         } elseif (is_dir($path)) {
-            return new tx_caretakerinstance_OperationResult(true, [
+            return new tx_caretakerinstance_OperationResult(true, array(
                 'type' => 'folder',
                 'path' => $parameter,
-            ]);
-        } else {
-            return new tx_caretakerinstance_OperationResult(false, ['path' => $parameter]);
+            ));
         }
+        return new tx_caretakerinstance_OperationResult(false, array('path' => $parameter));
     }
 
     /**
@@ -99,9 +95,7 @@ class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinst
         $path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
         if (\TYPO3\CMS\Core\Utility\GeneralUtility::isAllowedAbsPath($path)) {
             return $path;
-        } else {
-            return false;
         }
+        return false;
     }
-
 }

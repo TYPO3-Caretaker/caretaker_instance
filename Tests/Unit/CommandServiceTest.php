@@ -43,12 +43,9 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * @author        Christopher Hlubek <hlubek (at) networkteam.com>
  * @author        Tobias Liebig <liebig (at) networkteam.com>
- * @package        TYPO3
- * @subpackage    \tx_caretakerinstance
  */
 class CommandServiceTest extends UnitTestCase
 {
-
     /**
      * @var \PHPUnit_Framework_MockObject_MockObject|\tx_caretakerinstance_SecurityManager
      */
@@ -69,10 +66,10 @@ class CommandServiceTest extends UnitTestCase
      */
     protected $operationManager;
 
-    function setUp()
+    public function setUp()
     {
         $this->operationManager = $this->getMock('\tx_caretakerinstance_OperationManager',
-            ['executeOperation']);
+            array('executeOperation'));
 
         $this->securityManager = $this->getMock('\tx_caretakerinstance_ISecurityManager');
 
@@ -80,20 +77,20 @@ class CommandServiceTest extends UnitTestCase
             $this->operationManager, $this->securityManager);
 
         $this->commandRequest = new \tx_caretakerinstance_CommandRequest(
-            [
-                'data' => [
-                    'operations' => [
-                        ['mock', ['foo' => 'bar']],
-                        ['mock', ['foo' => 'bar']],
-                    ],
-                ],
-            ]);
+            array(
+                'data' => array(
+                    'operations' => array(
+                        array('mock', array('foo' => 'bar')),
+                        array('mock', array('foo' => 'bar')),
+                    ),
+                ),
+            ));
     }
 
-    function testWrapCommandResultEncodesResult()
+    public function testWrapCommandResultEncodesResult()
     {
         $result = new \tx_caretakerinstance_CommandResult(true,
-            new \tx_caretakerinstance_OperationResult(true, ['foo' => 'bar'])
+            new \tx_caretakerinstance_OperationResult(true, array('foo' => 'bar'))
         );
 
         $data = $result->toJson();
@@ -108,7 +105,7 @@ class CommandServiceTest extends UnitTestCase
         $this->assertEquals('Encoded result data', $wrap);
     }
 
-    function testExecuteCommandWithSecurity()
+    public function testExecuteCommandWithSecurity()
     {
         $this->securityManager->expects($this->once())
             ->method('validateRequest')
@@ -122,7 +119,7 @@ class CommandServiceTest extends UnitTestCase
 
         $this->operationManager->expects($this->exactly(2))
             ->method('executeOperation')
-            ->with($this->equalTo('mock'), $this->equalTo(['foo' => 'bar']))
+            ->with($this->equalTo('mock'), $this->equalTo(array('foo' => 'bar')))
             ->will($this->returnValue(new \tx_caretakerinstance_OperationResult(true, 'bar')));
 
         $result = $this->commandService->executeCommand($this->commandRequest);
@@ -139,7 +136,7 @@ class CommandServiceTest extends UnitTestCase
         }
     }
 
-    function testExecuteCommandSecurityCheckFailed()
+    public function testExecuteCommandSecurityCheckFailed()
     {
         $this->securityManager->expects($this->once())
             ->method('validateRequest')
@@ -156,7 +153,7 @@ class CommandServiceTest extends UnitTestCase
         $this->assertEquals('The request could not be certified', $result->getMessage());
     }
 
-    function testExecuteCommandDecryptionFailed()
+    public function testExecuteCommandDecryptionFailed()
     {
         $this->securityManager->expects($this->once())
             ->method('validateRequest')
@@ -176,7 +173,7 @@ class CommandServiceTest extends UnitTestCase
         $this->assertEquals('The request could not be decrypted', $result->getMessage());
     }
 
-    function testRequestSessionToken()
+    public function testRequestSessionToken()
     {
         $this->securityManager->expects($this->once())
             ->method('createSessionToken')

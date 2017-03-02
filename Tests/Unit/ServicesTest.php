@@ -42,43 +42,40 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  * Testcase for the ServiceFactory
  *
  * @author        Martin Ficzel <ficzel@work.de>
- * @package        TYPO3
- * @subpackage    \tx_caretakerinstance
  */
 class ServicesTest extends UnitTestCase
 {
-
     public function testFindInsecureExtensionCommand()
     {
         $this->markTestSkipped();
         $stub = $this->getMock(
             '\tx_caretakerinstance_FindInsecureExtensionTestService',
-            ['getLocationList', 'executeRemoteOperations', 'checkExtension']
+            array('getLocationList', 'executeRemoteOperations', 'checkExtension')
         );
 
         $stub->expects($this->once())
             ->method('getLocationList')
             ->with()
-            ->will($this->returnValue(['local']));
+            ->will($this->returnValue(array('local')));
 
         $stub->expects($this->once())
             ->method('executeRemoteOperations')
-            ->with($this->equalTo([['GetExtensionList', ['locations' => ['local']]]]))
+            ->with($this->equalTo(array(array('GetExtensionList', array('locations' => array('local'))))))
             ->will($this->returnValue(
                 new \tx_caretakerinstance_CommandResult(
                     true,
-                    [
+                    array(
                         new \tx_caretakerinstance_OperationResult(
                             true,
-                            [
-                                'tt_address' => [
+                            array(
+                                'tt_address' => array(
                                     'isInstalled' => true,
                                     'version' => '2.1.4',
-                                    'location' => ['local'],
-                                ],
-                            ]
+                                    'location' => array('local'),
+                                ),
+                            )
                         ),
-                    ]
+                    )
                 )
             )
             );
@@ -92,22 +89,23 @@ class ServicesTest extends UnitTestCase
 
         $this->assertInstanceOf('\tx_caretaker_TestResult', $result);
         $this->assertEquals(\tx_caretaker_Constants::state_ok, $result->getState());
-
     }
 
     public function providerFindInsecureExtensionGetLocationList()
     {
-        return [
-            [1, ['system']],
-            [2, ['global']],
-            [4, ['local']],
-            [3, ['system', 'global']],
-            [6, ['global', 'local']],
-        ];
+        return array(
+            array(1, array('system')),
+            array(2, array('global')),
+            array(4, array('local')),
+            array(3, array('system', 'global')),
+            array(6, array('global', 'local')),
+        );
     }
 
     /**
      * @dataProvider providerFindInsecureExtensionGetLocationList
+     * @param mixed $input
+     * @param mixed $output
      */
     public function testFindInsecureExtensionGetLocationList($input, $output)
     {
@@ -115,7 +113,7 @@ class ServicesTest extends UnitTestCase
 
         $stub = $this->getMock(
             '\tx_caretakerinstance_FindInsecureExtensionTestService',
-            ['getConfigValue']
+            array('getConfigValue')
         );
 
         $stub->expects($this->once())
@@ -125,5 +123,4 @@ class ServicesTest extends UnitTestCase
 
         $this->assertEquals($output, $stub->getLocationList());
     }
-
 }

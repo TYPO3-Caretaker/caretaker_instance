@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 abstract class tx_caretakerinstance_AbstractCryptoManager implements tx_caretakerinstance_ICryptoManager
 {
-
     /**
      * Create a session token that can be verified with the given secret
      *
@@ -69,7 +66,7 @@ abstract class tx_caretakerinstance_AbstractCryptoManager implements tx_caretake
      *
      * @param string $token
      * @param string $secret
-     * @return boolean
+     * @return bool
      */
     public function verifySessionToken($token, $secret)
     {
@@ -78,8 +75,7 @@ abstract class tx_caretakerinstance_AbstractCryptoManager implements tx_caretake
 
         if ($token == $data . ':' . $salt . md5($secret . ':' . $data . ':' . $salt)) {
             return $data;
-        } else {
-            return false;
         }
+        return false;
     }
 }

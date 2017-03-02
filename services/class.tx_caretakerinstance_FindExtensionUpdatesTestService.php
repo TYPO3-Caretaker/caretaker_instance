@@ -42,12 +42,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakerinstance_RemoteTestServiceBase
 {
-
     /**
      * Value Description
      *
@@ -78,8 +75,8 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
     {
         $location_list = $this->getLocationList();
 
-        $operation = ['GetExtensionList', ['locations' => $location_list]];
-        $operations = [$operation];
+        $operation = array('GetExtensionList', array('locations' => $location_list));
+        $operations = array($operation);
 
         $commandResult = $this->executeRemoteOperations($operations);
         if (!$this->isCommandResultSuccessful($commandResult)) {
@@ -95,9 +92,9 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 
         $extensionList = $operationResult->getValue();
 
-        $errors = [];
-        $warnings = [];
-        $oks = [];
+        $errors = array();
+        $warnings = array();
+        $oks = array();
         foreach ($extensionList as $extension) {
             $this->checkExtension($extension, $errors, $warnings, $oks);
         }
@@ -108,8 +105,8 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
         $num_warnings = count($warnings);
         $num_oks = count($oks);
 
-        $submessages = [];
-        $values = ['num_errors' => $num_errors, 'num_warnings' => $num_warnings];
+        $submessages = array();
+        $values = array('num_errors' => $num_errors, 'num_warnings' => $num_warnings);
 
         // add error submessages
         if ($num_errors > 0) {
@@ -164,7 +161,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
     public function getLocationList()
     {
         $locationCode = (int)$this->getConfigValue('check_extension_locations');
-        $locationList = [];
+        $locationList = array();
         if ($locationCode & 1) {
             $locationList[] = 'system';
         }
@@ -203,55 +200,52 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 
         // Ext is in TER
         if ($ter_info) {
-
             $message = 'LLL:EXT:caretaker_instance/locallang.xml:find_extension_updates_test_detailinfo';
-            $value = [
+            $value = array(
                 'ext_key' => $extension['ext_key'],
                 'ext_version' => $extension['version'],
                 'ter_version' => $ter_info['version'],
-            ];
+            );
 
             if ($this->checkVersionRange($ext_version, $ter_info['version'], '')) {
-                $oks[] = ['message' => $message, 'values' => $value];
+                $oks[] = array('message' => $message, 'values' => $value);
 
                 return;
-            } else {
+            }
                 // Check whitelist
                 $ext_whitelist = $this->getCustomExtensionWhitelist();
-                if (in_array($ext_key, $ext_whitelist)) {
-                    $oks[] = ['message' => $message, 'values' => $value];
+            if (in_array($ext_key, $ext_whitelist)) {
+                $oks[] = array('message' => $message, 'values' => $value);
 
-                    return;
-                }
+                return;
+            }
                 // handle error
                 $handling = $this->getStatusOfUpdatableExtensions();
-                switch ($handling) {
+            switch ($handling) {
                     // Warning
                     case 1:
-                        $warnings[] = ['message' => $message, 'values' => $value];
+                        $warnings[] = array('message' => $message, 'values' => $value);
 
                         return;
                     // Error
                     case 2:
-                        $errors[] = ['message' => $message, 'values' => $value];
+                        $errors[] = array('message' => $message, 'values' => $value);
 
                         return;
                     // OK
                     default:
-                        $oks[] = ['message' => $message, 'values' => $value];
+                        $oks[] = array('message' => $message, 'values' => $value);
 
                         return;
                 }
-            };
-
         } else {
-            $value = [
+            $value = array(
                 'ext_key' => $extension['ext_key'],
                 'ext_version' => $extension['version'],
                 'ter_version' => 'unknown',
-            ];
+            );
             $message = 'LLL:EXT:caretaker_instance/locallang.xml:find_extension_updates_test_detailinfo';
-            $oks[] = ['message' => $message, 'values' => $value];
+            $oks[] = array('message' => $message, 'values' => $value);
         }
     }
 
@@ -265,7 +259,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
         $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
 
         /** @var TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository $repo */
-        $repo = $objectManager->get("TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository");
+        $repo = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
         $repo->initializeObject();
 
         if ($this->isTYPO3VersionIgnored()) {
@@ -294,12 +288,12 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
             return false;
         }
 
-        $ext_infos = [
-            [
+        $ext_infos = array(
+            array(
                 'extkey' => $extension->getExtensionKey(),
                 'version' => $extension->getVersion(),
-            ],
-        ];
+            ),
+        );
 
         if (!is_array($ext_infos)) {
             return false;
@@ -374,7 +368,7 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
      * @param string $maxVersion Maximum version that is required.
      *                              May be empty.
      *
-     * @return boolean TRUE if the actual version is within min and max.
+     * @return bool TRUE if the actual version is within min and max.
      */
     public function checkVersionRange($actualVersion, $minVersion, $maxVersion)
     {

@@ -43,14 +43,11 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_OperationResult
 {
-
     /**
-     * @var boolean
+     * @var bool
      */
     protected $status;
 
@@ -62,7 +59,7 @@ class tx_caretakerinstance_OperationResult
     /**
      * Construct a new operation result
      *
-     * @param boolean $status
+     * @param bool $status
      * @param mixed $value
      */
     public function __construct($status, $value)
@@ -72,7 +69,7 @@ class tx_caretakerinstance_OperationResult
     }
 
     /**
-     * @return boolean If the operation was executed successful
+     * @return bool If the operation was executed successful
      */
     public function isSuccessful()
     {
@@ -92,7 +89,6 @@ class tx_caretakerinstance_OperationResult
      */
     public function toArray()
     {
-        return ['status' => $this->status, 'value' => $this->value];
+        return array('status' => $this->status, 'value' => $this->value);
     }
-
 }

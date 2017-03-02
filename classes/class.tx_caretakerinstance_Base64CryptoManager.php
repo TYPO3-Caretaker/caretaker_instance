@@ -45,13 +45,10 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  * @deprecated Use OpenSSLCryptoManager instead!
  */
 class tx_caretakerinstance_Base64CryptoManager implements tx_caretakerinstance_ICryptoManager
 {
-
     /**
      * @param string $data
      * @param string $secret
@@ -77,9 +74,8 @@ class tx_caretakerinstance_Base64CryptoManager implements tx_caretakerinstance_I
 
         if ($token == $data . ':' . $salt . md5($secret . ':' . $data . ':' . $salt)) {
             return $data;
-        } else {
-            return false;
         }
+        return false;
     }
 
     /**
@@ -128,6 +124,6 @@ class tx_caretakerinstance_Base64CryptoManager implements tx_caretakerinstance_I
      */
     public function generateKeyPair()
     {
-        return ['', ''];
+        return array('', '');
     }
 }

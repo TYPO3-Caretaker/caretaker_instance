@@ -48,12 +48,9 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_CommandRequest
 {
-
     /**
      * @var string The client public key when receiving a command
      */
@@ -77,7 +74,7 @@ class tx_caretakerinstance_CommandRequest
     /**
      * @var array
      */
-    protected $data = [];
+    protected $data = array();
 
     /**
      * Create a new Command Request
@@ -177,9 +174,8 @@ class tx_caretakerinstance_CommandRequest
     {
         if ($key != null) {
             return $this->data[$key];
-        } else {
-            return $this->data;
         }
+        return $this->data;
     }
 
     /**

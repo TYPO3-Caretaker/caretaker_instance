@@ -43,23 +43,20 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
 class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_IOperation
 {
-
     /**
      * An array of tables and table fields that should be cleared before sending.
      *
      * @var array
      */
-    protected $protectedFieldsByTable = [
-        'be_users' => ['password', 'uc'],
-        'fe_users' => ['password'],
-    ];
+    protected $protectedFieldsByTable = array(
+        'be_users' => array('password', 'uc'),
+        'fe_users' => array('password'),
+    );
 
-    protected $implicitFields = ['uid', 'pid', 'deleted', 'hidden'];
+    protected $implicitFields = array('uid', 'pid', 'deleted', 'hidden');
 
     /**
      * Get record data from the given table and uid
@@ -67,7 +64,7 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
      * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
      * @return tx_caretakerinstance_OperationResult The first found record as an array or FALSE if no record was found
      */
-    public function execute($parameter = [])
+    public function execute($parameter = array())
     {
         $table = $parameter['table'];
         $field = $parameter['field'];
@@ -97,12 +94,10 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
                 }
 
                 return new tx_caretakerinstance_OperationResult(true, $record);
-            } else {
-                return new tx_caretakerinstance_OperationResult(true, false);
             }
-        } else {
-            return new tx_caretakerinstance_OperationResult(false, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
+            return new tx_caretakerinstance_OperationResult(true, false);
         }
+        return new tx_caretakerinstance_OperationResult(false, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
     }
 
     /**
@@ -127,7 +122,7 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
      * @param $table
      * @return string The query to append
      */
-    function enableFields($table)
+    public function enableFields($table)
     {
         $ctrl = $GLOBALS['TCA'][$table]['ctrl'];
         $query = '';
@@ -161,5 +156,4 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
 
         return $query;
     }
-
 }

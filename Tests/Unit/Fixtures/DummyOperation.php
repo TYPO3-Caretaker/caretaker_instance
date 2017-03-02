@@ -37,12 +37,11 @@ namespace Caretaker\CaretakerInstance\Tests\Unit\Fixtures;
  */
 class DummyOperation implements \tx_caretakerinstance_IOperation
 {
-
     /**
      * @param array $parameter
      * @return \tx_caretakerinstance_OperationResult
      */
-    function execute($parameter = [])
+    public function execute($parameter = array())
     {
         return new \tx_caretakerinstance_OperationResult(true, $parameter['foo']);
     }
