@@ -44,8 +44,6 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * @author        Christopher Hlubek <hlubek (at) networkteam.com>
  * @author        Tobias Liebig <liebig (at) networkteam.com>
- * @package        TYPO3
- * @subpackage    \tx_caretakerinstance
  */
 class OperationsTest extends UnitTestCase
 {
@@ -86,7 +84,10 @@ class OperationsTest extends UnitTestCase
 
         $operation = new \tx_caretakerinstance_Operation_GetFilesystemChecksum();
 
-        $result = $operation->execute(array('path' => 'EXT:caretaker_instance/Tests/Unit/Fixtures', 'getSingleChecksums' => true));
+        $result = $operation->execute(array(
+            'path' => 'EXT:caretaker_instance/Tests/Unit/Fixtures',
+            'getSingleChecksums' => true,
+        ));
 
         $this->assertTrue($result->isSuccessful());
         $value = $result->getValue();
@@ -199,9 +200,9 @@ class OperationsTest extends UnitTestCase
         $operation = new \tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
         $result = $operation->execute(array(
-                        'key' => $key,
-                        'match' => $GLOBALS['Foo']['bar'],
-                )
+                'key' => $key,
+                'match' => $GLOBALS['Foo']['bar'],
+            )
         );
         $this->assertTrue($result->isSuccessful());
     }
@@ -213,15 +214,14 @@ class OperationsTest extends UnitTestCase
         $operation = new \tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
         $result = $operation->execute(array(
-                        'key' => $key,
-                        'match' => '/baz/',
-                        'usingRegexp' => true,
-                )
+                'key' => $key,
+                'match' => '/baz/',
+                'usingRegexp' => true,
+            )
         );
 
         $this->assertTrue($result->isSuccessful());
     }
-
 
     public function testOperation_MatchPredefinedVariableReturnsFalseIfValueDoesNotMatch()
     {
@@ -230,9 +230,9 @@ class OperationsTest extends UnitTestCase
         $operation = new \tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
         $result = $operation->execute(array(
-                        'key' => $key,
-                        'match' => 'an other value',
-                )
+                'key' => $key,
+                'match' => 'an other value',
+            )
         );
 
         $this->assertFalse($result->isSuccessful());

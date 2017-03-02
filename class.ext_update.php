@@ -38,74 +38,76 @@
  * Extension manager update class to generate public / private key pairs.
  *
  * @author        Christopher Hlubek <hlubek@networkteam.com>
- * @package        TYPO3
- * @subpackage    tx_caretakerinstance
  */
-class ext_update {
+class ext_update
+{
+    /**
+     * @var tx_caretakerinstance_ServiceFactory
+     */
+    protected $factory;
 
-	/**
-	 * @var tx_caretakerinstance_ServiceFactory
-	 */
-	protected $factory;
+    /**
+     * @return bool Whether the update should be shown / allowed
+     */
+    public function access()
+    {
+        $extConf = $this->getExtConf();
 
-	/**
-	 * @return boolean Whether the update should be shown / allowed
-	 */
-	public function access() {
+        $show = !strlen($extConf['crypto.']['instance.']['publicKey']) ||
+            !strlen($extConf['crypto.']['instance.']['privateKey']);
 
-		$extConf = $this->getExtConf();
+        return $show;
+    }
 
-		$show = !strlen($extConf['crypto.']['instance.']['publicKey']) ||
-				!strlen($extConf['crypto.']['instance.']['privateKey']);
-		return $show;
-	}
+    /**
+     * Return the update process HTML content
+     *
+     * @return string
+     */
+    public function main()
+    {
+        $extConf = $this->getExtConf();
 
-	/**
-	 * Return the update process HTML content
-	 *
-	 * @return string
-	 */
-	public function main() {
-		$extConf = $this->getExtConf();
+        $this->factory = tx_caretakerinstance_ServiceFactory::getInstance();
+        try {
+            list($publicKey, $privateKey) = $this->factory->getCryptoManager()->generateKeyPair();
+            $extConf['crypto.']['instance.']['publicKey'] = $publicKey;
+            $extConf['crypto.']['instance.']['privateKey'] = $privateKey;
+            $this->writeExtensionConfiguration($extConf);
+            $content = 'Success: Generated public / private key<br /><br />Public key:<br />' . $publicKey;
+        } catch (Exception $exception) {
+            $content = 'Error: ' . $exception->getMessage();
+        }
 
-		$this->factory = tx_caretakerinstance_ServiceFactory::getInstance();
-		try {
-			list($publicKey, $privateKey) = $this->factory->getCryptoManager()->generateKeyPair();
-			$extConf['crypto.']['instance.']['publicKey'] = $publicKey;
-			$extConf['crypto.']['instance.']['privateKey'] = $privateKey;
-			$this->writeExtensionConfiguration($extConf);
-			$content = "Success: Generated public / private key<br /><br />Public key:<br />" . $publicKey;
-		} catch (Exception $exception) {
-			$content = 'Error: ' . $exception->getMessage();
-		}
+        return $content;
+    }
 
-		return $content;
-	}
+    /**
+     * Writes the extension's configuration (version for TYPO3 CMS 6.0+)
+     *
+     * @param $extensionConfiguration
+     * @return void
+     */
+    protected function writeExtensionConfiguration($extensionConfiguration)
+    {
+        /** @var $configurationManager \TYPO3\CMS\Core\Configuration\ConfigurationManager */
+        $configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Configuration\\ConfigurationManager');
+        $configurationManager->setLocalConfigurationValueByPath('EXT/extConf/caretaker_instance', serialize($extensionConfiguration));
+        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::removeCacheFiles();
+    }
 
-	/**
-	 * Writes the extension's configuration (version for TYPO3 CMS 6.0+)
-	 *
-	 * @param $extensionConfiguration
-	 * @return void
-	 */
-	protected function writeExtensionConfiguration($extensionConfiguration) {
-		/** @var $configurationManager \TYPO3\CMS\Core\Configuration\ConfigurationManager */
-		$configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Configuration\\ConfigurationManager');
-		$configurationManager->setLocalConfigurationValueByPath('EXT/extConf/caretaker_instance', serialize($extensionConfiguration));
-		\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::removeCacheFiles();
-	}
+    /**
+     * Get the extension configuration
+     *
+     * @return array
+     */
+    protected function getExtConf()
+    {
+        $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance']);
+        if (!$extConf) {
+            $extConf = array();
+        }
 
-	/**
-	 * Get the extension configuration
-	 *
-	 * @return array
-	 */
-	protected function getExtConf() {
-		$extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance']);
-		if (!$extConf) {
-			$extConf = array();
-		}
-		return $extConf;
-	}
-
+        return $extConf;
+    }
 }

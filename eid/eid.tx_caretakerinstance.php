@@ -37,66 +37,66 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
 
 // Exit, if script is called directly (must be included via eID in index_ts.php)
 if (!defined('PATH_typo3conf')) {
-	die('Could not access this script directly!');
+    die('Could not access this script directly!');
 }
 
 try {
-	$factory = tx_caretakerinstance_ServiceFactory::getInstance();
-	$commandService = $factory->getCommandService();
+    $factory = tx_caretakerinstance_ServiceFactory::getInstance();
+    $commandService = $factory->getCommandService();
 
-	$remoteAddress = $_SERVER['REMOTE_ADDR'];
+    $remoteAddress = $_SERVER['REMOTE_ADDR'];
 
-	if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-		if (isset($_GET['rst'])) {
-			$token = $commandService->requestSessionToken($remoteAddress);
-			if (!$token) {
-				header('HTTP/1.0 403 Request not allowed');
-			} else {
-				echo $token;
-			}
-		} else {
-			header('HTTP/1.0 500 Invalid request');
-		}
-	} else {
-		$sessionToken = NULL;
-		$data = NULL;
-		$signature = NULL;
-		if (isset($_POST['st']) && isset($_POST['d']) && isset($_POST['s'])) {
-			$sessionToken = $_POST['st'];
-			$data = $_POST['d'];
-			$signature = $_POST['s'];
-		} else {
-			header('HTTP/1.0 500 Invalid request');
-		}
-		// handle data string correctly, if typo3 added slashes to the post vars
-		if (VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getCurrentTypo3Version()) < 7005000 && !get_magic_quotes_gpc()) {
-			$data = stripslashes($data);
-		}
-		$request = new tx_caretakerinstance_CommandRequest(
-				array(
-						'session_token' => $sessionToken,
-						'client_info' => array(
-								'host_address' => $remoteAddress
-						),
-						'data' => array(),
-						'raw' => $data,
-						'signature' => $signature
-				));
+    if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        if (isset($_GET['rst'])) {
+            $token = $commandService->requestSessionToken($remoteAddress);
+            if (!$token) {
+                header('HTTP/1.0 403 Request not allowed');
+            } else {
+                echo $token;
+            }
+        } else {
+            header('HTTP/1.0 500 Invalid request');
+        }
+    } else {
+        $sessionToken = null;
+        $data = null;
+        $signature = null;
+        if (isset($_POST['st']) && isset($_POST['d']) && isset($_POST['s'])) {
+            $sessionToken = $_POST['st'];
+            $data = $_POST['d'];
+            $signature = $_POST['s'];
+        } else {
+            header('HTTP/1.0 500 Invalid request');
+        }
+        // handle data string correctly, if typo3 added slashes to the post vars
+        if (VersionNumberUtility::convertVersionNumberToInteger(VersionNumberUtility::getCurrentTypo3Version()) < 7005000 && !get_magic_quotes_gpc()) {
+            $data = stripslashes($data);
+        }
+        $request = new tx_caretakerinstance_CommandRequest(
+            array(
+                'session_token' => $sessionToken,
+                'client_info' => array(
+                    'host_address' => $remoteAddress,
+                ),
+                'data' => array(),
+                'raw' => $data,
+                'signature' => $signature,
+            ));
 
-		$result = $commandService->executeCommand($request);
+        $result = $commandService->executeCommand($request);
 
-		// TODO Check for result failure and maybe throw a HTTP status code
+        // TODO Check for result failure and maybe throw a HTTP status code
 
-		echo $commandService->wrapCommandResult($result);
-	}
+        echo $commandService->wrapCommandResult($result);
+    }
 } catch (Exception $exception) {
-	echo json_encode(array(
-			'status' => tx_caretakerinstance_CommandResult::status_undefined,
-			'exception' => array(
-					'code' => $exception->getCode()
-			),
-			'message' => $exception->getMessage()
-	));
+    echo json_encode(array(
+        'status' => tx_caretakerinstance_CommandResult::status_undefined,
+        'exception' => array(
+            'code' => $exception->getCode(),
+        ),
+        'message' => $exception->getMessage(),
+    ));
 }
 
 exit;

@@ -1,47 +1,48 @@
 {
-  "name": "caretaker/caretaker_instance",
-  "description": "TYPO3 caretaker instance",
-  "type": "typo3-cms-extension",
-  "homepage": "https://github.com/TYPO3-Caretaker/",
-  "require": {
-    "typo3/cms-core": "^6.2.14|^7.6.0"
-  },
-  "require-dev": {
-    "namelesscoder/typo3-repository-client": "^1.1",
-    "mikey179/vfsStream": "1.4.*@dev",
-    "phpunit/phpunit": "~4.7.0"
-  },
-  "autoload": {
-    "classmap": [
-      "classes",
-      "services"
-    ]
-  },
-  "autoload-dev": {
-    "psr-4": {
-      "Caretaker\\CaretakerInstance\\Tests\\": "Tests",
-      "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-      "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
+    "name": "caretaker/caretaker_instance",
+    "description": "TYPO3 caretaker instance",
+    "type": "typo3-cms-extension",
+    "homepage": "https://github.com/TYPO3-Caretaker/",
+    "require": {
+        "typo3/cms-core": "^6.2.14|^7.6.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^2.0",
+        "namelesscoder/typo3-repository-client": "^1.1",
+        "mikey179/vfsStream": "1.4.*@dev",
+        "phpunit/phpunit": "~4.7.0"
+    },
+    "autoload": {
+        "classmap": [
+            "classes",
+            "services"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Caretaker\\CaretakerInstance\\Tests\\": "Tests",
+            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
+            "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
+        }
+    },
+    "replace": {
+        "caretaker_instance": "self.version",
+        "typo3-ter/caretaker_instance": "self.version"
+    },
+    "config": {
+        "vendor-dir": ".Build/vendor",
+        "bin-dir": ".Build/bin"
+    },
+    "scripts": {
+        "post-autoload-dump": [
+            "mkdir -p .Build/Web/typo3conf/ext/",
+            "[ -L .Build/Web/typo3conf/ext/caretaker_instance ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/caretaker_instance"
+        ]
+    },
+    "extra": {
+        "typo3/cms": {
+            "cms-package-dir": "{$vendor-dir}/typo3/cms",
+            "web-dir": ".Build/Web"
+        }
     }
-  },
-  "replace": {
-    "caretaker_instance": "self.version",
-    "typo3-ter/caretaker_instance": "self.version"
-  },
-  "config": {
-    "vendor-dir": ".Build/vendor",
-    "bin-dir": ".Build/bin"
-  },
-  "scripts": {
-    "post-autoload-dump": [
-      "mkdir -p .Build/Web/typo3conf/ext/",
-      "[ -L .Build/Web/typo3conf/ext/caretaker_instance ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/caretaker_instance"
-    ]
-  },
-  "extra": {
-    "typo3/cms": {
-      "cms-package-dir": "{$vendor-dir}/typo3/cms",
-      "web-dir": ".Build/Web"
-    }
-  }
 }

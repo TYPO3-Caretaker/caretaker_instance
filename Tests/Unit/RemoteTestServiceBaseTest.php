@@ -38,7 +38,7 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * $Id$
  */
-class RemoteTestServiceTest extends UnitTestCase
+class RemoteTestServiceBaseTest extends UnitTestCase
 {
     /**
      * @var RemoteTestServiceTestBaseImpl
@@ -47,7 +47,7 @@ class RemoteTestServiceTest extends UnitTestCase
 
     public function setUp()
     {
-//        $this->rts = new RemoteTestServiceTestBaseImpl();
+        //        $this->rts = new RemoteTestServiceTestBaseImpl();
     }
 
     public function testCheckVersionRangeOk()
@@ -55,11 +55,11 @@ class RemoteTestServiceTest extends UnitTestCase
         $this->markTestSkipped();
 
         $this->assertTrue(
-                $this->rts->checkVersionRange(
-                        '4.6.8', // Actual version
-                        '4.6.0', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                )
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.0', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            )
         );
     }
 
@@ -68,11 +68,11 @@ class RemoteTestServiceTest extends UnitTestCase
         $this->markTestSkipped();
 
         $this->assertTrue(
-                $this->rts->checkVersionRange(
-                        '4.6.8', // Actual version
-                        '4.6.8', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                )
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.8', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            )
         );
     }
 
@@ -81,11 +81,11 @@ class RemoteTestServiceTest extends UnitTestCase
         $this->markTestSkipped();
 
         $this->assertTrue(
-                $this->rts->checkVersionRange(
-                        '4.6.8', // Actual version
-                        '4.6.0', // Minimal allowed version
-                        '4.6.8' // Maximal allowed version
-                )
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.0', // Minimal allowed version
+                '4.6.8' // Maximal allowed version
+            )
         );
     }
 
@@ -94,11 +94,11 @@ class RemoteTestServiceTest extends UnitTestCase
         $this->markTestSkipped();
 
         $this->assertFalse(
-                $this->rts->checkVersionRange(
-                        '4.6.8', // Actual version
-                        '4.6.0', // Minimal allowed version
-                        '4.6.7' // Maximal allowed version
-                )
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.0', // Minimal allowed version
+                '4.6.7' // Maximal allowed version
+            )
         );
     }
 
@@ -107,11 +107,11 @@ class RemoteTestServiceTest extends UnitTestCase
         $this->markTestSkipped();
 
         $this->assertFalse(
-                $this->rts->checkVersionRange(
-                        '4.6.8', // Actual version
-                        '4.6.9', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                )
+            $this->rts->checkVersionRange(
+                '4.6.8', // Actual version
+                '4.6.9', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            )
         );
     }
 
@@ -120,36 +120,36 @@ class RemoteTestServiceTest extends UnitTestCase
         $this->markTestSkipped();
 
         $this->assertTrue(
-                $this->rts->checkVersionRange(
-                        '4.6.0', // Actual version
-                        '4.6.0alpha1', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                ),
-                '.0 is higher than .0alpha1'
+            $this->rts->checkVersionRange(
+                '4.6.0', // Actual version
+                '4.6.0alpha1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0 is higher than .0alpha1'
         );
         $this->assertTrue(
-                $this->rts->checkVersionRange(
-                        '4.6.0alpha1', // Actual version
-                        '4.6.0alpha1', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                ),
-                '.0alpha1 == .0alpha1'
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0alpha1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 == .0alpha1'
         );
         $this->assertFalse(
-                $this->rts->checkVersionRange(
-                        '4.6.0alpha1', // Actual version
-                        '4.6.0alpha2', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                ),
-                '.0alpha1 < .0alpha2'
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0alpha2', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 < .0alpha2'
         );
         $this->assertFalse(
-                $this->rts->checkVersionRange(
-                        '4.6.0alpha1', // Actual version
-                        '4.6.0', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                ),
-                '.0alpha1 < .0'
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 < .0'
         );
     }
 
@@ -158,20 +158,20 @@ class RemoteTestServiceTest extends UnitTestCase
         $this->markTestSkipped();
 
         $this->assertFalse(
-                $this->rts->checkVersionRange(
-                        '4.6.0alpha1', // Actual version
-                        '4.6.0beta1', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                ),
-                '.0alpha1 < .0beta1'
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0beta1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 < .0beta1'
         );
         $this->assertTrue(
-                $this->rts->checkVersionRange(
-                        '4.6.0beta1', // Actual version
-                        '4.6.0alpha1', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                ),
-                '.0beta1 > .0alpha1'
+            $this->rts->checkVersionRange(
+                '4.6.0beta1', // Actual version
+                '4.6.0alpha1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0beta1 > .0alpha1'
         );
     }
 
@@ -180,29 +180,28 @@ class RemoteTestServiceTest extends UnitTestCase
         $this->markTestSkipped();
 
         $this->assertTrue(
-                $this->rts->checkVersionRange(
-                        '4.6.0rc1', // Actual version
-                        '4.6.0beta1', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                ),
-                '.0rc1 > .0beta1'
+            $this->rts->checkVersionRange(
+                '4.6.0rc1', // Actual version
+                '4.6.0beta1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0rc1 > .0beta1'
         );
         $this->assertFalse(
-                $this->rts->checkVersionRange(
-                        '4.6.0alpha1', // Actual version
-                        '4.6.0rc1', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                ),
-                '.0alpha1 < .0rc1'
+            $this->rts->checkVersionRange(
+                '4.6.0alpha1', // Actual version
+                '4.6.0rc1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0alpha1 < .0rc1'
         );
         $this->assertTrue(
-                $this->rts->checkVersionRange(
-                        '4.6.0', // Actual version
-                        '4.6.0rc1', // Minimal allowed version
-                        '4.6.99' // Maximal allowed version
-                ),
-                '.0 > .0rc1'
+            $this->rts->checkVersionRange(
+                '4.6.0', // Actual version
+                '4.6.0rc1', // Minimal allowed version
+                '4.6.99' // Maximal allowed version
+            ),
+            '.0 > .0rc1'
         );
     }
-
 }

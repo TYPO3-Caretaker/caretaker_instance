@@ -42,120 +42,118 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caretakerinstance_IOperation {
+class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caretakerinstance_IOperation
+{
+    /**
+     * Check if the key matches the variable. Nested keys can be given
+     * using the | separator. To prevent information disclosure, the key
+     * value will not be returned.
+     *
+     * @param array $parameter key, match, usingRegexp, comparisonOperator
+     * @return tx_caretakerinstance_OperationResult The current PHP version
+     */
+    public function execute($parameter = array())
+    {
+        $keyPath = explode('|', $parameter['key']);
+        $value = $this->getValueForKeyPath($keyPath);
 
-	/**
-	 * Check if the key matches the variable. Nested keys can be given
-	 * using the | separator. To prevent information disclosure, the key
-	 * value will not be returned.
-	 *
-	 * @param array $parameter key, match, usingRegexp, comparisonOperator
-	 * @return tx_caretakerinstance_OperationResult The current PHP version
-	 */
-	public function execute($parameter = array()) {
+        $success = false;
+        if ($parameter['usingRegexp']) {
+            $success = (preg_match($parameter['match'], $value) >= 1);
+        } else {
+            switch ($parameter['comparisonOperator']) {
+                case ':regex:':
+                    $success = (preg_match($parameter['match'], $value) >= 1);
+                    break;
+                case '>=':
+                    $success = ($parameter['match'] >= $value);
+                    break;
+                case '<=':
+                    $success = ($parameter['match'] <= $value);
+                    break;
+                case '>':
+                    $success = ($parameter['match'] > $value);
+                    break;
+                case '<':
+                    $success = ($parameter['match'] < $value);
+                    break;
+                case '!=':
+                    $success = ($parameter['match'] != $value);
+                    break;
+                default:
+                case '=':
+                case '==':
+                    $success = ($parameter['match'] == $value);
+                    break;
+            }
+        }
 
-		$keyPath = explode('|', $parameter['key']);
-		$value = $this->getValueForKeyPath($keyPath);
+        return new tx_caretakerinstance_OperationResult($success, '');
+    }
 
-		$success = false;
-		if ($parameter['usingRegexp']) {
-			$success = (preg_match($parameter['match'], $value) >= 1);
-		} else {
+    /**
+     *
+     * @param array $keyPath
+     * @return bool
+     */
+    protected function getValueForKeyPath(array $keyPath)
+    {
+        $key = array_shift($keyPath);
+        $value = null;
+        switch ($key) {
+            case 'GLOBALS':
+                $value = $GLOBALS;
 
-			switch ($parameter['comparisonOperator']) {
-				case ':regex:' :
-					$success = (preg_match($parameter['match'], $value) >= 1);
-					break;
-				case '>=' :
-					$success = ($parameter['match'] >= $value);
-					break;
-				case '<=' :
-					$success = ($parameter['match'] <= $value);
-					break;
-				case '>' :
-					$success = ($parameter['match'] > $value);
-					break;
-				case '<' :
-					$success = ($parameter['match'] < $value);
-					break;
-				case '!=':
-					$success = ($parameter['match'] != $value);
-					break;
-				default:
-				case '=':
-				case '==':
-					$success = ($parameter['match'] == $value);
-					break;
-			}
-		}
-		return new tx_caretakerinstance_OperationResult($success, '');
-	}
+                // decode TYPO3_CONF_VARS->EXT->extConf children if requested
+                if ($keyPath[0] == 'TYPO3_CONF_VARS' && $keyPath[1] == 'EXT' && $keyPath[2] == 'extConf' && $keyPath[3]) {
+                    $serializedValue = $value[$keyPath[0]][$keyPath[1]][$keyPath[2]][$keyPath[3]];
+                    $value[$keyPath[0]][$keyPath[1]][$keyPath[2]][$keyPath[3]] = unserialize($serializedValue);
+                }
 
-	/**
-	 *
-	 * @param array $keyPath
-	 * @return boolean
-	 */
-	protected function getValueForKeyPath(array $keyPath) {
-		$key = array_shift($keyPath);
-		$value = NULL;
-		switch ($key) {
-			case 'GLOBALS':
-				$value = $GLOBALS;
+                break;
 
-				// decode TYPO3_CONF_VARS->EXT->extConf children if requested
-				if ($keyPath[0] == 'TYPO3_CONF_VARS' && $keyPath[1] == 'EXT' && $keyPath[2] == 'extConf' && $keyPath[3]) {
-					$serializedValue = $value[$keyPath[0]][$keyPath[1]][$keyPath[2]][$keyPath[3]];
-					$value[$keyPath[0]][$keyPath[1]][$keyPath[2]][$keyPath[3]] = unserialize($serializedValue);
-				}
+            case '_POST':
+                $value = $_POST;
+                break;
 
-				break;
+            case '_GET':
+                $value = $_GET;
+                break;
 
-			case '_POST':
-				$value = $_POST;
-				break;
+            case '_FILES':
+                $value = $_FILES;
+                break;
 
-			case '_GET':
-				$value = $_GET;
-				break;
+            case '_REQUEST':
+                $value = $_REQUEST;
+                break;
 
-			case '_FILES':
-				$value = $_FILES;
-				break;
+            case '_SERVER':
+                $value = $_SERVER;
+                break;
 
-			case '_REQUEST':
-				$value = $_REQUEST;
-				break;
+            case '_SESSION':
+                $value = $_SESSION;
+                break;
 
-			case '_SERVER':
-				$value = $_SERVER;
-				break;
+            case '_ENV':
+                $value = $_ENV;
+                break;
 
-			case '_SESSION':
-				$value = $_SESSION;
-				break;
+            case '_COOKIE':
+                $value = $_COOKIE;
+                break;
+        }
+        foreach ($keyPath as $key) {
+            if (isset($value[$key])) {
+                $value = $value[$key];
+            } else {
+                $value = false;
+                break;
+            }
+        }
 
-			case '_ENV':
-				$value = $_ENV;
-				break;
-
-			case '_COOKIE':
-				$value = $_COOKIE;
-				break;
-		}
-		foreach ($keyPath as $key) {
-			if (isset($value[$key])) {
-				$value = $value[$key];
-			} else {
-				$value = false;
-				break;
-			}
-		}
-
-		return $value;
-	}
-
+        return $value;
+    }
 }

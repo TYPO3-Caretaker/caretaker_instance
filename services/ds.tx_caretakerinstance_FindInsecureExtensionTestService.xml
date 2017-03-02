@@ -1,149 +1,149 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
-<!-- 
+<!--
 /**
  * This is a file of the caretaker project.
  * Copyright 2008 by n@work Internet Informationssystem GmbH (www.work.de)
- * 
+ *
  * @Author	Thomas Hempel 		<thomas@work.de>
  * @Author	Martin Ficzel		<martin@work.de>
  * @Author	Patrick Kollodzik	<patrick@work.de>
- * 
+ *
  * $$Id$$
  */
 -->
 <T3DataStructure>
-	<meta>
-		<langDisable>1</langDisable>
-	</meta>
-	<ROOT>
-		<TCEforms> 
-			<sheetTitle>Default</sheetTitle> 
-		</TCEforms> 
-		<type>array</type>
-		<el>
-			<check_extension_locations>
-				<TCEforms>
-					<label>Wich extension-locations should be checked</label>
-					<config>
-						<type>check</type>
-					    <items>
-					    	<numIndex index="0">
-					    		<numIndex index="0">System</numIndex>
-								<numIndex index="1"></numIndex>
-					    	</numIndex>
-					    	<numIndex index="1">
-					    		<numIndex index="0">Global</numIndex>
-								<numIndex index="1"></numIndex>
-					    	</numIndex>
-					    	<numIndex index="2">
-					    		<numIndex index="0">Local</numIndex>
-								<numIndex index="1"></numIndex>
-					    	</numIndex>
-					  </items>
-					  <default>6</default>
-					  <cols>3</cols>
-					</config>
-				</TCEforms>
-			</check_extension_locations>
-			
-			<status_of_installed_insecure_extensions>
-				<TCEforms>
-					<label>Status of installed insecure Extensions</label>
-					<config>
-						<type>select</type>
-						<items>
-					    	<numIndex index="0">
-					    		<numIndex index="0">OK</numIndex>
-								<numIndex index="1">0</numIndex>
-					    	</numIndex>
-					    	<numIndex index="1">
-					    		<numIndex index="0">Warning</numIndex>
-								<numIndex index="1">1</numIndex>
-					    	</numIndex>
-					    	<numIndex index="2">
-					    		<numIndex index="0">Error</numIndex>
-								<numIndex index="1">2</numIndex>
-					    	</numIndex>
-						</items>
-						<default>2</default>
-					</config>
-				</TCEforms>
-			</status_of_installed_insecure_extensions>
+    <meta>
+        <langDisable>1</langDisable>
+    </meta>
+    <ROOT>
+        <TCEforms>
+            <sheetTitle>Default</sheetTitle>
+        </TCEforms>
+        <type>array</type>
+        <el>
+            <check_extension_locations>
+                <TCEforms>
+                    <label>Wich extension-locations should be checked</label>
+                    <config>
+                        <type>check</type>
+                        <items>
+                            <numIndex index="0">
+                                <numIndex index="0">System</numIndex>
+                                <numIndex index="1"></numIndex>
+                            </numIndex>
+                            <numIndex index="1">
+                                <numIndex index="0">Global</numIndex>
+                                <numIndex index="1"></numIndex>
+                            </numIndex>
+                            <numIndex index="2">
+                                <numIndex index="0">Local</numIndex>
+                                <numIndex index="1"></numIndex>
+                            </numIndex>
+                        </items>
+                        <default>6</default>
+                        <cols>3</cols>
+                    </config>
+                </TCEforms>
+            </check_extension_locations>
 
-			<status_of_uninstalled_insecure_extensions>
-				<TCEforms>
-					<label>Status of present but uninstalled insecure extensions</label>
-					<config>
-						<type>select</type>
-						<items>
-					    	<numIndex index="0">
-					    		<numIndex index="0">OK</numIndex>
-								<numIndex index="1">0</numIndex>
-					    	</numIndex>
-					    	<numIndex index="1">
-					    		<numIndex index="0">Warning</numIndex>
-								<numIndex index="1">1</numIndex>
-					    	</numIndex>
-					    	<numIndex index="2">
-					    		<numIndex index="0">Error</numIndex>
-								<numIndex index="1">2</numIndex>
-					    	</numIndex>
-						</items>
-						<default>1</default>
-					</config>
-				</TCEforms>
-			</status_of_uninstalled_insecure_extensions>
+            <status_of_installed_insecure_extensions>
+                <TCEforms>
+                    <label>Status of installed insecure Extensions</label>
+                    <config>
+                        <type>select</type>
+                        <items>
+                            <numIndex index="0">
+                                <numIndex index="0">OK</numIndex>
+                                <numIndex index="1">0</numIndex>
+                            </numIndex>
+                            <numIndex index="1">
+                                <numIndex index="0">Warning</numIndex>
+                                <numIndex index="1">1</numIndex>
+                            </numIndex>
+                            <numIndex index="2">
+                                <numIndex index="0">Error</numIndex>
+                                <numIndex index="1">2</numIndex>
+                            </numIndex>
+                        </items>
+                        <default>2</default>
+                    </config>
+                </TCEforms>
+            </status_of_installed_insecure_extensions>
 
-			<status_of_custom_extensions>
-				<TCEforms>
-					<label>Status of Custom Extension wich are not found in TER</label>
-					<config>
-						<type>select</type>
-						<items>
-					    	<numIndex index="0">
-					    		<numIndex index="0">OK</numIndex>
-								<numIndex index="1">0</numIndex>
-					    	</numIndex>
-					    	<numIndex index="1">
-					    		<numIndex index="0">Warning</numIndex>
-								<numIndex index="1">1</numIndex>
-					    	</numIndex>
-					    	<numIndex index="2">
-					    		<numIndex index="0">Error</numIndex>
-								<numIndex index="1">2</numIndex>
-					    	</numIndex>
-						</items>
-						<default>0</default>
-					</config>
-				</TCEforms>
-			</status_of_custom_extensions>
-			
-			<custom_extkey_whitlelist>
-				<TCEforms>
-					<label>Custom Extension Key Whitelist</label>
-					<config>
-						<type>text</type>
-					</config>
-				</TCEforms>
-			</custom_extkey_whitlelist>
+            <status_of_uninstalled_insecure_extensions>
+                <TCEforms>
+                    <label>Status of present but uninstalled insecure extensions</label>
+                    <config>
+                        <type>select</type>
+                        <items>
+                            <numIndex index="0">
+                                <numIndex index="0">OK</numIndex>
+                                <numIndex index="1">0</numIndex>
+                            </numIndex>
+                            <numIndex index="1">
+                                <numIndex index="0">Warning</numIndex>
+                                <numIndex index="1">1</numIndex>
+                            </numIndex>
+                            <numIndex index="2">
+                                <numIndex index="0">Error</numIndex>
+                                <numIndex index="1">2</numIndex>
+                            </numIndex>
+                        </items>
+                        <default>1</default>
+                    </config>
+                </TCEforms>
+            </status_of_uninstalled_insecure_extensions>
 
-			<custom_extkey_blacklist>
-				<TCEforms>
-					<label>Custom Extension Key Blacklist</label>
-					<config>
-						<type>text</type>
-					</config>
-				</TCEforms>
-			</custom_extkey_blacklist>
+            <status_of_custom_extensions>
+                <TCEforms>
+                    <label>Status of Custom Extension wich are not found in TER</label>
+                    <config>
+                        <type>select</type>
+                        <items>
+                            <numIndex index="0">
+                                <numIndex index="0">OK</numIndex>
+                                <numIndex index="1">0</numIndex>
+                            </numIndex>
+                            <numIndex index="1">
+                                <numIndex index="0">Warning</numIndex>
+                                <numIndex index="1">1</numIndex>
+                            </numIndex>
+                            <numIndex index="2">
+                                <numIndex index="0">Error</numIndex>
+                                <numIndex index="1">2</numIndex>
+                            </numIndex>
+                        </items>
+                        <default>0</default>
+                    </config>
+                </TCEforms>
+            </status_of_custom_extensions>
 
-			<ignore_extension_version_suffix>
-				<TCEforms>
-					<label>Should extension version suffixes (e.g. "_mod") be ignored?</label>
-					<config>
-						<type>check</type>
-					</config>
-				</TCEforms>
-			</ignore_extension_version_suffix>
-		</el>
-	</ROOT>
+            <custom_extkey_whitlelist>
+                <TCEforms>
+                    <label>Custom Extension Key Whitelist</label>
+                    <config>
+                        <type>text</type>
+                    </config>
+                </TCEforms>
+            </custom_extkey_whitlelist>
+
+            <custom_extkey_blacklist>
+                <TCEforms>
+                    <label>Custom Extension Key Blacklist</label>
+                    <config>
+                        <type>text</type>
+                    </config>
+                </TCEforms>
+            </custom_extkey_blacklist>
+
+            <ignore_extension_version_suffix>
+                <TCEforms>
+                    <label>Should extension version suffixes (e.g. "_mod") be ignored?</label>
+                    <config>
+                        <type>check</type>
+                    </config>
+                </TCEforms>
+            </ignore_extension_version_suffix>
+        </el>
+    </ROOT>
 </T3DataStructure>

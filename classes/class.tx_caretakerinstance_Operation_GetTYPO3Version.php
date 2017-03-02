@@ -42,17 +42,15 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinstance_IOperation {
-
-	/**
-	 * @param array $parameter None
-	 * @return the current PHP version
-	 */
-	public function execute($parameter = array()) {
-		return new tx_caretakerinstance_OperationResult(true, TYPO3_version);
-	}
-
+class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinstance_IOperation
+{
+    /**
+     * @param array $parameter None
+     * @return the current PHP version
+     */
+    public function execute($parameter = array())
+    {
+        return new tx_caretakerinstance_OperationResult(true, TYPO3_version);
+    }
 }

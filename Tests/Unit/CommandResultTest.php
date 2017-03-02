@@ -43,26 +43,24 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * @author        Christopher Hlubek <hlubek (at) networkteam.com>
  * @author        Tobias Liebig <liebig (at) networkteam.com>
- * @package        TYPO3
- * @subpackage    \tx_caretakerinstance
  */
 class CommandResultTest extends UnitTestCase
 {
-    function testCommandResultToJsonCreatesJson()
+    public function testCommandResultToJsonCreatesJson()
     {
         $result = new \tx_caretakerinstance_CommandResult(true, array(
-                new \tx_caretakerinstance_OperationResult(true, 'foo'),
-                new \tx_caretakerinstance_OperationResult(true, false),
-                new \tx_caretakerinstance_OperationResult(true, array('foo', 'bar'))
+            new \tx_caretakerinstance_OperationResult(true, 'foo'),
+            new \tx_caretakerinstance_OperationResult(true, false),
+            new \tx_caretakerinstance_OperationResult(true, array('foo', 'bar')),
         ), 'Test message');
 
         $json = $result->toJson();
 
         $this->assertEquals('{"status":0,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}',
-                $json);
+            $json);
     }
 
-    function testCommandResultFromJson()
+    public function testCommandResultFromJson()
     {
         $json = '{"status":0,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}';
         $result = \tx_caretakerinstance_CommandResult::fromJson($json);
@@ -71,9 +69,9 @@ class CommandResultTest extends UnitTestCase
         $this->assertEquals('Test message', $result->getMessage());
         $this->assertTrue($result->isSuccessful());
         $this->assertEquals(array(
-                new \tx_caretakerinstance_OperationResult(true, 'foo'),
-                new \tx_caretakerinstance_OperationResult(true, false),
-                new \tx_caretakerinstance_OperationResult(true, array('foo', 'bar'))
+            new \tx_caretakerinstance_OperationResult(true, 'foo'),
+            new \tx_caretakerinstance_OperationResult(true, false),
+            new \tx_caretakerinstance_OperationResult(true, array('foo', 'bar')),
         ), $result->getOperationResults());
     }
 }

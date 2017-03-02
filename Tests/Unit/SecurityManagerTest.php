@@ -43,12 +43,9 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * @author        Christopher Hlubek <hlubek (at) networkteam.com>
  * @author        Tobias Liebig <liebig (at) networkteam.com>
- * @package        TYPO3
- * @subpackage    \tx_caretakerinstance
  */
 class SecurityManagerTest extends UnitTestCase
 {
-
     /**
      * @var \tx_caretakerinstance_ICryptoManager
      */
@@ -64,9 +61,8 @@ class SecurityManagerTest extends UnitTestCase
      */
     protected $commandRequest;
 
-    function setUp()
+    public function setUp()
     {
-
         $this->cryptoManager = $this->getMock('\tx_caretakerinstance_ICryptoManager');
 
         $this->securityManager = new \tx_caretakerinstance_SecurityManager($this->cryptoManager);
@@ -74,55 +70,55 @@ class SecurityManagerTest extends UnitTestCase
         $this->securityManager->setClientPublicKey('FakeClientPublicKey');
 
         $this->commandRequest = new \tx_caretakerinstance_CommandRequest(
-                array(
-                        'session_token' => '12345:abcdefg',
-                        'client_info' => array(
-                                'host_address' => '192.168.10.100'
-                        ),
-                        'data' => array(
-                            // Unpacked from raw data.
-                                'operations' => array(
-                                        array('mock', array('foo' => 'bar')),
-                                        array('mock', array('foo' => 'bar'))
-                                ),
-                            // Fake crypted JSON
-                                'encrypted' => 'xxer4rt34x'
-                        ),
-                    // Data in JSON raw (fake)
-                        'raw' => '{"foo": "bar"}',
-                    // Signature over raw data and session token sent from client
-                        'signature' => 'abcdefg'
-                ));
+            array(
+                'session_token' => '12345:abcdefg',
+                'client_info' => array(
+                    'host_address' => '192.168.10.100',
+                ),
+                'data' => array(
+                    // Unpacked from raw data.
+                    'operations' => array(
+                        array('mock', array('foo' => 'bar')),
+                        array('mock', array('foo' => 'bar')),
+                    ),
+                    // Fake crypted JSON
+                    'encrypted' => 'xxer4rt34x',
+                ),
+                // Data in JSON raw (fake)
+                'raw' => '{"foo": "bar"}',
+                // Signature over raw data and session token sent from client
+                'signature' => 'abcdefg',
+            ));
     }
 
-    function testCreateSessionToken()
+    public function testCreateSessionToken()
     {
         $this->cryptoManager->expects($this->once())
-                ->method('createSessionToken')
-                ->with($this->equalTo(time()), $this->equalTo('FakePrivateKey'))
-                ->will($this->returnValue('me_is_a_token'));
+            ->method('createSessionToken')
+            ->with($this->equalTo(time()), $this->equalTo('FakePrivateKey'))
+            ->will($this->returnValue('me_is_a_token'));
 
         $token = $this->securityManager->createSessionToken('192.168.10.100');
         $this->assertEquals('me_is_a_token', $token);
     }
 
-    function testClientRestrictionForSessionTokenCreation()
+    public function testClientRestrictionForSessionTokenCreation()
     {
         $this->securityManager->setClientHostAddressRestriction('192.168.10.200');
 
         $this->cryptoManager->expects($this->never())
-                ->method('createSessionToken');
+            ->method('createSessionToken');
 
         $token = $this->securityManager->createSessionToken('192.168.10.100');
         $this->assertFalse($token);
     }
 
-    function testDecodeRequest()
+    public function testDecodeRequest()
     {
         $this->cryptoManager->expects($this->once())
-                ->method('decrypt')
-                ->with($this->equalTo('xxer4rt34x'), $this->equalTo('FakePrivateKey'))
-                ->will($this->returnValue('{"secret": "top-secret"}'));
+            ->method('decrypt')
+            ->with($this->equalTo('xxer4rt34x'), $this->equalTo('FakePrivateKey'))
+            ->will($this->returnValue('{"secret": "top-secret"}'));
 
         $this->assertTrue($this->securityManager->decodeRequest($this->commandRequest));
 
@@ -131,105 +127,105 @@ class SecurityManagerTest extends UnitTestCase
         $this->assertEquals($data['secret'], 'top-secret', 'Encrypted JSON data was decoded');
     }
 
-    function testDecodeInvalidEncryptedRequest()
+    public function testDecodeInvalidEncryptedRequest()
     {
         $this->cryptoManager->expects($this->once())
-                ->method('decrypt')
-                ->will($this->returnValue(false));
+            ->method('decrypt')
+            ->will($this->returnValue(false));
 
         $this->assertFalse($this->securityManager->decodeRequest($this->commandRequest));
     }
 
-    function testValidateValidRequest()
+    public function testValidateValidRequest()
     {
         $this->cryptoManager->expects($this->once())
-                ->method('verifySessionToken')
-                ->with($this->equalTo('12345:abcdefg'), $this->equalTo('FakePrivateKey'))
-                ->will($this->returnValue(time() - 1));
+            ->method('verifySessionToken')
+            ->with($this->equalTo('12345:abcdefg'), $this->equalTo('FakePrivateKey'))
+            ->will($this->returnValue(time() - 1));
 
         $this->cryptoManager->expects($this->any())
-                ->method('verifySignature')
-                ->will($this->returnValue(true));
+            ->method('verifySignature')
+            ->will($this->returnValue(true));
 
         $this->assertTrue($this->securityManager->validateRequest($this->commandRequest));
     }
 
-    function testValidateExpiredRequest()
+    public function testValidateExpiredRequest()
     {
         $this->cryptoManager->expects($this->once())
-                ->method('verifySessionToken')
-                ->with($this->equalTo('12345:abcdefg'), $this->equalTo('FakePrivateKey'))
-                ->will($this->returnValue(time() - ($this->securityManager->getSessionTokenExpiration() + 1)));
+            ->method('verifySessionToken')
+            ->with($this->equalTo('12345:abcdefg'), $this->equalTo('FakePrivateKey'))
+            ->will($this->returnValue(time() - ($this->securityManager->getSessionTokenExpiration() + 1)));
 
         $this->cryptoManager->expects($this->any())
-                ->method('verifySignature')
-                ->will($this->returnValue(true));
+            ->method('verifySignature')
+            ->will($this->returnValue(true));
 
         $this->assertFalse($this->securityManager->validateRequest($this->commandRequest));
     }
 
-    function testClientRestrictionForRequestValidation()
+    public function testClientRestrictionForRequestValidation()
     {
         $this->securityManager->setClientHostAddressRestriction('192.168.10.200');
 
         $this->cryptoManager->expects($this->once())
-                ->method('verifySessionToken')
-                ->will($this->returnValue(time() - 1));
+            ->method('verifySessionToken')
+            ->will($this->returnValue(time() - 1));
 
         $this->cryptoManager->expects($this->any())
-                ->method('verifySignature')
-                ->will($this->returnValue(true));
+            ->method('verifySignature')
+            ->will($this->returnValue(true));
 
         $this->assertFalse($this->securityManager->validateRequest($this->commandRequest));
     }
 
-    function testValidationVerifiesSignature()
+    public function testValidationVerifiesSignature()
     {
         $this->cryptoManager->expects($this->any())
-                ->method('verifySessionToken')
-                ->will($this->returnValue(time() - 1));
+            ->method('verifySessionToken')
+            ->will($this->returnValue(time() - 1));
 
         $this->cryptoManager->expects($this->once())
-                ->method('verifySignature')
-                // Verify session token and raw data
-                ->with($this->equalTo('12345:abcdefg${"foo": "bar"}'),
-                        $this->equalTo('abcdefg'),
-                        $this->equalTo('FakeClientPublicKey'))
-                ->will($this->returnValue(true));
+            ->method('verifySignature')
+            // Verify session token and raw data
+            ->with($this->equalTo('12345:abcdefg${"foo": "bar"}'),
+                $this->equalTo('abcdefg'),
+                $this->equalTo('FakeClientPublicKey'))
+            ->will($this->returnValue(true));
 
         $this->assertTrue($this->securityManager->validateRequest($this->commandRequest));
     }
 
-    function testWrongSignatureDoesntValidate()
+    public function testWrongSignatureDoesntValidate()
     {
         $this->cryptoManager->expects($this->any())
-                ->method('verifySessionToken')
-                ->will($this->returnValue(time() - 1));
+            ->method('verifySessionToken')
+            ->will($this->returnValue(time() - 1));
 
         $this->cryptoManager->expects($this->any())
-                ->method('verifySignature')
-                ->will($this->returnValue(false));
+            ->method('verifySignature')
+            ->will($this->returnValue(false));
 
         $this->assertFalse($this->securityManager->validateRequest($this->commandRequest));
     }
 
-    function testEncodeResultEncodesStringWithClientPublicKey()
+    public function testEncodeResultEncodesStringWithClientPublicKey()
     {
         $this->cryptoManager->expects($this->once())
-                ->method('encrypt')
-                ->with($this->equalTo('My result data'), $this->equalTo('FakeClientPublicKey'))
-                ->will($this->returnValue('Encoded result'));
+            ->method('encrypt')
+            ->with($this->equalTo('My result data'), $this->equalTo('FakeClientPublicKey'))
+            ->will($this->returnValue('Encoded result'));
 
         $encodedResult = $this->securityManager->encodeResult('My result data');
         $this->assertEquals('Encoded result', $encodedResult);
     }
 
-    function testEncodeResultDecodesStringWithPrivateKey()
+    public function testEncodeResultDecodesStringWithPrivateKey()
     {
         $this->cryptoManager->expects($this->once())
-                ->method('decrypt')
-                ->with($this->equalTo('Encoded result'), $this->equalTo('FakePrivateKey'))
-                ->will($this->returnValue('My result data'));
+            ->method('decrypt')
+            ->with($this->equalTo('Encoded result'), $this->equalTo('FakePrivateKey'))
+            ->will($this->returnValue('My result data'));
 
         $encodedResult = $this->securityManager->decodeResult('Encoded result');
         $this->assertEquals('My result data', $encodedResult);
