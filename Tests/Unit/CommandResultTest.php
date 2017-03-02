@@ -50,16 +50,16 @@ class CommandResultTest extends UnitTestCase
 {
     function testCommandResultToJsonCreatesJson()
     {
-        $result = new \tx_caretakerinstance_CommandResult(true, array(
-                new \tx_caretakerinstance_OperationResult(true, 'foo'),
-                new \tx_caretakerinstance_OperationResult(true, false),
-                new \tx_caretakerinstance_OperationResult(true, array('foo', 'bar'))
-        ), 'Test message');
+        $result = new \tx_caretakerinstance_CommandResult(true, [
+            new \tx_caretakerinstance_OperationResult(true, 'foo'),
+            new \tx_caretakerinstance_OperationResult(true, false),
+            new \tx_caretakerinstance_OperationResult(true, ['foo', 'bar']),
+        ], 'Test message');
 
         $json = $result->toJson();
 
         $this->assertEquals('{"status":0,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}',
-                $json);
+            $json);
     }
 
     function testCommandResultFromJson()
@@ -70,10 +70,10 @@ class CommandResultTest extends UnitTestCase
         $this->assertInstanceOf('\tx_caretakerinstance_CommandResult', $result);
         $this->assertEquals('Test message', $result->getMessage());
         $this->assertTrue($result->isSuccessful());
-        $this->assertEquals(array(
-                new \tx_caretakerinstance_OperationResult(true, 'foo'),
-                new \tx_caretakerinstance_OperationResult(true, false),
-                new \tx_caretakerinstance_OperationResult(true, array('foo', 'bar'))
-        ), $result->getOperationResults());
+        $this->assertEquals([
+            new \tx_caretakerinstance_OperationResult(true, 'foo'),
+            new \tx_caretakerinstance_OperationResult(true, false),
+            new \tx_caretakerinstance_OperationResult(true, ['foo', 'bar']),
+        ], $result->getOperationResults());
     }
 }

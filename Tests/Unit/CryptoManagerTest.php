@@ -64,7 +64,6 @@ class CryptoManagerTest extends UnitTestCase
      */
     protected $publicKey;
 
-
     function setUp()
     {
         $this->cryptoManager = new \tx_caretakerinstance_OpenSSLCryptoManager();
@@ -86,7 +85,7 @@ class CryptoManagerTest extends UnitTestCase
     {
         $data = time();
 
-        $tokens = array();
+        $tokens = [];
         for ($i = 0; $i < 3; $i++) {
             $token = $this->cryptoManager->createSessionToken($data, $this->privateKey);
             $this->assertArrayNotHasKey($token, $tokens);
@@ -140,13 +139,13 @@ class CryptoManagerTest extends UnitTestCase
         $this->markTestSkipped('Skip encryption test because open SSL salts the data and the result is always different.');
 
         $crypt = $this->cryptoManager->encrypt(
-                '{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
-                $this->publicKey
+            '{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
+            $this->publicKey
         );
 
         $this->assertEquals(
-                'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
-                $crypt
+            'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
+            $crypt
         );
     }
 
@@ -155,13 +154,13 @@ class CryptoManagerTest extends UnitTestCase
         $this->markTestSkipped('Skip encryption test because open SSL salts the data and the result is always different.');
 
         $plain = $this->cryptoManager->decrypt(
-                'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
-                $this->privateKey
+            'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
+            $this->privateKey
         );
 
         $this->assertEquals(
-                '{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
-                $plain
+            '{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
+            $plain
         );
     }
 

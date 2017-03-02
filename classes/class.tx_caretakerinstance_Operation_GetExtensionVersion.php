@@ -45,29 +45,31 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretakerinstance_IOperation {
+class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretakerinstance_IOperation
+{
 
-	/**
-	 * Get the extension version of the given extension by extension key
-	 *
-	 * @param array $parameter None
-	 * @return tx_caretakerinstance_OperationResult The extension version
-	 */
-	public function execute($parameter = array()) {
-		$extensionKey = $parameter['extensionKey'];
+    /**
+     * Get the extension version of the given extension by extension key
+     *
+     * @param array $parameter None
+     * @return tx_caretakerinstance_OperationResult The extension version
+     */
+    public function execute($parameter = [])
+    {
+        $extensionKey = $parameter['extensionKey'];
 
-		if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
-			return new tx_caretakerinstance_OperationResult(FALSE, 'Extension [' . $extensionKey . '] is not loaded');
-		}
+        if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
+            return new tx_caretakerinstance_OperationResult(false, 'Extension [' . $extensionKey . '] is not loaded');
+        }
 
-		$_EXTKEY = $extensionKey;
-		@include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey, 'ext_emconf.php'));
+        $_EXTKEY = $extensionKey;
+        @include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey, 'ext_emconf.php'));
 
-		if (is_array($EM_CONF[$extensionKey])) {
-			return new tx_caretakerinstance_OperationResult(TRUE, $EM_CONF[$extensionKey]['version']);
-		} else {
-			return new tx_caretakerinstance_OperationResult(FALSE, 'Cannot read EM_CONF for extension [' . $extensionKey . ']');
-		}
-	}
+        if (is_array($EM_CONF[$extensionKey])) {
+            return new tx_caretakerinstance_OperationResult(true, $EM_CONF[$extensionKey]['version']);
+        } else {
+            return new tx_caretakerinstance_OperationResult(false, 'Cannot read EM_CONF for extension [' . $extensionKey . ']');
+        }
+    }
 
 }

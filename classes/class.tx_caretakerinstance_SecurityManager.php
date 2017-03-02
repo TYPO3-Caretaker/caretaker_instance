@@ -45,220 +45,237 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecurityManager {
+class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecurityManager
+{
 
-	/**
-	 * Public key of this instance
-	 *
-	 * @var string
-	 */
-	protected $publicKey;
+    /**
+     * Public key of this instance
+     *
+     * @var string
+     */
+    protected $publicKey;
 
-	/**
-	 * Private key of this instance
-	 *
-	 * @var string
-	 */
-	protected $privateKey;
+    /**
+     * Private key of this instance
+     *
+     * @var string
+     */
+    protected $privateKey;
 
-	/**
-	 * Public key of the client accessing the instance (a.k.a caretaker server), this must be preconfigured
-	 *
-	 * @var string
-	 */
-	protected $clientPublicKey;
+    /**
+     * Public key of the client accessing the instance (a.k.a caretaker server), this must be preconfigured
+     *
+     * @var string
+     */
+    protected $clientPublicKey;
 
-	/**
-	 * Expiration of session token in seconds
-	 *
-	 * @var int
-	 */
-	protected $sessionTokenExpiration = 600;
+    /**
+     * Expiration of session token in seconds
+     *
+     * @var int
+     */
+    protected $sessionTokenExpiration = 600;
 
-	/**
-	 * Restrict client (Caretaker server) to an IP address
-	 *
-	 * @var string
-	 */
-	protected $clientHostAddressRestriction;
+    /**
+     * Restrict client (Caretaker server) to an IP address
+     *
+     * @var string
+     */
+    protected $clientHostAddressRestriction;
 
-	/**
-	 * @var tx_caretakerinstance_OpenSSLCryptoManager
-	 */
-	protected $cryptoManager;
+    /**
+     * @var tx_caretakerinstance_OpenSSLCryptoManager
+     */
+    protected $cryptoManager;
 
-	/**
-	 * Constructor
-	 *
-	 * @param tx_caretakerinstance_ICryptoManager $cryptoManager
-	 */
-	public function __construct(tx_caretakerinstance_ICryptoManager $cryptoManager) {
-		$this->cryptoManager = $cryptoManager;
-	}
+    /**
+     * Constructor
+     *
+     * @param tx_caretakerinstance_ICryptoManager $cryptoManager
+     */
+    public function __construct(tx_caretakerinstance_ICryptoManager $cryptoManager)
+    {
+        $this->cryptoManager = $cryptoManager;
+    }
 
-	/**
-	 * Validate a command request
-	 * - Validity of session token
-	 * - Session token expiration
-	 * - Client host address
-	 * - Encrypted data signature
-	 *
-	 * @param tx_caretakerinstance_CommandRequest $commandRequest
-	 * @return boolean
-	 */
-	public function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest) {
-		$sessionToken = $commandRequest->getSessionToken();
-		$timestamp = $this->cryptoManager->verifySessionToken($sessionToken, $this->privateKey);
-		if ((time() - $timestamp) > $this->sessionTokenExpiration) {
-			// Session token expired
-			return FALSE;
-		} elseif (strlen($this->clientHostAddressRestriction) &&
-				$commandRequest->getClientHostAddress() != $this->clientHostAddressRestriction
-		) {
-			// Client IP address is not allowed
-			return FALSE;
-		} elseif (!$this->cryptoManager->verifySignature(
-				$commandRequest->getDataForSignature(),
-				$commandRequest->getSignature(),
-				$this->clientPublicKey)
-		) {
-			// Signature didn't verify
-			return FALSE;
-		}
+    /**
+     * Validate a command request
+     * - Validity of session token
+     * - Session token expiration
+     * - Client host address
+     * - Encrypted data signature
+     *
+     * @param tx_caretakerinstance_CommandRequest $commandRequest
+     * @return boolean
+     */
+    public function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest)
+    {
+        $sessionToken = $commandRequest->getSessionToken();
+        $timestamp = $this->cryptoManager->verifySessionToken($sessionToken, $this->privateKey);
+        if ((time() - $timestamp) > $this->sessionTokenExpiration) {
+            // Session token expired
+            return false;
+        } elseif (strlen($this->clientHostAddressRestriction) &&
+            $commandRequest->getClientHostAddress() != $this->clientHostAddressRestriction
+        ) {
+            // Client IP address is not allowed
+            return false;
+        } elseif (!$this->cryptoManager->verifySignature(
+            $commandRequest->getDataForSignature(),
+            $commandRequest->getSignature(),
+            $this->clientPublicKey)
+        ) {
+            // Signature didn't verify
+            return false;
+        }
 
-		return TRUE;
-	}
+        return true;
+    }
 
-	/**
-	 * Decrypt and merge encrypted data for the command request
-	 *
-	 * @param tx_caretakerinstance_CommandRequest $commandRequest
-	 * @return boolean TRUE if the command request could be decrypted
-	 */
-	public function decodeRequest(tx_caretakerinstance_CommandRequest $commandRequest) {
-		$data = json_decode($commandRequest->getRawData(), TRUE);
-		$commandRequest->mergeData($data);
+    /**
+     * Decrypt and merge encrypted data for the command request
+     *
+     * @param tx_caretakerinstance_CommandRequest $commandRequest
+     * @return boolean TRUE if the command request could be decrypted
+     */
+    public function decodeRequest(tx_caretakerinstance_CommandRequest $commandRequest)
+    {
+        $data = json_decode($commandRequest->getRawData(), true);
+        $commandRequest->mergeData($data);
 
-		if (strlen($commandRequest->getData('encrypted'))) {
-			$raw = $this->cryptoManager->decrypt($commandRequest->getData('encrypted'), $this->privateKey);
-			if (!$raw) {
-				// Decryption failed
-				return FALSE;
-			}
-			$data = json_decode($raw, TRUE);
+        if (strlen($commandRequest->getData('encrypted'))) {
+            $raw = $this->cryptoManager->decrypt($commandRequest->getData('encrypted'), $this->privateKey);
+            if (!$raw) {
+                // Decryption failed
+                return false;
+            }
+            $data = json_decode($raw, true);
 
-			// merge decrypted data into raw data
-			$commandRequest->mergeData($data);
-		}
+            // merge decrypted data into raw data
+            $commandRequest->mergeData($data);
+        }
 
-		return TRUE;
-	}
+        return true;
+    }
 
-	/**
-	 * Create a session token
-	 *
-	 * @param string $clientHostAddress
-	 * @return string
-	 */
-	public function createSessionToken($clientHostAddress) {
-		if (strlen($this->clientHostAddressRestriction) &&
-				$clientHostAddress != $this->clientHostAddressRestriction
-		) {
-			return FALSE;
-		}
-		return $this->cryptoManager->createSessionToken(time(), $this->privateKey);
-	}
+    /**
+     * Create a session token
+     *
+     * @param string $clientHostAddress
+     * @return string
+     */
+    public function createSessionToken($clientHostAddress)
+    {
+        if (strlen($this->clientHostAddressRestriction) &&
+            $clientHostAddress != $this->clientHostAddressRestriction
+        ) {
+            return false;
+        }
 
-	/**
-	 *
-	 * @return string
-	 */
-	public function getPublicKey() {
-		return $this->publicKey;
-	}
+        return $this->cryptoManager->createSessionToken(time(), $this->privateKey);
+    }
 
-	/**
-	 * @param string $publicKey
-	 * @return void
-	 */
-	public function setPublicKey($publicKey) {
-		$this->publicKey = $publicKey;
-	}
+    /**
+     *
+     * @return string
+     */
+    public function getPublicKey()
+    {
+        return $this->publicKey;
+    }
 
-	/**
-	 *
-	 * @return string
-	 */
-	public function getPrivateKey() {
-		return $this->privateKey;
-	}
+    /**
+     * @param string $publicKey
+     * @return void
+     */
+    public function setPublicKey($publicKey)
+    {
+        $this->publicKey = $publicKey;
+    }
 
-	/**
-	 *
-	 * @param string $privateKey
-	 * @return void
-	 */
-	public function setPrivateKey($privateKey) {
-		$this->privateKey = $privateKey;
-	}
+    /**
+     *
+     * @return string
+     */
+    public function getPrivateKey()
+    {
+        return $this->privateKey;
+    }
 
-	/**
-	 *
-	 * @return string
-	 */
-	public function getClientHostAddressRestriction() {
-		return $this->clientHostAddressRestriction;
-	}
+    /**
+     *
+     * @param string $privateKey
+     * @return void
+     */
+    public function setPrivateKey($privateKey)
+    {
+        $this->privateKey = $privateKey;
+    }
 
-	/**
-	 *
-	 * @param string $address
-	 * @return void
-	 */
-	public function setClientHostAddressRestriction($address) {
-		$this->clientHostAddressRestriction = $address;
-	}
+    /**
+     *
+     * @return string
+     */
+    public function getClientHostAddressRestriction()
+    {
+        return $this->clientHostAddressRestriction;
+    }
 
-	/**
-	 *
-	 * @return string
-	 */
-	public function getClientPublicKey() {
-		return $this->clientPublicKey;
-	}
+    /**
+     *
+     * @param string $address
+     * @return void
+     */
+    public function setClientHostAddressRestriction($address)
+    {
+        $this->clientHostAddressRestriction = $address;
+    }
 
-	/**
-	 *
-	 * @param string $clientPublicKey
-	 * @return void
-	 */
-	public function setClientPublicKey($clientPublicKey) {
-		$this->clientPublicKey = $clientPublicKey;
-	}
+    /**
+     *
+     * @return string
+     */
+    public function getClientPublicKey()
+    {
+        return $this->clientPublicKey;
+    }
 
-	/**
-	 *
-	 * @return int
-	 */
-	public function getSessionTokenExpiration() {
-		return $this->sessionTokenExpiration;
-	}
+    /**
+     *
+     * @param string $clientPublicKey
+     * @return void
+     */
+    public function setClientPublicKey($clientPublicKey)
+    {
+        $this->clientPublicKey = $clientPublicKey;
+    }
 
-	/**
-	 * @param string $resultData
-	 * @return string
-	 */
-	public function encodeResult($resultData) {
-		return $this->cryptoManager->encrypt($resultData, $this->clientPublicKey);
-	}
+    /**
+     *
+     * @return int
+     */
+    public function getSessionTokenExpiration()
+    {
+        return $this->sessionTokenExpiration;
+    }
 
-	/**
-	 *
-	 * @param string $encryptedData
-	 * @return string
-	 */
-	public function decodeResult($encryptedData) {
-		return $this->cryptoManager->decrypt($encryptedData, $this->privateKey);
-	}
+    /**
+     * @param string $resultData
+     * @return string
+     */
+    public function encodeResult($resultData)
+    {
+        return $this->cryptoManager->encrypt($resultData, $this->clientPublicKey);
+    }
+
+    /**
+     *
+     * @param string $encryptedData
+     * @return string
+     */
+    public function decodeResult($encryptedData)
+    {
+        return $this->cryptoManager->decrypt($encryptedData, $this->privateKey);
+    }
 
 }

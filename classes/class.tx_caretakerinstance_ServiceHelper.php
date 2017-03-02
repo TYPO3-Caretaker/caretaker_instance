@@ -46,29 +46,36 @@
  * @package TYPO3
  * @subpackage caretaker
  */
-class tx_caretakerinstance_ServiceHelper {
+class tx_caretakerinstance_ServiceHelper
+{
 
-	public static $deferredTestServicesToRegister = array();
+    public static $deferredTestServicesToRegister = [];
 
-	/**
-	 * Adds a service for caretaker. The service is registered and the type and flexform is added to the testconf
-	 *
-	 * @param string $extKey kex of the extension wich is adding the service
-	 * @param string $path path to the flexform and service class without slahes before and after
-	 * @param string $key key wich is used for to identify the service
-	 * @param string $title title of the testservice
-	 * @param string $description description of the testservice
-	 */
-	public static function registerCaretakerTestService($extKey, $path, $key, $title, $description = '') {
-		if ($GLOBALS['T3_SERVICES']['caretaker_test_service'] === NULL) {
-			// EXT:caretaker not yet loaded. Memorize the data for later registration
-			self::$deferredTestServicesToRegister[$extKey . $path . $key] = array(
-					$extKey, $path, $key, $title, $description
-			);
-			return;
-		} else {
-			tx_caretaker_ServiceHelper::registerCaretakerTestService($extKey, $path, $key, $title, $description);
-		}
-	}
+    /**
+     * Adds a service for caretaker. The service is registered and the type and flexform is added to the testconf
+     *
+     * @param string $extKey kex of the extension wich is adding the service
+     * @param string $path path to the flexform and service class without slahes before and after
+     * @param string $key key wich is used for to identify the service
+     * @param string $title title of the testservice
+     * @param string $description description of the testservice
+     */
+    public static function registerCaretakerTestService($extKey, $path, $key, $title, $description = '')
+    {
+        if ($GLOBALS['T3_SERVICES']['caretaker_test_service'] === null) {
+            // EXT:caretaker not yet loaded. Memorize the data for later registration
+            self::$deferredTestServicesToRegister[$extKey . $path . $key] = [
+                $extKey,
+                $path,
+                $key,
+                $title,
+                $description,
+            ];
+
+            return;
+        } else {
+            tx_caretaker_ServiceHelper::registerCaretakerTestService($extKey, $path, $key, $title, $description);
+        }
+    }
 
 }

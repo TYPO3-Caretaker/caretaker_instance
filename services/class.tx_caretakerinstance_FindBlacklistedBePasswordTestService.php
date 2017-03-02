@@ -50,55 +50,60 @@ use TYPO3\CMS\Core\Utility\VersionNumberUtility;
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caretakerinstance_RemoteTestServiceBase {
+class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caretakerinstance_RemoteTestServiceBase
+{
 
-	/**
-	 * Value Description
-	 * @var string
-	 */
-	protected $valueDescription = '';
+    /**
+     * Value Description
+     *
+     * @var string
+     */
+    protected $valueDescription = '';
 
-	/**
-	 * Service type description in human readable form.
-	 * @var string
-	 */
-	protected $typeDescription = 'Test that no users with blacklisted passwords exist on the instance.';
+    /**
+     * Service type description in human readable form.
+     *
+     * @var string
+     */
+    protected $typeDescription = 'Test that no users with blacklisted passwords exist on the instance.';
 
-	/**
-	 * Template to display the test Configuration in human readable form.
-	 * @var string
-	 */
-	protected $configurationInfoTemplate = '';
+    /**
+     * Template to display the test Configuration in human readable form.
+     *
+     * @var string
+     */
+    protected $configurationInfoTemplate = '';
 
-	/**
-	 * @return tx_caretaker_TestResult
-	 */
-	public function runTest() {
-		$blacklistedPasswords = explode(chr(10), $this->getConfigValue('blacklist'));
-		$checkForDuplicatePasswords = $this->getConfigValue('check_duplicate_passwords');
+    /**
+     * @return tx_caretaker_TestResult
+     */
+    public function runTest()
+    {
+        $blacklistedPasswords = explode(chr(10), $this->getConfigValue('blacklist'));
+        $checkForDuplicatePasswords = $this->getConfigValue('check_duplicate_passwords');
 
-		$operations = array();
-		$operations[] = array('GetExtensionVersion', array('extensionKey' => 'saltedpasswords'));
-		$commandResult = $this->executeRemoteOperations($operations);
+        $operations = [];
+        $operations[] = ['GetExtensionVersion', ['extensionKey' => 'saltedpasswords']];
+        $commandResult = $this->executeRemoteOperations($operations);
 
-		$results = $commandResult->getOperationResults();
-		$operationResult = $results[0];
-		if (is_object($operationResult) && $operationResult->isSuccessful()) {
-			return tx_caretaker_TestResult::create(
-					tx_caretaker_Constants::state_undefined,
-					0,
-					'FindBlacklistedBePassword is not supported if EXT:saltedpasswords is installed on instance.'
-			);
-		}
+        $results = $commandResult->getOperationResults();
+        $operationResult = $results[0];
+        if (is_object($operationResult) && $operationResult->isSuccessful()) {
+            return tx_caretaker_TestResult::create(
+                tx_caretaker_Constants::state_undefined,
+                0,
+                'FindBlacklistedBePassword is not supported if EXT:saltedpasswords is installed on instance.'
+            );
+        }
 
         // check version of caretaker_instance extension and use "GetRecord" instead of "GetRecords" before version 0.5.2
-        $operations = array();
-        $operations[] = array('GetExtensionVersion', array('extensionKey' => 'caretaker_instance'));
+        $operations = [];
+        $operations[] = ['GetExtensionVersion', ['extensionKey' => 'caretaker_instance']];
         $commandResult = $this->executeRemoteOperations($operations);
         if ($commandResult instanceof tx_caretakerinstance_CommandResult && $commandResult->getStatus() == 0) {
             $getRecordsCommand = 'GetRecords';
             /** @var tx_caretakerinstance_OperationResult $operationResult */
-            foreach($commandResult->getOperationResults() as $operationResult) {
+            foreach ($commandResult->getOperationResults() as $operationResult) {
                 if ($operationResult->isSuccessful()) {
                     $version = VersionNumberUtility::convertVersionNumberToInteger($operationResult->getValue());
                     if ($version < VersionNumberUtility::convertVersionNumberToInteger('0.5.2')) {
@@ -107,11 +112,19 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
                 }
             }
 
-            $operations = array();
+            $operations = [];
             foreach ($blacklistedPasswords as $password) {
                 $password = trim($password);
                 if (strlen($password)) {
-                    $operations[] = array($getRecordsCommand, array('table' => 'be_users', 'field' => 'password', 'value' => md5($password), 'checkEnableFields' => TRUE));
+                    $operations[] = [
+                        $getRecordsCommand,
+                        [
+                            'table' => 'be_users',
+                            'field' => 'password',
+                            'value' => md5($password),
+                            'checkEnableFields' => true,
+                        ],
+                    ];
                 }
             }
 
@@ -121,13 +134,13 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
                 return $this->getFailedCommandResultTestResult($commandResult);
             }
 
-            $careless_users = array();
+            $careless_users = [];
 
             $results = $commandResult->getOperationResults();
             foreach ($results as $operationResult) {
                 if ($operationResult->isSuccessful()) {
                     $users = $operationResult->getValue();
-                    if ($users !== FALSE) {
+                    if ($users !== false) {
                         foreach ($users as $user) {
                             $careless_users[] = $user;
                         }
@@ -140,16 +153,25 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
             if ($checkForDuplicatePasswords) {
                 // clean the preceding operations
                 unset($operations);
-                $operations = array();
+                $operations = [];
 
                 // Will check whether "password" is IN (subselect or comma separated list)
-                $sql_fields = array(
-                    'password' => array(
-                        'SELECT password FROM be_users WHERE disable = 0 AND deleted = 0 GROUP BY password HAVING COUNT(*) > 1' // subselect or comma separated values
-                    )
-                );
+                $sql_fields = [
+                    'password' => [
+                        'SELECT password FROM be_users WHERE disable = 0 AND deleted = 0 GROUP BY password HAVING COUNT(*) > 1'
+                        // subselect or comma separated values
+                    ],
+                ];
 
-                $operations[] = array($getRecordsCommand, array('table' => 'be_users', 'field' => array_keys($sql_fields), 'value' => $sql_fields, 'checkEnableFields' => TRUE));
+                $operations[] = [
+                    $getRecordsCommand,
+                    [
+                        'table' => 'be_users',
+                        'field' => array_keys($sql_fields),
+                        'value' => $sql_fields,
+                        'checkEnableFields' => true,
+                    ],
+                ];
 
                 $commandResult = $this->executeRemoteOperations($operations);
 
@@ -157,13 +179,12 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
                     return $this->getFailedCommandResultTestResult($commandResult);
                 }
 
-
                 $results = $commandResult->getOperationResults();
                 foreach ($results as $operationResult) {
                     if ($operationResult->isSuccessful()) {
 
                         $users = $operationResult->getValue();
-                        if ($users !== FALSE) {
+                        if ($users !== false) {
                             foreach ($users as $user) {
                                 $careless_users[] = $user;
                             }
@@ -177,11 +198,11 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
             // Check if multiple users have the same password, if so then add them to $careless_users array.
             if (count($careless_users) > 0) {
 
-                $submessages = array();
+                $submessages = [];
                 foreach ($careless_users as $user) {
                     $submessages[] = new tx_caretaker_ResultMessage($user['username']);
                 }
-//			// Remove dublets
+                //			// Remove dublets
 
                 $submessages = array_unique($submessages, SORT_REGULAR);
                 asort($submessages);
@@ -199,10 +220,10 @@ class tx_caretakerinstance_FindBlacklistedBePasswordTestService extends tx_caret
         } else {
             return $this->getFailedCommandResultTestResult($commandResult);
         }
-	}
+    }
 
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
 }

@@ -46,114 +46,120 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_IOperation {
+class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_IOperation
+{
 
-	/**
-	 * An array of tables and table fields that should be cleared before sending.
-	 *
-	 * @var array
-	 */
-	protected $protectedFieldsByTable = array(
-			'be_users' => array('password', 'uc'),
-			'fe_users' => array('password')
-	);
+    /**
+     * An array of tables and table fields that should be cleared before sending.
+     *
+     * @var array
+     */
+    protected $protectedFieldsByTable = [
+        'be_users' => ['password', 'uc'],
+        'fe_users' => ['password'],
+    ];
 
-	protected $implicitFields = array('uid', 'pid', 'deleted', 'hidden');
+    protected $implicitFields = ['uid', 'pid', 'deleted', 'hidden'];
 
-	/**
-	 * Get record data from the given table and uid
-	 *
-	 * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
-	 * @return tx_caretakerinstance_OperationResult The first found record as an array or FALSE if no record was found
-	 */
-	public function execute($parameter = array()) {
-		$table = $parameter['table'];
-		$field = $parameter['field'];
-		$value = $parameter['value'];
-		$checkEnableFields = $parameter['checkEnableFields'] == TRUE;
-		\TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
-		if (!isset($GLOBALS['TCA'][$table])) {
-			return new tx_caretakerinstance_OperationResult(FALSE, 'Table [' . $table . '] not found in the TCA');
-		}
-		if (!isset($GLOBALS['TCA'][$table]['columns'][$field]) && !in_array($field, $this->implicitFields)) {
-			return new tx_caretakerinstance_OperationResult(FALSE, 'Field [' . $field . '] of table [' . $table . '] not found in the TCA');
-		}
+    /**
+     * Get record data from the given table and uid
+     *
+     * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
+     * @return tx_caretakerinstance_OperationResult The first found record as an array or FALSE if no record was found
+     */
+    public function execute($parameter = [])
+    {
+        $table = $parameter['table'];
+        $field = $parameter['field'];
+        $value = $parameter['value'];
+        $checkEnableFields = $parameter['checkEnableFields'] == true;
+        \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
+        if (!isset($GLOBALS['TCA'][$table])) {
+            return new tx_caretakerinstance_OperationResult(false, 'Table [' . $table . '] not found in the TCA');
+        }
+        if (!isset($GLOBALS['TCA'][$table]['columns'][$field]) && !in_array($field, $this->implicitFields)) {
+            return new tx_caretakerinstance_OperationResult(false, 'Field [' . $field . '] of table [' . $table . '] not found in the TCA');
+        }
 
-		$result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-				'*',
-				$table,
-				$field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
+        $result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
+            '*',
+            $table,
+            $field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
 
-		if ($result) {
-			$record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result);
-			if ($record !== FALSE) {
-				if (isset($this->protectedFieldsByTable[$table])) {
-					$protectedFields = $this->protectedFieldsByTable[$table];
-					foreach ($protectedFields as $protectedField) {
-						unset($record[$protectedField]);
-					}
-				}
-				return new tx_caretakerinstance_OperationResult(TRUE, $record);
-			} else {
-				return new tx_caretakerinstance_OperationResult(TRUE, FALSE);
-			}
-		} else {
-			return new tx_caretakerinstance_OperationResult(FALSE, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
-		}
-	}
+        if ($result) {
+            $record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result);
+            if ($record !== false) {
+                if (isset($this->protectedFieldsByTable[$table])) {
+                    $protectedFields = $this->protectedFieldsByTable[$table];
+                    foreach ($protectedFields as $protectedField) {
+                        unset($record[$protectedField]);
+                    }
+                }
 
-	/**
-	 * Include TCA to load table definitions
-	 *
-	 * @return void
-	 */
-	protected function includeTCA() {
-		if (!$GLOBALS['TSFE']) {
-			// Make new instance of TSFE object for initializing user:
-			$GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
-			$GLOBALS['TSFE']->includeTCA();
-		}
-	}
+                return new tx_caretakerinstance_OperationResult(true, $record);
+            } else {
+                return new tx_caretakerinstance_OperationResult(true, false);
+            }
+        } else {
+            return new tx_caretakerinstance_OperationResult(false, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
+        }
+    }
 
-	/**
-	 * A simplified enableFields function (partially copied from sys_page) that
-	 * can be used without a full TSFE environment. It doesn't / can't check
-	 * fe_group constraints or custom hooks.
-	 *
-	 * @param $table
-	 * @return string The query to append
-	 */
-	function enableFields($table) {
-		$ctrl = $GLOBALS['TCA'][$table]['ctrl'];
-		$query = '';
-		if (is_array($ctrl)) {
-			// Delete field check:
-			if ($ctrl['delete']) {
-				$query .= ' AND ' . $table . '.' . $ctrl['delete'] . ' = 0';
-			}
+    /**
+     * Include TCA to load table definitions
+     *
+     * @return void
+     */
+    protected function includeTCA()
+    {
+        if (!$GLOBALS['TSFE']) {
+            // Make new instance of TSFE object for initializing user:
+            $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
+            $GLOBALS['TSFE']->includeTCA();
+        }
+    }
 
-			// Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
-			if ($ctrl['versioningWS']) {
-				$query .= ' AND ' . $table . '.t3ver_state <= 0'; // Shadow state for new items MUST be ignored!
-			}
+    /**
+     * A simplified enableFields function (partially copied from sys_page) that
+     * can be used without a full TSFE environment. It doesn't / can't check
+     * fe_group constraints or custom hooks.
+     *
+     * @param $table
+     * @return string The query to append
+     */
+    function enableFields($table)
+    {
+        $ctrl = $GLOBALS['TCA'][$table]['ctrl'];
+        $query = '';
+        if (is_array($ctrl)) {
+            // Delete field check:
+            if ($ctrl['delete']) {
+                $query .= ' AND ' . $table . '.' . $ctrl['delete'] . ' = 0';
+            }
 
-			// Enable fields:
-			if (is_array($ctrl['enablecolumns'])) {
-				if ($ctrl['enablecolumns']['disabled']) {
-					$field = $table . '.' . $ctrl['enablecolumns']['disabled'];
-					$query .= ' AND ' . $field . ' = 0';
-				}
-				if ($ctrl['enablecolumns']['starttime']) {
-					$field = $table . '.' . $ctrl['enablecolumns']['starttime'];
-					$query .= ' AND (' . $field . ' <= ' . time() . ')';
-				}
-				if ($ctrl['enablecolumns']['endtime']) {
-					$field = $table . '.' . $ctrl['enablecolumns']['endtime'];
-					$query .= ' AND (' . $field . ' = 0 OR ' . $field . ' > ' . time() . ')';
-				}
-			}
-		}
-		return $query;
-	}
+            // Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
+            if ($ctrl['versioningWS']) {
+                $query .= ' AND ' . $table . '.t3ver_state <= 0'; // Shadow state for new items MUST be ignored!
+            }
+
+            // Enable fields:
+            if (is_array($ctrl['enablecolumns'])) {
+                if ($ctrl['enablecolumns']['disabled']) {
+                    $field = $table . '.' . $ctrl['enablecolumns']['disabled'];
+                    $query .= ' AND ' . $field . ' = 0';
+                }
+                if ($ctrl['enablecolumns']['starttime']) {
+                    $field = $table . '.' . $ctrl['enablecolumns']['starttime'];
+                    $query .= ' AND (' . $field . ' <= ' . time() . ')';
+                }
+                if ($ctrl['enablecolumns']['endtime']) {
+                    $field = $table . '.' . $ctrl['enablecolumns']['endtime'];
+                    $query .= ' AND (' . $field . ' = 0 OR ' . $field . ' > ' . time() . ')';
+                }
+            }
+        }
+
+        return $query;
+    }
 
 }

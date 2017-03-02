@@ -45,5 +45,6 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_RequestSessionTokenFailedException extends Exception {
+class tx_caretakerinstance_RequestSessionTokenFailedException extends Exception
+{
 }

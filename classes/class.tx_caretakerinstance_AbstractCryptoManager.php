@@ -45,38 +45,41 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-abstract class tx_caretakerinstance_AbstractCryptoManager implements tx_caretakerinstance_ICryptoManager {
+abstract class tx_caretakerinstance_AbstractCryptoManager implements tx_caretakerinstance_ICryptoManager
+{
 
-	/**
-	 * Create a session token that can be verified with the given secret
-	 *
-	 * @param string $data
-	 * @param string $secret
-	 * @return string
-	 */
-	public function createSessionToken($data, $secret) {
-		// Salted MD5 hash for verification and randomness
-		$salt = substr(md5(rand()), 0, 12);
-		$token = $data . ':' . $salt . md5($secret . ':' . $data . ':' . $salt);
+    /**
+     * Create a session token that can be verified with the given secret
+     *
+     * @param string $data
+     * @param string $secret
+     * @return string
+     */
+    public function createSessionToken($data, $secret)
+    {
+        // Salted MD5 hash for verification and randomness
+        $salt = substr(md5(rand()), 0, 12);
+        $token = $data . ':' . $salt . md5($secret . ':' . $data . ':' . $salt);
 
-		return $token;
-	}
+        return $token;
+    }
 
-	/**
-	 * Verify that the given token was created with the given secret
-	 *
-	 * @param string $token
-	 * @param string $secret
-	 * @return boolean
-	 */
-	public function verifySessionToken($token, $secret) {
-		list($data, $hash) = explode(':', $token, 2);
-		$salt = substr($hash, 0, 12);
+    /**
+     * Verify that the given token was created with the given secret
+     *
+     * @param string $token
+     * @param string $secret
+     * @return boolean
+     */
+    public function verifySessionToken($token, $secret)
+    {
+        list($data, $hash) = explode(':', $token, 2);
+        $salt = substr($hash, 0, 12);
 
-		if ($token == $data . ':' . $salt . md5($secret . ':' . $data . ':' . $salt)) {
-			return $data;
-		} else {
-			return FALSE;
-		}
-	}
+        if ($token == $data . ':' . $salt . md5($secret . ':' . $data . ':' . $salt)) {
+            return $data;
+        } else {
+            return false;
+        }
+    }
 }

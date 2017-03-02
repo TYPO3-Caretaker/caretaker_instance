@@ -52,41 +52,41 @@ class ServicesTest extends UnitTestCase
     {
         $this->markTestSkipped();
         $stub = $this->getMock(
-                '\tx_caretakerinstance_FindInsecureExtensionTestService',
-                array('getLocationList', 'executeRemoteOperations', 'checkExtension')
+            '\tx_caretakerinstance_FindInsecureExtensionTestService',
+            ['getLocationList', 'executeRemoteOperations', 'checkExtension']
         );
 
         $stub->expects($this->once())
-                ->method('getLocationList')
-                ->with()
-                ->will($this->returnValue(array('local')));
+            ->method('getLocationList')
+            ->with()
+            ->will($this->returnValue(['local']));
 
         $stub->expects($this->once())
-                ->method('executeRemoteOperations')
-                ->with($this->equalTo(array(array('GetExtensionList', array('locations' => array('local'))))))
-                ->will($this->returnValue(
-                        new \tx_caretakerinstance_CommandResult(
-                                true,
-                                array(
-                                        new \tx_caretakerinstance_OperationResult(
-                                                true,
-                                                array(
-                                                        'tt_address' => array(
-                                                                'isInstalled' => true,
-                                                                'version' => '2.1.4',
-                                                                'location' => array('local')
-                                                        )
-                                                )
-                                        )
-                                )
-                        )
+            ->method('executeRemoteOperations')
+            ->with($this->equalTo([['GetExtensionList', ['locations' => ['local']]]]))
+            ->will($this->returnValue(
+                new \tx_caretakerinstance_CommandResult(
+                    true,
+                    [
+                        new \tx_caretakerinstance_OperationResult(
+                            true,
+                            [
+                                'tt_address' => [
+                                    'isInstalled' => true,
+                                    'version' => '2.1.4',
+                                    'location' => ['local'],
+                                ],
+                            ]
+                        ),
+                    ]
                 )
-                );
+            )
+            );
 
         $stub->expects($this->once())
-                ->method('checkExtension')
-                ->with()
-                ->will($this->returnValue(true));
+            ->method('checkExtension')
+            ->with()
+            ->will($this->returnValue(true));
 
         $result = $stub->runTest();
 
@@ -97,13 +97,13 @@ class ServicesTest extends UnitTestCase
 
     public function providerFindInsecureExtensionGetLocationList()
     {
-        return array(
-                array(1, array('system')),
-                array(2, array('global')),
-                array(4, array('local')),
-                array(3, array('system', 'global')),
-                array(6, array('global', 'local')),
-        );
+        return [
+            [1, ['system']],
+            [2, ['global']],
+            [4, ['local']],
+            [3, ['system', 'global']],
+            [6, ['global', 'local']],
+        ];
     }
 
     /**
@@ -114,14 +114,14 @@ class ServicesTest extends UnitTestCase
         $this->markTestSkipped();
 
         $stub = $this->getMock(
-                '\tx_caretakerinstance_FindInsecureExtensionTestService',
-                array('getConfigValue')
+            '\tx_caretakerinstance_FindInsecureExtensionTestService',
+            ['getConfigValue']
         );
 
         $stub->expects($this->once())
-                ->method('getConfigValue')
-                ->with()
-                ->will($this->returnValue($input));
+            ->method('getConfigValue')
+            ->with()
+            ->will($this->returnValue($input));
 
         $this->assertEquals($output, $stub->getLocationList());
     }

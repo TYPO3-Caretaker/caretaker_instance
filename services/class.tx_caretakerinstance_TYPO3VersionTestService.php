@@ -45,90 +45,93 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase {
+class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_RemoteTestServiceBase
+{
 
-	/**
-	 * @return tx_caretaker_TestResult
-	 */
-	public function runTest() {
-		$minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'), $this->getConfigValue('allow_unstable'));
-		$maxVersion = $this->checkForLatestVersion($this->getConfigValue('max_version'), $this->getConfigValue('allow_unstable'));
+    /**
+     * @return tx_caretaker_TestResult
+     */
+    public function runTest()
+    {
+        $minVersion = $this->checkForLatestVersion($this->getConfigValue('min_version'), $this->getConfigValue('allow_unstable'));
+        $maxVersion = $this->checkForLatestVersion($this->getConfigValue('max_version'), $this->getConfigValue('allow_unstable'));
 
-		if (!$minVersion && !$maxVersion) {
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute TYPO3 version test without min and max version');
-		}
+        if (!$minVersion && !$maxVersion) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute TYPO3 version test without min and max version');
+        }
 
-		if ($maxVersion === FALSE) {
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'No TYPO3 version information available. Please add "TYPO3 Versionnumbers Update" to your scheduler queue.');
-		}
+        if ($maxVersion === false) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'No TYPO3 version information available. Please add "TYPO3 Versionnumbers Update" to your scheduler queue.');
+        }
 
-		$operation = array('GetTYPO3Version');
-		$operations = array($operation);
+        $operation = ['GetTYPO3Version'];
+        $operations = [$operation];
 
-		$commandResult = $this->executeRemoteOperations($operations);
+        $commandResult = $this->executeRemoteOperations($operations);
 
-		if (!$this->isCommandResultSuccessful($commandResult)) {
-			return $this->getFailedCommandResultTestResult($commandResult);
-		}
+        if (!$this->isCommandResultSuccessful($commandResult)) {
+            return $this->getFailedCommandResultTestResult($commandResult);
+        }
 
-		$results = $commandResult->getOperationResults();
-		$operationResult = $results[0];
-		if ($operationResult->isSuccessful()) {
-			$version = $operationResult->getValue();
-		} else {
-			return $this->getFailedOperationResultTestResult($operationResult);
-		}
+        $results = $commandResult->getOperationResults();
+        $operationResult = $results[0];
+        if ($operationResult->isSuccessful()) {
+            $version = $operationResult->getValue();
+        } else {
+            return $this->getFailedOperationResultTestResult($operationResult);
+        }
 
-		$checkResult = $this->checkVersionRange(
-				$version,
-				$minVersion,
-				$maxVersion);
+        $checkResult = $this->checkVersionRange(
+            $version,
+            $minVersion,
+            $maxVersion);
 
-		if ($checkResult) {
-			$message = 'TYPO3 version ' . $version . ' is installed';
-			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
-		} else {
-			$message = 'TYPO3 version ' . $version . ' is installed, but';
-			if ($minVersion) {
-				$message .= ' >= ' . $minVersion;
-			}
-			if ($maxVersion) {
-				$message .= ' <= ' . $maxVersion;
-			}
-			$message .= ' expected.';
-			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $message);
-		}
+        if ($checkResult) {
+            $message = 'TYPO3 version ' . $version . ' is installed';
+            $testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
+        } else {
+            $message = 'TYPO3 version ' . $version . ' is installed, but';
+            if ($minVersion) {
+                $message .= ' >= ' . $minVersion;
+            }
+            if ($maxVersion) {
+                $message .= ' <= ' . $maxVersion;
+            }
+            $message .= ' expected.';
+            $testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $message);
+        }
 
-		return $testResult;
-	}
+        return $testResult;
+    }
 
-	/**
-	 * @param string $versionString
-	 * @param bool $allowUnstable
-	 * @return string|bool
-	 */
-	protected function checkForLatestVersion($versionString, $allowUnstable = FALSE) {
-		if (strpos($versionString, '.latest') !== FALSE) {
-			$versionDigits = explode('.', $versionString, 3);
-			$latestVersions = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Registry')->get('tx_caretaker', $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable');
-			$newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
-			if (!$newVersionString) {
-				// try with single version number, used since TYPO3 CMS 7
-				$newVersionString = $latestVersions[$versionDigits[0]];
-			}
+    /**
+     * @param string $versionString
+     * @param bool $allowUnstable
+     * @return string|bool
+     */
+    protected function checkForLatestVersion($versionString, $allowUnstable = false)
+    {
+        if (strpos($versionString, '.latest') !== false) {
+            $versionDigits = explode('.', $versionString, 3);
+            $latestVersions = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Registry')->get('tx_caretaker', $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable');
+            $newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
+            if (!$newVersionString) {
+                // try with single version number, used since TYPO3 CMS 7
+                $newVersionString = $latestVersions[$versionDigits[0]];
+            }
 
-			if (!empty($newVersionString)) {
-				$versionString = $newVersionString;
-			} else {
-				// if we reach this point, no "current version was "latest" was found. This can be caused by a not running TYPO3 Version update task.
-				return FALSE;
-			}
-		}
+            if (!empty($newVersionString)) {
+                $versionString = $newVersionString;
+            } else {
+                // if we reach this point, no "current version was "latest" was found. This can be caused by a not running TYPO3 Version update task.
+                return false;
+            }
+        }
 
-		return $versionString;
-	}
+        return $versionString;
+    }
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php']);
 }

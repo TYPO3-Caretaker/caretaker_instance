@@ -72,36 +72,36 @@ class CommandServiceTest extends UnitTestCase
     function setUp()
     {
         $this->operationManager = $this->getMock('\tx_caretakerinstance_OperationManager',
-                array('executeOperation'));
+            ['executeOperation']);
 
         $this->securityManager = $this->getMock('\tx_caretakerinstance_ISecurityManager');
 
         $this->commandService = new \tx_caretakerinstance_CommandService(
-                $this->operationManager, $this->securityManager);
+            $this->operationManager, $this->securityManager);
 
         $this->commandRequest = new \tx_caretakerinstance_CommandRequest(
-                array(
-                        'data' => array(
-                                'operations' => array(
-                                        array('mock', array('foo' => 'bar')),
-                                        array('mock', array('foo' => 'bar'))
-                                )
-                        )
-                ));
+            [
+                'data' => [
+                    'operations' => [
+                        ['mock', ['foo' => 'bar']],
+                        ['mock', ['foo' => 'bar']],
+                    ],
+                ],
+            ]);
     }
 
     function testWrapCommandResultEncodesResult()
     {
         $result = new \tx_caretakerinstance_CommandResult(true,
-                new \tx_caretakerinstance_OperationResult(true, array('foo' => 'bar'))
+            new \tx_caretakerinstance_OperationResult(true, ['foo' => 'bar'])
         );
 
         $data = $result->toJson();
 
         $this->securityManager->expects($this->once())
-                ->method('encodeResult')
-                ->with($this->equalTo($data))
-                ->will($this->returnValue('Encoded result data'));
+            ->method('encodeResult')
+            ->with($this->equalTo($data))
+            ->will($this->returnValue('Encoded result data'));
 
         $wrap = $this->commandService->wrapCommandResult($result);
 
@@ -111,19 +111,19 @@ class CommandServiceTest extends UnitTestCase
     function testExecuteCommandWithSecurity()
     {
         $this->securityManager->expects($this->once())
-                ->method('validateRequest')
-                ->with($this->equalTo($this->commandRequest))
-                ->will($this->returnValue(true));
+            ->method('validateRequest')
+            ->with($this->equalTo($this->commandRequest))
+            ->will($this->returnValue(true));
 
         $this->securityManager->expects($this->once())
-                ->method('decodeRequest')
-                ->with($this->equalTo($this->commandRequest))
-                ->will($this->returnValue(true));
+            ->method('decodeRequest')
+            ->with($this->equalTo($this->commandRequest))
+            ->will($this->returnValue(true));
 
         $this->operationManager->expects($this->exactly(2))
-                ->method('executeOperation')
-                ->with($this->equalTo('mock'), $this->equalTo(array('foo' => 'bar')))
-                ->will($this->returnValue(new \tx_caretakerinstance_OperationResult(true, 'bar')));
+            ->method('executeOperation')
+            ->with($this->equalTo('mock'), $this->equalTo(['foo' => 'bar']))
+            ->will($this->returnValue(new \tx_caretakerinstance_OperationResult(true, 'bar')));
 
         $result = $this->commandService->executeCommand($this->commandRequest);
 
@@ -142,12 +142,12 @@ class CommandServiceTest extends UnitTestCase
     function testExecuteCommandSecurityCheckFailed()
     {
         $this->securityManager->expects($this->once())
-                ->method('validateRequest')
-                ->with($this->equalTo($this->commandRequest))
-                ->will($this->returnValue(false));
+            ->method('validateRequest')
+            ->with($this->equalTo($this->commandRequest))
+            ->will($this->returnValue(false));
 
         $this->securityManager->expects($this->never())
-                ->method('decodeRequest');
+            ->method('decodeRequest');
 
         $result = $this->commandService->executeCommand($this->commandRequest);
 
@@ -159,15 +159,15 @@ class CommandServiceTest extends UnitTestCase
     function testExecuteCommandDecryptionFailed()
     {
         $this->securityManager->expects($this->once())
-                ->method('validateRequest')
-                ->with($this->equalTo($this->commandRequest))
-                ->will($this->returnValue(true));
+            ->method('validateRequest')
+            ->with($this->equalTo($this->commandRequest))
+            ->will($this->returnValue(true));
 
         $this->securityManager->expects($this->once())
-                ->method('decodeRequest');
+            ->method('decodeRequest');
 
         $this->operationManager->expects($this->never())
-                ->method('executeOperation');
+            ->method('executeOperation');
 
         $result = $this->commandService->executeCommand($this->commandRequest);
 
@@ -179,9 +179,9 @@ class CommandServiceTest extends UnitTestCase
     function testRequestSessionToken()
     {
         $this->securityManager->expects($this->once())
-                ->method('createSessionToken')
-                ->with($this->equalTo('10.0.0.1'))
-                ->will($this->returnValue('me-is-token'));
+            ->method('createSessionToken')
+            ->with($this->equalTo('10.0.0.1'))
+            ->will($this->returnValue('me-is-token'));
 
         $token = $this->commandService->requestSessionToken('10.0.0.1');
         $this->assertEquals('me-is-token', $token);

@@ -51,7 +51,7 @@ class OperationsTest extends UnitTestCase
 {
     public function testOperationInterface()
     {
-        $parameter = array('foo' => 'bar');
+        $parameter = ['foo' => 'bar'];
         $operation = new DummyOperation();
         $result = $operation->execute($parameter);
         $this->assertInstanceOf('\tx_caretakerinstance_OperationResult', $result);
@@ -69,7 +69,7 @@ class OperationsTest extends UnitTestCase
 
         $operation = new \tx_caretakerinstance_Operation_GetFilesystemChecksum();
 
-        $result = $operation->execute(array('path' => 'EXT:caretaker_instance/Tests/Unit/Fixtures/Operation_GetFilesystemChecksum.txt'));
+        $result = $operation->execute(['path' => 'EXT:caretaker_instance/Tests/Unit/Fixtures/Operation_GetFilesystemChecksum.txt']);
 
         var_dump($result);
         $this->assertTrue($result->isSuccessful());
@@ -86,7 +86,10 @@ class OperationsTest extends UnitTestCase
 
         $operation = new \tx_caretakerinstance_Operation_GetFilesystemChecksum();
 
-        $result = $operation->execute(array('path' => 'EXT:caretaker_instance/Tests/Unit/Fixtures', 'getSingleChecksums' => true));
+        $result = $operation->execute([
+            'path' => 'EXT:caretaker_instance/Tests/Unit/Fixtures',
+            'getSingleChecksums' => true,
+        ]);
 
         $this->assertTrue($result->isSuccessful());
         $value = $result->getValue();
@@ -104,7 +107,7 @@ class OperationsTest extends UnitTestCase
         $this->fail('test runs indefinitely');
         $operation = new \tx_caretakerinstance_Operation_GetFilesystemChecksum();
 
-        $result = $operation->execute(array('path' => PATH_site . '../../'));
+        $result = $operation->execute(['path' => PATH_site . '../../']);
 
         $this->assertFalse($result->isSuccessful());
     }
@@ -137,7 +140,7 @@ class OperationsTest extends UnitTestCase
 
         $operation = new \tx_caretakerinstance_Operation_GetExtensionVersion();
 
-        $result = $operation->execute(array('extensionKey' => 'caretaker_instance'));
+        $result = $operation->execute(['extensionKey' => 'caretaker_instance']);
 
         $this->assertTrue($result->isSuccessful());
 
@@ -149,7 +152,7 @@ class OperationsTest extends UnitTestCase
     {
         $operation = new \tx_caretakerinstance_Operation_GetExtensionVersion();
 
-        $result = $operation->execute(array('extensionKey' => 'not_loaded_extension'));
+        $result = $operation->execute(['extensionKey' => 'not_loaded_extension']);
 
         $this->assertFalse($result->isSuccessful());
     }
@@ -167,7 +170,7 @@ class OperationsTest extends UnitTestCase
     {
         $operation = new \tx_caretakerinstance_Operation_GetExtensionList();
 
-        $result = $operation->execute(array('locations' => array('global', 'local', 'system')));
+        $result = $operation->execute(['locations' => ['global', 'local', 'system']]);
 
         $this->assertTrue($result->isSuccessful());
         $this->assertGreaterThan(0, count($result->getValue()));
@@ -181,7 +184,7 @@ class OperationsTest extends UnitTestCase
 
         // FIXME this test is tied to a specific record uid
 
-        $result = $operation->execute(array('table' => 'be_users', 'field' => 'uid', 'value' => 1));
+        $result = $operation->execute(['table' => 'be_users', 'field' => 'uid', 'value' => 1]);
 
         $record = $result->getValue();
 
@@ -198,10 +201,10 @@ class OperationsTest extends UnitTestCase
         $key = 'GLOBALS|Foo|bar';
         $operation = new \tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
-        $result = $operation->execute(array(
-                        'key' => $key,
-                        'match' => $GLOBALS['Foo']['bar'],
-                )
+        $result = $operation->execute([
+                'key' => $key,
+                'match' => $GLOBALS['Foo']['bar'],
+            ]
         );
         $this->assertTrue($result->isSuccessful());
     }
@@ -212,16 +215,15 @@ class OperationsTest extends UnitTestCase
         $key = 'GLOBALS|Foo|bar';
         $operation = new \tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
-        $result = $operation->execute(array(
-                        'key' => $key,
-                        'match' => '/baz/',
-                        'usingRegexp' => true,
-                )
+        $result = $operation->execute([
+                'key' => $key,
+                'match' => '/baz/',
+                'usingRegexp' => true,
+            ]
         );
 
         $this->assertTrue($result->isSuccessful());
     }
-
 
     public function testOperation_MatchPredefinedVariableReturnsFalseIfValueDoesNotMatch()
     {
@@ -229,10 +231,10 @@ class OperationsTest extends UnitTestCase
         $key = 'GLOBALS|Foo|bar';
         $operation = new \tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
-        $result = $operation->execute(array(
-                        'key' => $key,
-                        'match' => 'an other value',
-                )
+        $result = $operation->execute([
+                'key' => $key,
+                'match' => 'an other value',
+            ]
         );
 
         $this->assertFalse($result->isSuccessful());

@@ -55,16 +55,17 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-interface tx_caretakerinstance_IOperation {
+interface tx_caretakerinstance_IOperation
+{
 
-	/**
-	 * Execute this Operation. The execution should not rely
-	 * on the execution of previous Operations. The execution
-	 * of the Operation MUST NOT modify any data (database, file)
-	 * on the instance.
-	 *
-	 * @param array $parameter Parameters for the operation
-	 * @return tx_caretakerinstance_OperationResult The operation result
-	 */
-	function execute($parameter = array());
+    /**
+     * Execute this Operation. The execution should not rely
+     * on the execution of previous Operations. The execution
+     * of the Operation MUST NOT modify any data (database, file)
+     * on the instance.
+     *
+     * @param array $parameter Parameters for the operation
+     * @return tx_caretakerinstance_OperationResult The operation result
+     */
+    function execute($parameter = []);
 }

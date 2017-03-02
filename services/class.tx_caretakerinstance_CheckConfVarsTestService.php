@@ -45,133 +45,148 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance_RemoteTestServiceBase {
+class tx_caretakerinstance_CheckConfVarsTestService extends tx_caretakerinstance_RemoteTestServiceBase
+{
 
-	/**
-	 * Value Description
-	 * @var string
-	 */
-	protected $valueDescription = '';
+    /**
+     * Value Description
+     *
+     * @var string
+     */
+    protected $valueDescription = '';
 
-	/**
-	 * Service type description in human readble form.
-	 * @var string
-	 */
-	protected $typeDescription = 'LLL:EXT:caretaker_instance/locallang.xml:typo3_conf_vars_test_description';
+    /**
+     * Service type description in human readble form.
+     *
+     * @var string
+     */
+    protected $typeDescription = 'LLL:EXT:caretaker_instance/locallang.xml:typo3_conf_vars_test_description';
 
-	/**
-	 * Template to display the test Configuration in human readable form.
-	 * @var string
-	 */
-	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:typo3_conf_vars_test_configuration';
+    /**
+     * Template to display the test Configuration in human readable form.
+     *
+     * @var string
+     */
+    protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:typo3_conf_vars_test_configuration';
 
+    /**
+     * @return mixed
+     */
+    public function runTest()
+    {
+        $checkConfVars = explode(chr(10), $this->getConfigValue('checkConfVars'));
+        $operations = [];
+        foreach ($checkConfVars as $checkConfVar) {
+            $checkConfVar = trim($checkConfVar);
 
-	/**
-	 * @return mixed
-	 */
-	public function runTest() {
-		$checkConfVars = explode(chr(10), $this->getConfigValue('checkConfVars'));
-		$operations = array();
-		foreach ($checkConfVars as $checkConfVar) {
-			$checkConfVar = trim($checkConfVar);
+            // ignore empty and comment lines
+            if ($checkConfVar == '' || strpos($checkConfVar, '#') === 0 || strpos($checkConfVar, '//') === 0) {
+                continue;
+            }
 
-			// ignore empty and comment lines
-			if ($checkConfVar == '' || strpos($checkConfVar, '#') === 0 || strpos($checkConfVar, '//') === 0) {
-				continue;
-			}
+            // detect comparison Opertor by regex
+            $matches = [];
+            preg_match('/([a-zA-Z0-9\|_]+)[\s]*([\=\!\<\>]{1,2})[\s]*(.*)/', $checkConfVar, $matches);
 
-			// detect comparison Opertor by regex
-			$matches = array();
-			preg_match('/([a-zA-Z0-9\|_]+)[\s]*([\=\!\<\>]{1,2})[\s]*(.*)/', $checkConfVar, $matches);
+            if ($matches[1] && $matches[2] && isset($matches[3])) {
 
-			if ($matches[1] && $matches[2] && isset($matches[3])) {
+                $path = trim($matches[1]);
+                $operator = trim($matches[2]);
+                $value = trim($matches[3]);
 
-				$path = trim($matches[1]);
-				$operator = trim($matches[2]);
-				$value = trim($matches[3]);
+                // numeric comparison
+                if (is_numeric($value) && intval($value) == $value) {
+                    $value = intval($value);
+                }
 
-				// numeric comparison
-				if (is_numeric($value) && intval($value) == $value) {
-					$value = intval($value);
-				}
+                if ($path && $operator) {
+                    $operations[] = [
+                        'MatchPredefinedVariable',
+                        [
+                            'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
+                            'usingRegexp' => false,
+                            'match' => $value,
+                            'comparisonOperator' => $operator,
+                        ],
+                    ];
+                }
+            } // compare regex on :regex:
+            else if (strpos($checkConfVar, ':regex:') > 0) {
+                list($path, $value) = explode(':regex:', $checkConfVar);
+                $path = trim($path);
+                $value = trim($value);
 
-				if ($path && $operator) {
-					$operations[] = array('MatchPredefinedVariable', array(
-							'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
-							'usingRegexp' => false,
-							'match' => $value,
-							'comparisonOperator' => $operator
-					));
-				}
-			} // compare regex on :regex:
-			else if (strpos($checkConfVar, ':regex:') > 0) {
-				list($path, $value) = explode(':regex:', $checkConfVar);
-				$path = trim($path);
-				$value = trim($value);
+                if ($path && $value) {
+                    $operations[] = [
+                        'MatchPredefinedVariable',
+                        [
+                            'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
+                            'usingRegexp' => true,
+                            'match' => $value,
+                            'comparisonOperator' => false,
+                        ],
+                    ];
+                }
+            }
 
-				if ($path && $value) {
-					$operations[] = array('MatchPredefinedVariable', array(
-							'key' => 'GLOBALS|TYPO3_CONF_VARS|' . $path,
-							'usingRegexp' => true,
-							'match' => $value,
-							'comparisonOperator' => false
-					));
-				}
-			}
+        }
 
-		}
+        if (count($operations) == 0) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, 0, 'No conditions found');
+        }
 
-		if (count($operations) == 0) {
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_warning, 0, 'No conditions found');
-		}
+        $commandResult = $this->executeRemoteOperations($operations);
+        if (!$this->isCommandResultSuccessful($commandResult)) {
+            return $this->getFailedCommandResultTestResult($commandResult);
+        }
 
-		$commandResult = $this->executeRemoteOperations($operations);
-		if (!$this->isCommandResultSuccessful($commandResult)) {
-			return $this->getFailedCommandResultTestResult($commandResult);
-		}
+        $results = $commandResult->getOperationResults();
+        $success = [];
+        $failures = [];
 
-		$results = $commandResult->getOperationResults();
-		$success = array();
-		$failures = array();
+        foreach ($results as $key => $operationResult) {
+            if ($operationResult->isSuccessful()) {
+                if ($operations[$key][1]['usingRegexp'] == true) {
+                    $success[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched the regular expression ' . $operations[$key][1]['match'];
+                } else {
+                    $success[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched the expectation ' . $operations[$key][1]['comparisonOperator'] . ' "' . $operations[$key][1]['match'] . '"';
+                }
+            } else {
+                if ($operations[$key][1]['usingRegexp'] == true) {
+                    $failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the regular expression ' . $operations[$key][1]['match'];
+                } else {
+                    $failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the expectation ' . $operations[$key][1]['comparisonOperator'] . ' "' . $operations[$key][1]['match'] . '"';
+                }
+            }
+        }
 
-		foreach ($results as $key => $operationResult) {
-			if ($operationResult->isSuccessful()) {
-				if ($operations[$key][1]['usingRegexp'] == true) {
-					$success[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched the regular expression ' . $operations[$key][1]['match'];
-				} else {
-					$success[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' matched the expectation ' . $operations[$key][1]['comparisonOperator'] . ' "' . $operations[$key][1]['match'] . '"';
-				}
-			} else {
-				if ($operations[$key][1]['usingRegexp'] == true) {
-					$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the regular expression ' . $operations[$key][1]['match'];
-				} else {
-					$failures[] = 'Variable-Path ' . $operations[$key][1]['key'] . ' did not match the expectation ' . $operations[$key][1]['comparisonOperator'] . ' "' . $operations[$key][1]['match'] . '"';
-				}
-			}
-		}
+        $msg_failures = '';
+        $msg_success = '';
 
-		$msg_failures = '';
-		$msg_success = '';
+        if (count($success)) {
+            $msg_success .= chr(10) . 'Matched Conditions: ' . chr(10) . implode(chr(10), $success);
+        }
 
-		if (count($success)) {
-			$msg_success .= chr(10) . 'Matched Conditions: ' . chr(10) . implode(chr(10), $success);
-		}
+        $resultMatch = $this->getConfigValue('resultMatch');
+        $resultNoMatch = $this->getConfigValue('resultNoMatch');
 
-		$resultMatch = $this->getConfigValue('resultMatch');
-		$resultNoMatch = $this->getConfigValue('resultNoMatch');
+        if ($resultMatch == null) {
+            $resultMatch = tx_caretaker_Constants::state_error;
+        }
+        if ($resultNoMatch == null) {
+            $resultNoMatch = tx_caretaker_Constants::state_ok;
+        }
 
-		if ($resultMatch == NULL) $resultMatch = tx_caretaker_Constants::state_error;
-		if ($resultNoMatch == NULL) $resultNoMatch = tx_caretaker_Constants::state_ok;
+        if (count($failures)) {
+            $msg_failures .= chr(10) . 'Not Matched Conditions: ' . chr(10) . implode(chr(10), $failures);
 
-		if (count($failures)) {
-			$msg_failures .= chr(10) . 'Not Matched Conditions: ' . chr(10) . implode(chr(10), $failures);
-			return tx_caretaker_TestResult::create(intval($resultNoMatch), 0, $msg_failures . chr(10) . $msg_success);
-		} else {
-			return tx_caretaker_TestResult::create(intval($resultMatch), 0, $msg_success);
-		}
-	}
+            return tx_caretaker_TestResult::create(intval($resultNoMatch), 0, $msg_failures . chr(10) . $msg_success);
+        } else {
+            return tx_caretaker_TestResult::create(intval($resultMatch), 0, $msg_success);
+        }
+    }
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
 }

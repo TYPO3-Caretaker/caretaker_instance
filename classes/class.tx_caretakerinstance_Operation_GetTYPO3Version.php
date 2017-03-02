@@ -45,14 +45,16 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinstance_IOperation {
+class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinstance_IOperation
+{
 
-	/**
-	 * @param array $parameter None
-	 * @return the current PHP version
-	 */
-	public function execute($parameter = array()) {
-		return new tx_caretakerinstance_OperationResult(true, TYPO3_version);
-	}
+    /**
+     * @param array $parameter None
+     * @return the current PHP version
+     */
+    public function execute($parameter = [])
+    {
+        return new tx_caretakerinstance_OperationResult(true, TYPO3_version);
+    }
 
 }

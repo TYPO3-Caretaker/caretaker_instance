@@ -45,74 +45,82 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_RemoteTestServiceBase {
+class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_RemoteTestServiceBase
+{
 
-	/**
-	 * Value Description
-	 * @var string
-	 */
-	protected $valueDescription = '';
+    /**
+     * Value Description
+     *
+     * @var string
+     */
+    protected $valueDescription = '';
 
-	/**
-	 * Service type description in human readble form.
-	 * @var string
-	 */
-	protected $typeDescription = 'LLL:EXT:caretaker_instance/locallang.xml:backend_user_test_description';
+    /**
+     * Service type description in human readble form.
+     *
+     * @var string
+     */
+    protected $typeDescription = 'LLL:EXT:caretaker_instance/locallang.xml:backend_user_test_description';
 
-	/**
-	 * Template to display the test Configuration in human readable form.
-	 * @var string
-	 */
-	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:backend_user_test_configuration';
+    /**
+     * Template to display the test Configuration in human readable form.
+     *
+     * @var string
+     */
+    protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:backend_user_test_configuration';
 
-	/**
-	 * @return tx_caretaker_TestResult
-	 */
-	public function runTest() {
-		$blacklistedUsernames = explode(chr(10), $this->getConfigValue('blacklist'));
+    /**
+     * @return tx_caretaker_TestResult
+     */
+    public function runTest()
+    {
+        $blacklistedUsernames = explode(chr(10), $this->getConfigValue('blacklist'));
 
-		$operations = array();
-		foreach ($blacklistedUsernames as $username) {
-			$username = trim($username);
-			if (strlen($username)) {
-				$operations[] = array('GetRecord', array('table' => 'be_users', 'field' => 'username', 'value' => $username, 'checkEnableFields' => TRUE));
-			}
-		}
+        $operations = [];
+        foreach ($blacklistedUsernames as $username) {
+            $username = trim($username);
+            if (strlen($username)) {
+                $operations[] = [
+                    'GetRecord',
+                    ['table' => 'be_users', 'field' => 'username', 'value' => $username, 'checkEnableFields' => true],
+                ];
+            }
+        }
 
-		$commandResult = $this->executeRemoteOperations($operations);
+        $commandResult = $this->executeRemoteOperations($operations);
 
-		if (!$this->isCommandResultSuccessful($commandResult)) {
-			return $this->getFailedCommandResultTestResult($commandResult);
-		}
+        if (!$this->isCommandResultSuccessful($commandResult)) {
+            return $this->getFailedCommandResultTestResult($commandResult);
+        }
 
-		$usernames = array();
+        $usernames = [];
 
-		$results = $commandResult->getOperationResults();
-		foreach ($results as $operationResult) {
-			if ($operationResult->isSuccessful()) {
-				$user = $operationResult->getValue();
-				if ($user !== FALSE) {
-					$usernames[] = $user['username'];
-				}
-			} else {
-				return $this->getFailedOperationResultTestResult($operationResult);
-			}
-		}
+        $results = $commandResult->getOperationResults();
+        foreach ($results as $operationResult) {
+            if ($operationResult->isSuccessful()) {
+                $user = $operationResult->getValue();
+                if ($user !== false) {
+                    $usernames[] = $user['username'];
+                }
+            } else {
+                return $this->getFailedOperationResultTestResult($operationResult);
+            }
+        }
 
-		$blacklistedUsernamesFound = array();
-		foreach ($blacklistedUsernames as $username) {
-			if (in_array($username, $usernames)) {
-				$blacklistedUsernamesFound[] = $username;
-			}
-		}
-		if (count($blacklistedUsernamesFound) > 0) {
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Users [' . implode(',', $blacklistedUsernamesFound) . '] are blacklisted and should not be active.');
-		}
+        $blacklistedUsernamesFound = [];
+        foreach ($blacklistedUsernames as $username) {
+            if (in_array($username, $usernames)) {
+                $blacklistedUsernamesFound[] = $username;
+            }
+        }
+        if (count($blacklistedUsernamesFound) > 0) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, 'Users [' . implode(',', $blacklistedUsernamesFound) . '] are blacklisted and should not be active.');
+        }
 
-		return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, '');
-	}
+        return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, '');
+    }
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
 }

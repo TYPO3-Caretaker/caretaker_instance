@@ -42,62 +42,66 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinstance_IOperation {
+class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinstance_IOperation
+{
 
-	/**
-	 * execute operation (checkPathExists)
-	 * @param array $parameter a path 'path' to a file or folder
-	 * @return tx_caretakerinstance_OperationResult 'file' if path is a file, 'directory' if it's a directory and false if it doesn't exist
-	 */
-	public function execute($parameter = null) {
-		$path = $this->getPath($parameter);
-		list($path) = glob($path);
+    /**
+     * execute operation (checkPathExists)
+     *
+     * @param array $parameter a path 'path' to a file or folder
+     * @return tx_caretakerinstance_OperationResult 'file' if path is a file, 'directory' if it's a directory and false if it doesn't exist
+     */
+    public function execute($parameter = null)
+    {
+        $path = $this->getPath($parameter);
+        list($path) = glob($path);
 
-		if (is_file($path)) {
-			//if file exists, get the tstamp
-			$time = filemtime($path);
-			$size = filesize($path);
+        if (is_file($path)) {
+            //if file exists, get the tstamp
+            $time = filemtime($path);
+            $size = filesize($path);
 
-			return new tx_caretakerinstance_OperationResult(TRUE, array(
-					'type' => 'file',
-					'path' => $parameter,
-					'time' => $time,
-					'size' => $size
-			));
-		} elseif (is_dir($path)) {
-			return new tx_caretakerinstance_OperationResult(TRUE, array(
-					'type' => 'folder',
-					'path' => $parameter
-			));
-		} else {
-			return new tx_caretakerinstance_OperationResult(FALSE, array('path' => $parameter));
-		}
-	}
+            return new tx_caretakerinstance_OperationResult(true, [
+                'type' => 'file',
+                'path' => $parameter,
+                'time' => $time,
+                'size' => $size,
+            ]);
+        } elseif (is_dir($path)) {
+            return new tx_caretakerinstance_OperationResult(true, [
+                'type' => 'folder',
+                'path' => $parameter,
+            ]);
+        } else {
+            return new tx_caretakerinstance_OperationResult(false, ['path' => $parameter]);
+        }
+    }
 
-	/**
-	 * prepare path, resolve relative path and resolve EXT: path
-	 *
-	 * @param string $path absolute or relative path or EXT:foobar/
-	 * @return string/bool false if path is invalid, else the absolute path
-	 */
-	protected function getPath($path) {
-		// getFileAbsFileName can't handle directory path with trailing / correctly
-		if (substr($path, -1) === '/') {
-			$path = substr($path, 0, -1);
-		}
+    /**
+     * prepare path, resolve relative path and resolve EXT: path
+     *
+     * @param string $path absolute or relative path or EXT:foobar/
+     * @return string/bool false if path is invalid, else the absolute path
+     */
+    protected function getPath($path)
+    {
+        // getFileAbsFileName can't handle directory path with trailing / correctly
+        if (substr($path, -1) === '/') {
+            $path = substr($path, 0, -1);
+        }
 
-		// FIXME remove this hacky part
-		// skip path checks for CLI mode
-		if (defined('TYPO3_cliMode')) {
-			return $path;
-		}
+        // FIXME remove this hacky part
+        // skip path checks for CLI mode
+        if (defined('TYPO3_cliMode')) {
+            return $path;
+        }
 
-		$path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
-		if (\TYPO3\CMS\Core\Utility\GeneralUtility::isAllowedAbsPath($path)) {
-			return $path;
-		} else {
-			return false;
-		}
-	}
+        $path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
+        if (\TYPO3\CMS\Core\Utility\GeneralUtility::isAllowedAbsPath($path)) {
+            return $path;
+        } else {
+            return false;
+        }
+    }
 
 }

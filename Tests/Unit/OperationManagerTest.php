@@ -52,7 +52,7 @@ class OperationManagerTest extends UnitTestCase
     {
         $operationManager = new \tx_caretakerinstance_OperationManager();
         $operationManager->registerOperation('get_php_version',
-                'tx_caretakerinstance_Operation_GetPHPVersion');
+            'tx_caretakerinstance_Operation_GetPHPVersion');
         $operation = $operationManager->getOperation('get_php_version');
         $this->assertInstanceOf('\tx_caretakerinstance_Operation_GetPHPVersion', $operation);
     }
@@ -61,7 +61,7 @@ class OperationManagerTest extends UnitTestCase
     {
         $operationManager = new \tx_caretakerinstance_OperationManager();
         $operationManager->registerOperation('get_php_version',
-                new \tx_caretakerinstance_Operation_GetPHPVersion());
+            new \tx_caretakerinstance_Operation_GetPHPVersion());
         $operation = $operationManager->getOperation('get_php_version');
         $this->assertInstanceOf('\tx_caretakerinstance_Operation_GetPHPVersion', $operation);
     }
@@ -85,15 +85,15 @@ class OperationManagerTest extends UnitTestCase
     {
         $operationManager = new \tx_caretakerinstance_OperationManager();
 
-        $operation = $this->getMock('\tx_caretakerinstance_IOperation', array('execute'));
+        $operation = $this->getMock('\tx_caretakerinstance_IOperation', ['execute']);
         $operation->expects($this->once())
-                ->method('execute')
-                ->with($this->equalTo(array('foo' => 'bar')))
-                ->will($this->returnValue(new \tx_caretakerinstance_OperationResult(true, 'bar')));
+            ->method('execute')
+            ->with($this->equalTo(['foo' => 'bar']))
+            ->will($this->returnValue(new \tx_caretakerinstance_OperationResult(true, 'bar')));
 
         $operationManager->registerOperation('mock', $operation);
 
-        $result = $operationManager->executeOperation('mock', array('foo' => 'bar'));
+        $result = $operationManager->executeOperation('mock', ['foo' => 'bar']);
         $this->assertTrue($result->isSuccessful());
         $this->assertEquals('bar', $result->getValue());
     }

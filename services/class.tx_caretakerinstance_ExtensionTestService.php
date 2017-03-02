@@ -45,108 +45,114 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase {
+class tx_caretakerinstance_ExtensionTestService extends tx_caretakerinstance_RemoteTestServiceBase
+{
 
-	/**
-	 * Value Description
-	 * @var string
-	 */
-	protected $valueDescription = '';
+    /**
+     * Value Description
+     *
+     * @var string
+     */
+    protected $valueDescription = '';
 
-	/**
-	 * Service type description in human readble form.
-	 * @var string
-	 */
-	protected $typeDescription = 'LLL:EXT:caretaker_instance/locallang.xml:extension_test_description';
+    /**
+     * Service type description in human readble form.
+     *
+     * @var string
+     */
+    protected $typeDescription = 'LLL:EXT:caretaker_instance/locallang.xml:extension_test_description';
 
-	/**
-	 * Template to display the test Configuration in human readable form.
-	 * @var string
-	 */
-	protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:extension_test_configuration';
+    /**
+     * Template to display the test Configuration in human readable form.
+     *
+     * @var string
+     */
+    protected $configurationInfoTemplate = 'LLL:EXT:caretaker_instance/locallang.xml:extension_test_configuration';
 
-	public function runTest() {
-		$extensionKey = $this->getConfigValue('extension_key');
-		$requirementMode = $this->getConfigValue('requirement_mode');
-		$minVersion = $this->getConfigValue('min_version');
-		$maxVersion = $this->getConfigValue('max_version');
+    public function runTest()
+    {
+        $extensionKey = $this->getConfigValue('extension_key');
+        $requirementMode = $this->getConfigValue('requirement_mode');
+        $minVersion = $this->getConfigValue('min_version');
+        $maxVersion = $this->getConfigValue('max_version');
 
-		if (!$extensionKey) {
-			return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute extension test without extension key');
-		}
+        if (!$extensionKey) {
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Cannot execute extension test without extension key');
+        }
 
-		$operation = array('GetExtensionVersion', array('extensionKey' => $extensionKey));
-		$operations = array($operation);
+        $operation = ['GetExtensionVersion', ['extensionKey' => $extensionKey]];
+        $operations = [$operation];
 
-		$commandResult = $this->executeRemoteOperations($operations);
+        $commandResult = $this->executeRemoteOperations($operations);
 
-		if (!$this->isCommandResultSuccessful($commandResult)) {
-			return $this->getFailedCommandResultTestResult($commandResult);
-		}
+        if (!$this->isCommandResultSuccessful($commandResult)) {
+            return $this->getFailedCommandResultTestResult($commandResult);
+        }
 
-		$results = $commandResult->getOperationResults();
-		$operationResult = $results[0];
-		if ($operationResult->isSuccessful()) {
-			$extensionVersion = $operationResult->getValue();
-		} else {
-			$extensionVersion = FALSE;
-		}
+        $results = $commandResult->getOperationResults();
+        $operationResult = $results[0];
+        if ($operationResult->isSuccessful()) {
+            $extensionVersion = $operationResult->getValue();
+        } else {
+            $extensionVersion = false;
+        }
 
-		$checkResult = $this->checkVersionForRequirementAndVersionRange(
-				$extensionVersion,
-				$requirementMode,
-				$minVersion,
-				$maxVersion
-		);
+        $checkResult = $this->checkVersionForRequirementAndVersionRange(
+            $extensionVersion,
+            $requirementMode,
+            $minVersion,
+            $maxVersion
+        );
 
-		if ($checkResult) {
-			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ($extensionVersion === false ? 'not ' : '') . 'installed';
-			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
-		} else {
-			$message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ($extensionVersion === false ? 'not ' : '') . 'installed, but ';
-			if ($minVersion) {
-				$message .= ' >= ' . $minVersion;
-			}
-			if ($maxVersion) {
-				$message .= ' <= ' . $maxVersion;
-			}
-			$message .= ' expected';
-			$testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $message);
-		}
+        if ($checkResult) {
+            $message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ($extensionVersion === false ? 'not ' : '') . 'installed';
+            $testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, $message);
+        } else {
+            $message = 'Extension "' . $extensionKey . '" version ' . $extensionVersion . ' is ' . ($extensionVersion === false ? 'not ' : '') . 'installed, but ';
+            if ($minVersion) {
+                $message .= ' >= ' . $minVersion;
+            }
+            if ($maxVersion) {
+                $message .= ' <= ' . $maxVersion;
+            }
+            $message .= ' expected';
+            $testResult = tx_caretaker_TestResult::create(tx_caretaker_Constants::state_error, 0, $message);
+        }
 
-		return $testResult;
-	}
+        return $testResult;
+    }
 
-	/**
-	 * @param string $actualValue
-	 * @param string $requirement
-	 * @param string $minVersion
-	 * @param string $maxVersion
-	 * @return bool
-	 * @throws Exception
-	 */
-	public function checkVersionForRequirementAndVersionRange($actualValue, $requirement, $minVersion, $maxVersion) {
-		if ($requirement == 'none') {
-			if ($actualValue) {
-				return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
-			} else {
-				return TRUE;
-			}
-		} elseif ($requirement == 'required') {
-			if (!$actualValue) {
-				return FALSE;
-			} else {
-				return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
-			}
-		} elseif ($requirement == 'forbidden') {
-			return !$actualValue;
-		} elseif ($requirement == 'evil') {
-			// TODO implement check for installed but not loaded extension
-			throw new \Exception('requirement "evil" not implemented');
-		}
-	}
+    /**
+     * @param string $actualValue
+     * @param string $requirement
+     * @param string $minVersion
+     * @param string $maxVersion
+     * @return bool
+     * @throws Exception
+     */
+    public function checkVersionForRequirementAndVersionRange($actualValue, $requirement, $minVersion, $maxVersion)
+    {
+        if ($requirement == 'none') {
+            if ($actualValue) {
+                return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
+            } else {
+                return true;
+            }
+        } elseif ($requirement == 'required') {
+            if (!$actualValue) {
+                return false;
+            } else {
+                return $this->checkVersionRange($actualValue, $minVersion, $maxVersion);
+            }
+        } elseif ($requirement == 'forbidden') {
+            return !$actualValue;
+        } elseif ($requirement == 'evil') {
+            // TODO implement check for installed but not loaded extension
+            throw new \Exception('requirement "evil" not implemented');
+        }
+    }
 }
 
 if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php']) {
-	include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php']);
+    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_ExtensionTestService.php']);
 }

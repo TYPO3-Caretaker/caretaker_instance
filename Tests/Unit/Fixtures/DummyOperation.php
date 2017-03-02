@@ -35,13 +35,15 @@ namespace Caretaker\CaretakerInstance\Tests\Unit\Fixtures;
  *
  * $Id$
  */
-class DummyOperation implements \tx_caretakerinstance_IOperation {
+class DummyOperation implements \tx_caretakerinstance_IOperation
+{
 
-	/**
-	 * @param array $parameter
-	 * @return \tx_caretakerinstance_OperationResult
-	 */
-	function execute($parameter = array()) {
-		return new \tx_caretakerinstance_OperationResult(true, $parameter['foo']);
-	}
+    /**
+     * @param array $parameter
+     * @return \tx_caretakerinstance_OperationResult
+     */
+    function execute($parameter = [])
+    {
+        return new \tx_caretakerinstance_OperationResult(true, $parameter['foo']);
+    }
 }

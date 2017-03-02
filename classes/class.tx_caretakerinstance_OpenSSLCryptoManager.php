@@ -45,142 +45,154 @@
  * @package TYPO3
  * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_AbstractCryptoManager {
+class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_AbstractCryptoManager
+{
 
-	/**
-	 * Constructor
-	 */
-	public function __construct() {
-		if (!extension_loaded('openssl')) {
-			throw new Exception('OpenSSL PHP extension is required for Caretaker OpenSSLCryptoManager', 1298644422);
-		}
-	}
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        if (!extension_loaded('openssl')) {
+            throw new Exception('OpenSSL PHP extension is required for Caretaker OpenSSLCryptoManager', 1298644422);
+        }
+    }
 
-	/**
-	 * Encrypt data with the <em>public</em> key of the recipient.
-	 * Will be encrypted using openssl_seal.
-	 *
-	 * @param $data string The data to encrypt
-	 * @param $publicKey string The public key for encryption (as PEM formatted string)
-	 * @return string The encrypted data
-	 * @throws Exception
-	 */
-	public function encrypt($data, $publicKey) {
-		$publicKey = $this->decodeKey($publicKey);
-		if (empty($publicKey)) {
-			throw new \Exception('Public key missing', 1423738632);
-		}
+    /**
+     * Encrypt data with the <em>public</em> key of the recipient.
+     * Will be encrypted using openssl_seal.
+     *
+     * @param $data string The data to encrypt
+     * @param $publicKey string The public key for encryption (as PEM formatted string)
+     * @return string The encrypted data
+     * @throws Exception
+     */
+    public function encrypt($data, $publicKey)
+    {
+        $publicKey = $this->decodeKey($publicKey);
+        if (empty($publicKey)) {
+            throw new \Exception('Public key missing', 1423738632);
+        }
 
-		openssl_seal($data, $cryptedData, $envelopeKeys, array($publicKey));
+        openssl_seal($data, $cryptedData, $envelopeKeys, [$publicKey]);
 
-		$envelopeKey = $envelopeKeys[0];
+        $envelopeKey = $envelopeKeys[0];
 
-		$crypted = base64_encode($envelopeKey) . ':' . base64_encode($cryptedData);
+        $crypted = base64_encode($envelopeKey) . ':' . base64_encode($cryptedData);
 
-		return $crypted;
-	}
+        return $crypted;
+    }
 
-	/**
-	 * Decrypt data with <em>private</em> key
-	 *
-	 * @param $data string The data to decrypt
-	 * @param string $privateKey The private key for decryption (as PEM formatted string)
-	 * @return string The decrypted data
-	 * @throws Exception
-	 */
-	public function decrypt($data, $privateKey) {
-		$privateKey = $this->decodeKey($privateKey);
-		if (empty($privateKey)) {
-			throw new \Exception('Private key missing', 1423738633);
-		}
+    /**
+     * Decrypt data with <em>private</em> key
+     *
+     * @param $data string The data to decrypt
+     * @param string $privateKey The private key for decryption (as PEM formatted string)
+     * @return string The decrypted data
+     * @throws Exception
+     */
+    public function decrypt($data, $privateKey)
+    {
+        $privateKey = $this->decodeKey($privateKey);
+        if (empty($privateKey)) {
+            throw new \Exception('Private key missing', 1423738633);
+        }
 
-		list($envelopeKey, $cryptedData) = explode(':', $data);
+        list($envelopeKey, $cryptedData) = explode(':', $data);
 
-		$envelopeKey = base64_decode($envelopeKey);
-		$cryptedData = base64_decode($cryptedData);
+        $envelopeKey = base64_decode($envelopeKey);
+        $cryptedData = base64_decode($cryptedData);
 
-		openssl_open($cryptedData, $decrypted, $envelopeKey, $privateKey);
+        openssl_open($cryptedData, $decrypted, $envelopeKey, $privateKey);
 
-		return $decrypted;
-	}
+        return $decrypted;
+    }
 
-	/**
-	 * Sign the data with the given private key
-	 *
-	 * @param string $data
-	 * @param string $privateKey The private key in PEM form
-	 * @return string
-	 * @throws Exception
-	 */
-	public function createSignature($data, $privateKey) {
-		$privateKey = $this->decodeKey($privateKey);
-		if (empty($privateKey)) {
-			throw new \Exception('Private key missing', 1423738634);
-		}
+    /**
+     * Sign the data with the given private key
+     *
+     * @param string $data
+     * @param string $privateKey The private key in PEM form
+     * @return string
+     * @throws Exception
+     */
+    public function createSignature($data, $privateKey)
+    {
+        $privateKey = $this->decodeKey($privateKey);
+        if (empty($privateKey)) {
+            throw new \Exception('Private key missing', 1423738634);
+        }
 
-		openssl_sign($data, $signature, $privateKey);
-		$signature = base64_encode($signature);
-		return $signature;
-	}
+        openssl_sign($data, $signature, $privateKey);
+        $signature = base64_encode($signature);
 
-	/**
-	 * Verify the signature of data with the given public key
-	 *
-	 * @param string $data
-	 * @param string $signature
-	 * @param string $publicKey The private key in PEM form
-	 * @return string
-	 * @throws Exception
-	 */
-	public function verifySignature($data, $signature, $publicKey) {
-		$publicKey = $this->decodeKey($publicKey);
-		if (empty($publicKey)) {
-			throw new \Exception('Public key missing', 1423738635);
-		}
+        return $signature;
+    }
 
-		$signature = base64_decode($signature);
-		$correct = openssl_verify($data, $signature, $publicKey);
-		return $correct === 1;
-	}
+    /**
+     * Verify the signature of data with the given public key
+     *
+     * @param string $data
+     * @param string $signature
+     * @param string $publicKey The private key in PEM form
+     * @return string
+     * @throws Exception
+     */
+    public function verifySignature($data, $signature, $publicKey)
+    {
+        $publicKey = $this->decodeKey($publicKey);
+        if (empty($publicKey)) {
+            throw new \Exception('Public key missing', 1423738635);
+        }
 
-	/**
-	 * Generate a new key pair
-	 * @return array Public and private key as string
-	 * @throws Exception
-	 */
-	public function generateKeyPair() {
-		$keyPair = openssl_pkey_new();
+        $signature = base64_decode($signature);
+        $correct = openssl_verify($data, $signature, $publicKey);
 
-		if (!$keyPair) {
-			throw new Exception('Cant create OpenSSL private key.');
-		}
+        return $correct === 1;
+    }
 
-		openssl_pkey_export($keyPair, $privateKey);
+    /**
+     * Generate a new key pair
+     *
+     * @return array Public and private key as string
+     * @throws Exception
+     */
+    public function generateKeyPair()
+    {
+        $keyPair = openssl_pkey_new();
 
-		$publicKey = openssl_pkey_get_details($keyPair);
-		$publicKey = $publicKey['key'];
+        if (!$keyPair) {
+            throw new Exception('Cant create OpenSSL private key.');
+        }
 
-		return array($this->encodeKey($publicKey), $this->encodeKey($privateKey));
-	}
+        openssl_pkey_export($keyPair, $privateKey);
 
-	/**
-	 * Encode linebreaks in key to make it usable in ext config
-	 *
-	 * @param string $key The key in PEM format
-	 * @return string The key without linebreaks (not in PEM!)
-	 */
-	protected function encodeKey($key) {
-		return str_replace("\n", '|', $key);
-	}
+        $publicKey = openssl_pkey_get_details($keyPair);
+        $publicKey = $publicKey['key'];
 
-	/**
-	 * Add linebreaks in key to make it conform to PEM format
-	 *
-	 * @param string $key The key without linebreaks
-	 * @return string The key with linebreaks (in PEM)
-	 */
-	protected function decodeKey($key) {
-		return str_replace('|', "\n", $key);
-	}
+        return [$this->encodeKey($publicKey), $this->encodeKey($privateKey)];
+    }
+
+    /**
+     * Encode linebreaks in key to make it usable in ext config
+     *
+     * @param string $key The key in PEM format
+     * @return string The key without linebreaks (not in PEM!)
+     */
+    protected function encodeKey($key)
+    {
+        return str_replace("\n", '|', $key);
+    }
+
+    /**
+     * Add linebreaks in key to make it conform to PEM format
+     *
+     * @param string $key The key without linebreaks
+     * @return string The key with linebreaks (in PEM)
+     */
+    protected function decodeKey($key)
+    {
+        return str_replace('|', "\n", $key);
+    }
 
 }

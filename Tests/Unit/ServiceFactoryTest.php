@@ -54,27 +54,26 @@ class ServiceFactoryTest extends UnitTestCase
 
         // Simulate TYPO3 ext conf
 
-        $extConf = array(
-                'crypto.' => array(
-                        'instance.' => array(
-                                'publicKey' => 'FakePublicKey',
-                                'privateKey' => 'FakePrivateKey'
-                        ),
-                        'client.' => array(
-                                'publicKey' => 'FakeClientPublicKey'
-                        )
-                ),
-                'security.' => array(
-                        'clientHostAddressRestriction' => '10.0.0.1'
-                )
-        );
+        $extConf = [
+            'crypto.' => [
+                'instance.' => [
+                    'publicKey' => 'FakePublicKey',
+                    'privateKey' => 'FakePrivateKey',
+                ],
+                'client.' => [
+                    'publicKey' => 'FakeClientPublicKey',
+                ],
+            ],
+            'security.' => [
+                'clientHostAddressRestriction' => '10.0.0.1',
+            ],
+        ];
 
         $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance'] =
-                serialize($extConf);
+            serialize($extConf);
 
         $factory = \tx_caretakerinstance_ServiceFactory::getInstance();
         $commandService = $factory->getCommandService();
-
 
         $this->assertInstanceOf('\tx_caretakerinstance_CommandService', $commandService);
 
@@ -91,30 +90,29 @@ class ServiceFactoryTest extends UnitTestCase
 
     function testOperationClassRegistrationByConfVars()
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] = array(
-                'dummy' => 'Caretaker\CaretakerInstance\Tests\Unit\Fixtures\DummyOperation'
-        );
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] = [
+            'dummy' => 'Caretaker\CaretakerInstance\Tests\Unit\Fixtures\DummyOperation',
+        ];
         $factory = \tx_caretakerinstance_ServiceFactory::getInstance();
         $operationManager = $factory->getOperationManager();
 
-        $result = $operationManager->executeOperation('dummy', array('foo' => 'bar'));
+        $result = $operationManager->executeOperation('dummy', ['foo' => 'bar']);
 
         $this->assertEquals('bar', $result->getValue());
     }
 
     function testOperationInstanceRegistrationByConfVars()
     {
-        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] = array(
-                'dummyInstance' => new DummyOperation()
-        );
+        $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] = [
+            'dummyInstance' => new DummyOperation(),
+        ];
         $factory = \tx_caretakerinstance_ServiceFactory::getInstance();
         $operationManager = $factory->getOperationManager();
 
-        $result = $operationManager->executeOperation('dummyInstance', array('foo' => 'bar'));
+        $result = $operationManager->executeOperation('dummyInstance', ['foo' => 'bar']);
 
         $this->assertEquals('bar', $result->getValue());
     }
-
 
     function testRemoteCommandConnector()
     {
