@@ -287,13 +287,16 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
             /** @var TYPO3\CMS\Extensionmanager\Domain\Model\Extension $extension */
             foreach ($extensionAllVersions as $extensionVersion) {
                 /** @var TYPO3\CMS\Extensionmanager\Domain\Model\Dependency $dependency */
+                $compatible = true;
                 foreach ($extensionVersion->getDependencies() as $dependency) {
-                    if ($dependency->getIdentifier() == 'typo3'
-                        && $this->checkVersionRange($typo3Version, $dependency->getLowestVersion(), $dependency->getHighestVersion())
-                    ) {
-                        $extension = $extensionVersion;
-                        break 2;
+                    if ($dependency->getIdentifier() == 'typo3') {
+                        $compatible = $this->checkVersionRange($typo3Version, $dependency->getLowestVersion(), $dependency->getHighestVersion());
+                        break;
                     }
+                }
+                if ($compatible) {
+                    $extension = $extensionVersion;
+                    break;
                 }
             }
         }
