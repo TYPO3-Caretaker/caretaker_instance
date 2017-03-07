@@ -22,25 +22,14 @@
         <languageKey index="default" type="array">
 
             <label index="insecure_extension_test_ok">No suspect Extensions are found</label>
-            <label index="insecure_extension_test_problems">###VALUE_NUM_ERRORS### Errors and ###VALUE_NUM_WARNINGS###
-                Warnings
-            </label>
+            <label index="insecure_extension_test_problems">###VALUE_NUM_ERRORS### Errors and ###VALUE_NUM_WARNINGS### Warnings</label>
 
-            <label index="insecure_extension_detail_installed">Insecure Extension ###VALUE_EXT_KEY### is installed in
-                version ###VALUE_VERSION###
-            </label>
-            <label index="insecure_extension_detail_present">Insecure Extension ###VALUE_EXT_KEY### is present but not
-                installed in version ###VALUE_VERSION###
-            </label>
-            <label index="insecure_extension_detail_unknown">Unknown Extension ###VALUE_EXT_KEY### is found in version
-                ###VALUE_VERSION###
-            </label>
+            <label index="insecure_extension_detail_installed">Insecure Extension ###VALUE_EXT_KEY### is installed in version ###VALUE_VERSION###</label>
+            <label index="insecure_extension_detail_present">Insecure Extension ###VALUE_EXT_KEY### is present but not installed in version ###VALUE_VERSION###</label>
+            <label index="insecure_extension_detail_unknown">Unknown Extension ###VALUE_EXT_KEY### is found in version ###VALUE_VERSION###</label>
 
-            <label index="blacklisted_extension_installed">The Blacklisted Extension ###VALUE_EXT_KEY### is installed.
-            </label>
-            <label index="blacklisted_extension_present">The Blacklisted Extension ###VALUE_EXT_KEY### is present but
-                not installed.
-            </label>
+            <label index="blacklisted_extension_installed">The Blacklisted Extension ###VALUE_EXT_KEY### is installed.</label>
+            <label index="blacklisted_extension_present">The Blacklisted Extension ###VALUE_EXT_KEY### is present but not installed.</label>
 
             <label index="insecure_extension_test_errors">Errors:</label>
             <label index="insecure_extension_test_warnings">Warnings:</label>
@@ -63,12 +52,8 @@
             <label index="find_extension_updates_test_description">Find Extension Updates</label>
             <label index="find_extension_updates_test_configuration"></label>
             <label index="find_extension_updates_test_ok">All Extensions are up to date</label>
-            <label index="find_extension_updates_test_problems">###VALUE_NUM_ERRORS### Errors and
-                ###VALUE_NUM_WARNINGS### Warnings
-            </label>
-            <label index="find_extension_updates_test_detailinfo">Extension ###VALUE_EXT_KEY### is installed in Version
-                ###VALUE_EXT_VERSION###. Latest is ###VALUE_TER_VERSION###.
-            </label>
+            <label index="find_extension_updates_test_problems">###VALUE_NUM_ERRORS### Errors and ###VALUE_NUM_WARNINGS### Warnings</label>
+            <label index="find_extension_updates_test_detailinfo">Extension ###VALUE_EXT_KEY### is installed in Version ###VALUE_EXT_VERSION###. Latest is ###VALUE_TER_VERSION###.</label>
             <label index="find_extension_updates_test_detail_error">Errors:</label>
             <label index="find_extension_updates_test_detail_warning">Warnings:</label>
             <label index="find_extension_updates_test_detail_ok">Ok:</label>
@@ -76,26 +61,14 @@
         </languageKey>
         <languageKey index="de" type="array">
             <label index="insecure_extension_test_ok">Es wurden keine problematischen Extensions gefunden</label>
-            <label index="insecure_extension_test_problems">###VALUE_NUM_ERRORS### Fehler und ###VALUE_NUM_WARNINGS###
-                Warnungen
-            </label>
+            <label index="insecure_extension_test_problems">###VALUE_NUM_ERRORS### Fehler und ###VALUE_NUM_WARNINGS### Warnungen</label>
 
-            <label index="insecure_extension_detail_installed">Die unsichere Extension ###VALUE_EXT_KEY### ist in
-                Version ###VALUE_VERSION### installiert
-            </label>
-            <label index="insecure_extension_detail_present">Die unsichere Extension ###VALUE_EXT_KEY### ist vorhanden
-                aber nicht installiert in Version ###VALUE_VERSION###
-            </label>
-            <label index="insecure_extension_detail_unknown">Die unbekannte Extension ###VALUE_EXT_KEY### ist in Version
-                ###VALUE_VERSION### vorhanden
-            </label>
+            <label index="insecure_extension_detail_installed">Die unsichere Extension ###VALUE_EXT_KEY### ist in Version ###VALUE_VERSION### installiert</label>
+            <label index="insecure_extension_detail_present">Die unsichere Extension ###VALUE_EXT_KEY### ist vorhanden aber nicht installiert in Version ###VALUE_VERSION###</label>
+            <label index="insecure_extension_detail_unknown">Die unbekannte Extension ###VALUE_EXT_KEY### ist in Version ###VALUE_VERSION### vorhanden</label>
 
-            <label index="blacklisted_extension_installed">Die unerwünschte Extension ###VALUE_EXT_KEY### ist
-                installiert.
-            </label>
-            <label index="blacklisted_extension_present">Die unerwünschte Extension ###VALUE_EXT_KEY### ist vorhanden
-                aber nicht installiert.
-            </label>
+            <label index="blacklisted_extension_installed">Die unerwünschte Extension ###VALUE_EXT_KEY### ist installiert.</label>
+            <label index="blacklisted_extension_present">Die unerwünschte Extension ###VALUE_EXT_KEY### ist vorhanden aber nicht installiert.</label>
 
             <label index="insecure_extension_test_errors">Fehler:</label>
             <label index="insecure_extension_test_warnings">Warnungen:</label>
