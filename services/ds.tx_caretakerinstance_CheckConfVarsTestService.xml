@@ -11,9 +11,7 @@
         <el>
             <checkConfVars>
                 <TCEforms>
-                    <label>Check TYPO3_CONF_VARS : key_pipe_subkey ... comparison operator (==,!=,&lt;=,&gt;=,&lt;,&gt;)
-                        or :regex: ... value or regular expression
-                    </label>
+                    <label>Check TYPO3_CONF_VARS : key_pipe_subkey ... comparison operator (==,!=,&lt;=,&gt;=,&lt;,&gt;) or :regex: ... value or regular expression</label>
                     <config>
                         <type>text</type>
                         <cols>80</cols>
