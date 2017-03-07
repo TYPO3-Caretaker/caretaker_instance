@@ -89,6 +89,15 @@
                 </TCEforms>
             </ignore_extension_version_suffix>
 
+            <ignore_major_extension_version>
+                <TCEforms>
+                    <label>Should major extension versions be ignored?</label>
+                    <config>
+                        <type>check</type>
+                    </config>
+                </TCEforms>
+            </ignore_major_extension_version>
+
             <only_for_running_typo3_version>
                 <TCEforms>
                     <label>Should extension versions not for running TYPO3 version be ignored?</label>
