@@ -276,12 +276,26 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
         $repo = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
         $repo->initializeObject();
 
+        $highestVersion = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(
+            \TYPO3\CMS\Core\Utility\VersionNumberUtility::raiseVersionNumber('main', $ext_version)
+        );
+
         if ($this->isTYPO3VersionIgnored()) {
-            // get last version
-            $extension = $repo->findHighestAvailableVersion($ext_key);
+            if ($this->isMajorVersionIgnored()) {
+                $extension = $repo->findByVersionRangeAndExtensionKeyOrderedByVersion($ext_key, 0, $highestVersion, false)
+                    ->getFirst();
+            } else {
+                // get last version
+                $extension = $repo->findHighestAvailableVersion($ext_key);
+            }
         } else {
-            // get all versions of the extension
-            $extensionAllVersions = $repo->findByExtensionKeyOrderedByVersion($ext_key)->toArray();
+            if ($this->isMajorVersionIgnored()) {
+                $extensionAllVersions = $repo->findByVersionRangeAndExtensionKeyOrderedByVersion($ext_key, 0, $highestVersion, false)
+                    ->toArray();
+            } else {
+                // get all versions of the extension
+                $extensionAllVersions = $repo->findByExtensionKeyOrderedByVersion($ext_key)->toArray();
+            }
 
             // find last highest version for running TYPO3 version
             /** @var TYPO3\CMS\Extensionmanager\Domain\Model\Extension $extension */
@@ -350,6 +364,14 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
     protected function isExtensionVersionSuffixIgnored()
     {
         return $this->getConfigValue('ignore_extension_version_suffix') == 1;
+    }
+
+    /**
+     * @return bool
+     */
+    protected function isMajorVersionIgnored()
+    {
+        return $this->getConfigValue('ignore_major_extension_version') == 1;
     }
 
     /**
