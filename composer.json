@@ -4,7 +4,7 @@
     "type": "typo3-cms-extension",
     "homepage": "https://github.com/TYPO3-Caretaker/",
     "require": {
-        "typo3/cms-core": "^6.2.14|^7.6.0"
+        "typo3/cms-core": "^6.2.14|^7.6.0|~8.6.0|dev-master"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.0",
