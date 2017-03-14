@@ -42,71 +42,68 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
-interface tx_caretakerinstance_ICryptoManager {
+interface tx_caretakerinstance_ICryptoManager
+{
+    /**
+     * Create a session token that can be verified with the given secret
+     *
+     * @param string $data
+     * @param string $secret
+     * @return string
+     */
+    public function createSessionToken($data, $secret);
 
-	/**
-	 * Create a session token that can be verified with the given secret
-	 *
-	 * @param string $data
-	 * @param string $secret
-	 * @return string
-	 */
-	function createSessionToken($data, $secret);
+    /**
+     * Verify that the given token was created with the given secret
+     *
+     * @param string $token
+     * @param string $secret
+     * @return bool
+     */
+    public function verifySessionToken($token, $secret);
 
-	/**
-	 * Verify that the given token was created with the given secret
-	 *
-	 * @param string $token
-	 * @param string $secret
-	 * @return boolean
-	 */
-	function verifySessionToken($token, $secret);
+    /**
+     * Sign the data with the given private key
+     *
+     * @param string $data
+     * @param string $privateKey The private key
+     * @return string
+     */
+    public function createSignature($data, $privateKey);
 
-	/**
-	 * Sign the data with the given private key
-	 *
-	 * @param string $data
-	 * @param string $privateKey The private key
-	 * @return string
-	 */
-	function createSignature($data, $privateKey);
+    /**
+     * Verify the signature of data with the given public key
+     *
+     * @param string $data
+     * @param string $signature
+     * @param string $publicKey The private key
+     * @return string
+     */
+    public function verifySignature($data, $signature, $publicKey);
 
-	/**
-	 * Verify the signature of data with the given public key
-	 *
-	 * @param string $data
-	 * @param string $signature
-	 * @param string $publicKey The private key
-	 * @return string
-	 */
-	function verifySignature($data, $signature, $publicKey);
+    /**
+     * Encrypt data with the given public key
+     *
+     * @param $data string The data to encrypt
+     * @param $publicKey string The public key for encryption
+     * @return string The encrypted data
+     */
+    public function encrypt($data, $publicKey);
 
-	/**
-	 * Encrypt data with the given public key
-	 *
-	 * @param $data string The data to encrypt
-	 * @param $publicKey string The public key for encryption
-	 * @return string The encrypted data
-	 */
-	function encrypt($data, $publicKey);
+    /**
+     * Decrypt data with the given private key
+     *
+     * @param $data string The data to decrypt
+     * @param $privateKey string The private key for decryption
+     * @return string The decrypted data
+     */
+    public function decrypt($data, $privateKey);
 
-	/**
-	 * Decrypt data with the given private key
-	 *
-	 * @param $data string The data to decrypt
-	 * @param $privateKey string The private key for decryption
-	 * @return string The decrypted data
-	 */
-	function decrypt($data, $privateKey);
-
-	/**
-	 * Generate a new key pair
-	 *
-	 * @return array Public and private key as string
-	 */
-	function generateKeyPair();
-
+    /**
+     * Generate a new key pair
+     *
+     * @return array Public and private key as string
+     */
+    public function generateKeyPair();
 }

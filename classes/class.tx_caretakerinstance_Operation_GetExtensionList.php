@@ -42,92 +42,92 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerinstance_IOperation {
+class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerinstance_IOperation
+{
+    /**
+     * @var array Available extension scopes
+     */
+    protected $scopes = array('system', 'global', 'local');
 
-	/**
-	 * @var array Available extension scopes
-	 */
-	protected $scopes = array('system', 'global', 'local');
+    /**
+     *
+     * @param array $parameter Array of extension locations as string (system, global, local)
+     * @return tx_caretakerinstance_OperationResult The extension list
+     */
+    public function execute($parameter = array())
+    {
+        $locations = $parameter['locations'];
+        if (is_array($locations) && count($locations) > 0) {
+            $extensionList = array();
+            foreach ($locations as $scope) {
+                if (in_array($scope, $this->scopes)) {
+                    $extensionList = array_merge($extensionList, $this->getExtensionListForScope($scope));
+                }
+            }
 
-	/**
-	 *
-	 * @param array $parameter Array of extension locations as string (system, global, local)
-	 * @return tx_caretakerinstance_OperationResult The extension list
-	 */
-	public function execute($parameter = array()) {
-		$locations = $parameter['locations'];
-		if (is_array($locations) && count($locations) > 0) {
-			$extensionList = array();
-			foreach ($locations as $scope) {
-				if (in_array($scope, $this->scopes)) {
-					$extensionList = array_merge($extensionList, $this->getExtensionListForScope($scope));
-				}
-			}
-			return new tx_caretakerinstance_OperationResult(TRUE, $extensionList);
-		} else {
-			return new tx_caretakerinstance_OperationResult(FALSE, 'No extension locations given');
-		}
+            return new tx_caretakerinstance_OperationResult(true, $extensionList);
+        }
+        return new tx_caretakerinstance_OperationResult(false, 'No extension locations given');
+    }
 
-	}
+    /**
+     * Get the path for the given scope
+     *
+     * @param string $scope
+     * @return string
+     */
+    protected function getPathForScope($scope)
+    {
+        switch ($scope) {
+            case 'system':
+                $path = PATH_typo3 . 'sysext/';
+                break;
+            case 'global':
+                $path = PATH_typo3 . 'ext/';
+                break;
+            case 'local':
+            default:
+                $path = PATH_typo3conf . 'ext/';
+                break;
+        }
 
-	/**
-	 * Get the path for the given scope
-	 *
-	 * @param string $scope
-	 * @return string
-	 */
-	protected function getPathForScope($scope) {
-		switch ($scope) {
-			case 'system':
-				$path = PATH_typo3 . 'sysext/';
-				break;
-			case 'global':
-				$path = PATH_typo3 . 'ext/';
-				break;
-			case 'local':
-			default:
-				$path = PATH_typo3conf . 'ext/';
-				break;
-		}
-		return $path;
-	}
+        return $path;
+    }
 
-	/**
-	 * Get the list of extensions in the given scope
-	 *
-	 * @param string $scope
-	 * @return boolean
-	 */
-	protected function getExtensionListForScope($scope) {
-		$path = $this->getPathForScope($scope);
-		$extensionInfo = array();
-		if (@is_dir($path)) {
-			$extensionFolders = \TYPO3\CMS\Core\Utility\GeneralUtility::get_dirs($path);
-			if (is_array($extensionFolders)) {
-				foreach ($extensionFolders as $extKey) {
-					$extensionInfo[$extKey]['ext_key'] = $extKey;
-					$extensionInfo[$extKey]['installed'] = (boolean)\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey);
+    /**
+     * Get the list of extensions in the given scope
+     *
+     * @param string $scope
+     * @return bool
+     */
+    protected function getExtensionListForScope($scope)
+    {
+        $path = $this->getPathForScope($scope);
+        $extensionInfo = array();
+        if (@is_dir($path)) {
+            $extensionFolders = \TYPO3\CMS\Core\Utility\GeneralUtility::get_dirs($path);
+            if (is_array($extensionFolders)) {
+                foreach ($extensionFolders as $extKey) {
+                    $extensionInfo[$extKey]['ext_key'] = $extKey;
+                    $extensionInfo[$extKey]['installed'] = (bool)\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey);
 
-					if (@is_file($path . $extKey . '/ext_emconf.php')) {
-						$_EXTKEY = $extKey;
-						@include($path . $extKey . '/ext_emconf.php');
-						$extensionVersion = $EM_CONF[$extKey]['version'];
-					} else {
-						$extensionVersion = FALSE;
-					}
+                    if (@is_file($path . $extKey . '/ext_emconf.php')) {
+                        $_EXTKEY = $extKey;
+                        @include($path . $extKey . '/ext_emconf.php');
+                        $extensionVersion = $EM_CONF[$extKey]['version'];
+                    } else {
+                        $extensionVersion = false;
+                    }
 
-					if ($extensionVersion) {
-						$extensionInfo[$extKey]['version'] = $extensionVersion;
-						$extensionInfo[$extKey]['scope'][$scope] = $extensionVersion;
-					}
-				}
-			}
-		}
+                    if ($extensionVersion) {
+                        $extensionInfo[$extKey]['version'] = $extensionVersion;
+                        $extensionInfo[$extKey]['scope'][$scope] = $extensionVersion;
+                    }
+                }
+            }
+        }
 
-		return $extensionInfo;
-	}
-
+        return $extensionInfo;
+    }
 }

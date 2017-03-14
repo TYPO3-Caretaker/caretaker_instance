@@ -19,15 +19,12 @@ $EM_CONF[$_EXTKEY] = array (
   'lockType' => '',
   'author_company' => '',
   'version' => '0.7.7',
-  'TYPO3_version' => '6.2.0-7.99.99',
-  'PHP_version' => '5.3.0-',
   'constraints' => 
   array (
     'depends' => 
     array (
-      'cms' => '',
-      'typo3' => '6.2.0-7.99.99',
-      'php' => '5.3.0-',
+      'typo3' => '6.2.0-7.6.99',
+      'php' => '5.3.0-0.0.0',
     ),
     'conflicts' => 
     array (

@@ -48,143 +48,152 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_CommandRequest {
+class tx_caretakerinstance_CommandRequest
+{
+    /**
+     * @var string The client public key when receiving a command
+     */
+    protected $clientKey;
 
-	/**
-	 * @var string The client public key when receiving a command
-	 */
-	protected $clientKey;
+    /**
+     * @var string The client host address (IP) when receiving a command
+     */
+    protected $clientHostAddress;
 
-	/**
-	 * @var string The client host address (IP) when receiving a command
-	 */
-	protected $clientHostAddress;
+    /**
+     * @var string The public key of the server when sending a command
+     */
+    protected $serverKey;
 
-	/**
-	 * @var string The public key of the server when sending a command
-	 */
-	protected $serverKey;
+    /**
+     * @var string The URL of the server (to the TYPO3 site root) when sending a command
+     */
+    protected $serverUrl;
 
-	/**
-	 * @var string The URL of the server (to the TYPO3 site root) when sending a command
-	 */
-	protected $serverUrl;
+    /**
+     * @var array
+     */
+    protected $data = array();
 
-	/**
-	 * @var array
-	 */
-	protected $data = array();
+    /**
+     * Create a new Command Request
+     *
+     * @param array $options Options of the Command Request object
+     */
+    public function __construct($options)
+    {
+        $this->sessionToken = $options['session_token'];
+        $this->data = $options['data'];
+        $this->rawData = $options['raw'];
+        $this->signature = $options['signature'];
 
-	/**
-	 * Create a new Command Request
-	 *
-	 * @param array $options Options of the Command Request object
-	 */
-	public function __construct($options) {
-		$this->sessionToken = $options['session_token'];
-		$this->data = $options['data'];
-		$this->rawData = $options['raw'];
-		$this->signature = $options['signature'];
+        // If we have client infos, we are recieving a command
+        if (is_array($options['client_info'])) {
+            $this->clientKey = $options['client_info']['client_key'];
+            $this->clientHostAddress = $options['client_info']['host_address'];
+        }
 
-		// If we have client infos, we are recieving a command
-		if (is_array($options['client_info'])) {
-			$this->clientKey = $options['client_info']['client_key'];
-			$this->clientHostAddress = $options['client_info']['host_address'];
-		}
+        // If we have server infos, we are going to send this Request
+        if (is_array($options['server_info'])) {
+            $this->serverKey = $options['server_info']['server_key'];
+            $this->serverUrl = $options['server_info']['server_url'];
+        }
+    }
 
-		// If we have server infos, we are going to send this Request
-		if (is_array($options['server_info'])) {
-			$this->serverKey = $options['server_info']['server_key'];
-			$this->serverUrl = $options['server_info']['server_url'];
-		}
-	}
+    /**
+     * @return string The client public key
+     */
+    public function getClientKey()
+    {
+        return $this->clientKey;
+    }
 
-	/**
-	 * @return string The client public key
-	 */
-	public function getClientKey() {
-		return $this->clientKey;
-	}
+    /**
+     * @return string The session token
+     */
+    public function getSessionToken()
+    {
+        return $this->sessionToken;
+    }
 
-	/**
-	 * @return string The session token
-	 */
-	public function getSessionToken() {
-		return $this->sessionToken;
-	}
+    /**
+     * @return string The client host address
+     */
+    public function getClientHostAddress()
+    {
+        return $this->clientHostAddress;
+    }
 
-	/**
-	 * @return string The client host address
-	 */
-	public function getClientHostAddress() {
-		return $this->clientHostAddress;
-	}
+    /**
+     * @return string The Server's (read: instance) URL
+     */
+    public function getServerUrl()
+    {
+        return $this->serverUrl;
+    }
 
-	/**
-	 * @return string The Server's (read: instance) URL
-	 */
-	public function getServerUrl() {
-		return $this->serverUrl;
-	}
+    /**
+     * @return string The Server's (read: instance) public key
+     */
+    public function getServerKey()
+    {
+        return $this->serverKey;
+    }
 
-	/**
-	 * @return string The Server's (read: instance) public key
-	 */
-	public function getServerKey() {
-		return $this->serverKey;
-	}
+    /**
+     * @return string The raw data (encrypted)
+     */
+    public function getRawData()
+    {
+        return $this->rawData;
+    }
 
-	/**
-	 * @return string The raw data (encrypted)
-	 */
-	public function getRawData() {
-		return $this->rawData;
-	}
+    /**
+     * @return string The signature
+     */
+    public function getSignature()
+    {
+        return $this->signature;
+    }
 
-	/**
-	 * @return string The signature
-	 */
-	public function getSignature() {
-		return $this->signature;
-	}
+    /**
+     * @param string $signature
+     * @return void
+     */
+    public function setSignature($signature)
+    {
+        $this->signature = $signature;
+    }
 
-	/**
-	 * @param string $signature
-	 * @return void
-	 */
-	public function setSignature($signature) {
-		$this->signature = $signature;
-	}
+    /**
+     * @param string $key A key for the data entry to fetch
+     * @return mixed The entry for the key in the Command Request data
+     */
+    public function getData($key = null)
+    {
+        if ($key != null) {
+            return $this->data[$key];
+        }
+        return $this->data;
+    }
 
-	/**
-	 * @param string $key A key for the data entry to fetch
-	 * @return mixed The entry for the key in the Command Request data
-	 */
-	public function getData($key = null) {
-		if ($key != null) {
-			return $this->data[$key];
-		} else {
-			return $this->data;
-		}
-	}
+    /**
+     * Merge data from another array onto the data
+     *
+     * @param array $array
+     * @return void
+     */
+    public function mergeData(&$array)
+    {
+        $this->data = array_merge($this->data, $array);
+    }
 
-	/**
-	 * Merge data from another array onto the data
-	 *
-	 * @param array $array
-	 * @return void
-	 */
-	public function mergeData(&$array) {
-		$this->data = array_merge($this->data, $array);
-	}
-
-	/**
-	 * @return string The relevant data for signature verification
-	 */
-	public function getDataForSignature() {
-		return $this->getSessionToken() . '$' . $this->getRawData();
-	}
+    /**
+     * @return string The relevant data for signature verification
+     */
+    public function getDataForSignature()
+    {
+        return $this->getSessionToken() . '$' . $this->getRawData();
+    }
 }

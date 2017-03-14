@@ -43,12 +43,9 @@ use TYPO3\CMS\Core\Tests\UnitTestCase;
  *
  * @author        Christopher Hlubek <hlubek (at) networkteam.com>
  * @author        Tobias Liebig <liebig (at) networkteam.com>
- * @package        TYPO3
- * @subpackage    \tx_caretakerinstance
  */
 class CryptoManagerTest extends UnitTestCase
 {
-
     /**
      * @var \tx_caretakerinstance_OpenSSLCryptoManager
      */
@@ -64,8 +61,7 @@ class CryptoManagerTest extends UnitTestCase
      */
     protected $publicKey;
 
-
-    function setUp()
+    public function setUp()
     {
         $this->cryptoManager = new \tx_caretakerinstance_OpenSSLCryptoManager();
 
@@ -73,7 +69,7 @@ class CryptoManagerTest extends UnitTestCase
         $this->privateKey = '-----BEGIN PRIVATE KEY-----|MIICdwIBADANBgkqhkiG9w0BAQEFAASCAmEwggJdAgEAAoGBAMjKQKzNPzv8NTkJ|VlKNbYpUu+3MAy2Q0oJgbadYZDWpGmi2CKpVvYGH6RhJAzuZ6UacG8P/DS1RFM1X|6zWKRO2IW5W6kemKAM1boJ3Fg+NpNaXXnojy36yJT3BwQEMk/elvlRiOrCa1+tq7|hzuCIM+IGMl98gYhAAf09qUhDfwHAgMBAAECgYAn8HMk7D6jw+siSUUubotXdLtc|9bO8II5++IdXPjHQqq5iHbNjjmJ/nXU0K3HFLTxFm0+6kMUiOnqUzeQvZi2HZ9dB|Xgd7UWMXZY2IJhiTBOFwX+LUC2fgjvXbsjjXirTh2nKFVM2/z/ne7M0wiAS0rCUt|rbYAuAosy7pt6k3DQQJBAOnHTLgFPsVbsvTiZl9d9LrO8Zev6f0UWJjGokINInd0|1qTy/HdJTB6WBfsWYb5oGR/CuAF+lKcg6Hf4WomDZQ8CQQDb4DiRQuFsTjWlaLf+|1qbbPsZynRXsDi0UTnfFowd4vYjyS2Sbm1II3jcLxQgqNQva6CN/DKZhOmI4Rprv|mqmJAkAbftFLI3LKi4p0utwHg2lxPz2y9YGzvlzdOx+CXUEcg6VrKRkAfqJxRnvV|mEBOwLeTwLcbleOt9HTjB1a+rbGJAkEAqgHfmymcRPLf9epXQfrUfvc1187v8Vow|rt/RKgZZM5lRNw7mVo6symCPLVGGc6Qaa4NMVuMADnNnGF43VAZBCQJBAKKQrh9k|KcwFtKTrewsccZ/JBPRBdOMS+Wj/7jF67hGpxjiQgMslGflGg33NIThRHPj/WEEc|zrTgmvPlLrhkTa8=|-----END PRIVATE KEY-----|';
     }
 
-    function testGenerateSessionTokenAndverifySignature()
+    public function testGenerateSessionTokenAndverifySignature()
     {
         $data = time();
 
@@ -82,7 +78,7 @@ class CryptoManagerTest extends UnitTestCase
         $this->assertEquals($data, $this->cryptoManager->verifySessionToken($token, $this->privateKey));
     }
 
-    function testSessionTokensWithSalt()
+    public function testSessionTokensWithSalt()
     {
         $data = time();
 
@@ -94,7 +90,7 @@ class CryptoManagerTest extends UnitTestCase
         }
     }
 
-    function testSessionTokenVerifySignature()
+    public function testSessionTokenVerifySignature()
     {
         $data = time();
 
@@ -106,63 +102,62 @@ class CryptoManagerTest extends UnitTestCase
         $this->assertFalse($this->cryptoManager->verifySessionToken($token, $this->privateKey));
     }
 
-    function testSignAndVerifySignature()
+    public function testSignAndVerifySignature()
     {
         // $this->markTestSkipped('Skip RSA test for performance reasons');
 
-        $data = "this has to be signed";
+        $data = 'this has to be signed';
         $signature = $this->cryptoManager->createSignature($data, $this->privateKey);
         $this->assertTrue($this->cryptoManager->verifySignature($data, $signature, $this->publicKey));
     }
 
-    function testModifiedDocumentDoesntVerifySignature()
+    public function testModifiedDocumentDoesntVerifySignature()
     {
         // $this->markTestSkipped('Skip RSA test for performance reasons');
 
-        $data = "this has to be signed";
+        $data = 'this has to be signed';
         $signature = $this->cryptoManager->createSignature($data, $this->privateKey);
-        $data = "this has been modified";
+        $data = 'this has been modified';
         $this->assertFalse($this->cryptoManager->verifySignature($data, $signature, $this->publicKey));
     }
 
-    function testEncryptDecrypt()
+    public function testEncryptDecrypt()
     {
         // $this->markTestSkipped('Skip RSA test for performance reasons');
 
-        $data = "top-secret";
+        $data = 'top-secret';
         $crypt = $this->cryptoManager->encrypt($data, $this->publicKey);
         $decrypt = $this->cryptoManager->decrypt($crypt, $this->privateKey);
         $this->assertEquals($data, $decrypt);
     }
 
-    function testEncryptAJson()
+    public function testEncryptAJson()
     {
         $this->markTestSkipped('Skip encryption test because open SSL salts the data and the result is always different.');
 
         $crypt = $this->cryptoManager->encrypt(
-                '{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
-                $this->publicKey
+            '{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
+            $this->publicKey
         );
 
         $this->assertEquals(
-                'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
-                $crypt
+            'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
+            $crypt
         );
     }
 
-    function testDecryptAString()
+    public function testDecryptAString()
     {
         $this->markTestSkipped('Skip encryption test because open SSL salts the data and the result is always different.');
 
         $plain = $this->cryptoManager->decrypt(
-                'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
-                $this->privateKey
+            'e96A2TuIWwcexcK8f7Dnk6aPRnIQYDdbggXz6vj/JGq9pR2838ZHOb5blMKYSWKTYOmLyuYZ5Qsci0Wrl858hq07lCkF8B6XIHu7MoGWytUAdVZOM0EsF58x9WAMCpkd+/iTThO5G03O0CXMffLFCWCAY4/IVbKHZwfQg8pXIUE=:ZdjiFGXRxwHViSSIVSa0gsRJgWjYy3O+XLp11soRIu9MN0iXf+X7Rg4vYkPZtNpEPGX4oElOR2J1Pnidqw==',
+            $this->privateKey
         );
 
         $this->assertEquals(
-                '{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
-                $plain
+            '{"operations":[["foo",{"bar":"fop"}],["lorem",{"ip":"sum"}]]}',
+            $plain
         );
     }
-
 }

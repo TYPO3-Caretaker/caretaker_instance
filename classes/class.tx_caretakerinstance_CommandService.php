@@ -47,77 +47,78 @@
  * @author Christopher Hlubek <hlubek@networkteam.com>
  * @author Tobias Liebig <liebig@networkteam.com>
  *
- * @package TYPO3
- * @subpackage caretaker_instance
  */
-class tx_caretakerinstance_CommandService {
+class tx_caretakerinstance_CommandService
+{
+    /**
+     * @var tx_caretakerinstance_ISecurityManager
+     */
+    protected $securityManager;
 
-	/**
-	 * @var tx_caretakerinstance_ISecurityManager
-	 */
-	protected $securityManager;
+    /**
+     * @var tx_caretakerinstance_OperationManager
+     */
+    protected $operationManager;
 
-	/**
-	 * @var tx_caretakerinstance_OperationManager
-	 */
-	protected $operationManager;
+    /**
+     * Construct a new Command Service
+     *
+     * @param tx_caretakerinstance_OperationManager $operationManager
+     * @param tx_caretakerinstance_ISecurityManager $securityManager
+     */
+    public function __construct(tx_caretakerinstance_OperationManager $operationManager, tx_caretakerinstance_ISecurityManager $securityManager)
+    {
+        $this->operationManager = $operationManager;
+        $this->securityManager = $securityManager;
+    }
 
-	/**
-	 * Construct a new Command Service
-	 *
-	 * @param tx_caretakerinstance_OperationManager $operationManager
-	 * @param tx_caretakerinstance_ISecurityManager $securityManager
-	 */
-	public function __construct(tx_caretakerinstance_OperationManager $operationManager, tx_caretakerinstance_ISecurityManager $securityManager) {
-		$this->operationManager = $operationManager;
-		$this->securityManager = $securityManager;
-	}
+    /**
+     * Execute a Command Request (which consists of multiple Operation keys and parameters).
+     *
+     * The Command Request is validated, decoded and then executed.
+     *
+     * @param tx_caretakerinstance_CommandRequest $commandRequest
+     * @return tx_caretakerinstance_CommandResult The command result object
+     */
+    public function executeCommand(tx_caretakerinstance_CommandRequest $commandRequest)
+    {
+        if ($this->securityManager->validateRequest($commandRequest)) {
+            if ($this->securityManager->decodeRequest($commandRequest)) {
+                $operations = $commandRequest->getData('operations');
 
-	/**
-	 * Execute a Command Request (which consists of multiple Operation keys and parameters).
-	 *
-	 * The Command Request is validated, decoded and then executed.
-	 *
-	 * @param tx_caretakerinstance_CommandRequest $commandRequest
-	 * @return tx_caretakerinstance_CommandResult The command result object
-	 */
-	public function executeCommand(tx_caretakerinstance_CommandRequest $commandRequest) {
-		if ($this->securityManager->validateRequest($commandRequest)) {
-			if ($this->securityManager->decodeRequest($commandRequest)) {
-				$operations = $commandRequest->getData('operations');
+                $results = array();
+                foreach ($operations as $operation) {
+                    $results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
+                }
 
-				$results = array();
-				foreach ($operations as $operation) {
-					$results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
-				}
-				return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_ok, $results);
-			} else {
-				return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'The request could not be decrypted');
-			}
-		} else {
-			return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, NULL, 'The request could not be certified');
-		}
-	}
+                return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_ok, $results);
+            }
+            return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be decrypted');
+        }
+        return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be certified');
+    }
 
-	/**
-	 * Create / request a new session token from the server
-	 *
-	 * @param string $clientHostAddress
-	 * @return string
-	 */
-	public function requestSessionToken($clientHostAddress) {
-		return $this->securityManager->createSessionToken($clientHostAddress);
-	}
+    /**
+     * Create / request a new session token from the server
+     *
+     * @param string $clientHostAddress
+     * @return string
+     */
+    public function requestSessionToken($clientHostAddress)
+    {
+        return $this->securityManager->createSessionToken($clientHostAddress);
+    }
 
-	/**
-	 * Encode / encrypt the command result with the security manager
-	 *
-	 * @param tx_caretakerinstance_CommandResult $commandResult
-	 * @return string
-	 */
-	public function wrapCommandResult(tx_caretakerinstance_CommandResult $commandResult) {
-		$json = $commandResult->toJson();
-		return $this->securityManager->encodeResult($json);
-	}
+    /**
+     * Encode / encrypt the command result with the security manager
+     *
+     * @param tx_caretakerinstance_CommandResult $commandResult
+     * @return string
+     */
+    public function wrapCommandResult(tx_caretakerinstance_CommandResult $commandResult)
+    {
+        $json = $commandResult->toJson();
 
+        return $this->securityManager->encodeResult($json);
+    }
 }
