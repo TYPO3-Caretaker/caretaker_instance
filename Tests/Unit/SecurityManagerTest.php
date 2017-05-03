@@ -150,6 +150,10 @@ class SecurityManagerTest extends UnitTestCase
         $this->assertTrue($this->securityManager->validateRequest($this->commandRequest));
     }
 
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Session token expired
+     */
     public function testValidateExpiredRequest()
     {
         $this->cryptoManager->expects($this->once())
@@ -161,9 +165,13 @@ class SecurityManagerTest extends UnitTestCase
             ->method('verifySignature')
             ->will($this->returnValue(true));
 
-        $this->assertFalse($this->securityManager->validateRequest($this->commandRequest));
+        $this->securityManager->validateRequest($this->commandRequest);
     }
 
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Client IP address is not allowed
+     */
     public function testClientRestrictionForRequestValidation()
     {
         $this->securityManager->setClientHostAddressRestriction('192.168.10.200');
@@ -176,7 +184,7 @@ class SecurityManagerTest extends UnitTestCase
             ->method('verifySignature')
             ->will($this->returnValue(true));
 
-        $this->assertFalse($this->securityManager->validateRequest($this->commandRequest));
+        $this->securityManager->validateRequest($this->commandRequest);
     }
 
     public function testValidationVerifiesSignature()
@@ -196,6 +204,10 @@ class SecurityManagerTest extends UnitTestCase
         $this->assertTrue($this->securityManager->validateRequest($this->commandRequest));
     }
 
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Signature didn't verify
+     */
     public function testWrongSignatureDoesntValidate()
     {
         $this->cryptoManager->expects($this->any())
@@ -206,7 +218,7 @@ class SecurityManagerTest extends UnitTestCase
             ->method('verifySignature')
             ->will($this->returnValue(false));
 
-        $this->assertFalse($this->securityManager->validateRequest($this->commandRequest));
+        $this->securityManager->validateRequest($this->commandRequest);
     }
 
     public function testEncodeResultEncodesStringWithClientPublicKey()

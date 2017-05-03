@@ -82,18 +82,22 @@ class tx_caretakerinstance_CommandService
      */
     public function executeCommand(tx_caretakerinstance_CommandRequest $commandRequest)
     {
-        if ($this->securityManager->validateRequest($commandRequest)) {
-            if ($this->securityManager->decodeRequest($commandRequest)) {
-                $operations = $commandRequest->getData('operations');
+        try {
+            if ($this->securityManager->validateRequest($commandRequest)) {
+                if ($this->securityManager->decodeRequest($commandRequest)) {
+                    $operations = $commandRequest->getData('operations');
 
-                $results = array();
-                foreach ($operations as $operation) {
-                    $results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
+                    $results = array();
+                    foreach ($operations as $operation) {
+                        $results[] = $this->operationManager->executeOperation($operation[0], $operation[1]);
+                    }
+
+                    return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_ok, $results);
                 }
-
-                return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_ok, $results);
+                return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be decrypted');
             }
-            return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be decrypted');
+        } catch (Exception $exception) {
+            return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be certified (' . $exception->getMessage() . ')');
         }
         return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be certified');
     }

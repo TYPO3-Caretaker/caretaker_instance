@@ -56,6 +56,7 @@ interface tx_caretakerinstance_ISecurityManager
      * Validate a Command Request (check session token, host address)
      *
      * @param tx_caretakerinstance_CommandRequest $commandRequest
+     * @throws Exception
      */
     public function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest);
 
