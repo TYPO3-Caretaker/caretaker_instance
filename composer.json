@@ -7,24 +7,22 @@
         "typo3/cms-core": "^6.2.14|^7.6|^8.7"
     },
     "require-dev": {
+        "nimut/testing-framework": "^1.0",
         "namelesscoder/typo3-repository-client": "^1.1",
-        "mikey179/vfsStream": "1.4.*@dev",
-        "phpunit/phpunit": "~4.7.0"
+        "phpunit/phpunit": "^4.8"
     },
     "suggest": {
         "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
     },
     "autoload": {
         "classmap": [
-            "classes",
-            "services"
+            "classes/",
+            "services/"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Caretaker\\CaretakerInstance\\Tests\\": "Tests",
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-            "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
+            "Caretaker\\CaretakerInstance\\Tests\\": "Tests/"
         }
     },
     "replace": {
