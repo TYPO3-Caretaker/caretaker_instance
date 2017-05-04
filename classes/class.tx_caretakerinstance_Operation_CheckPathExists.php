@@ -23,6 +23,8 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\SingletonInterface;
+
 /**
  * This is a file of the caretaker project.
  * http://forge.typo3.org/projects/show/extension-caretaker
@@ -40,7 +42,7 @@
  * @author Felix Oertel <oertel@networkteam.com>
  *
  */
-class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinstance_IOperation
+class tx_caretakerinstance_Operation_CheckPathExists implements tx_caretakerinstance_IOperation, SingletonInterface
 {
     /**
      * execute operation (checkPathExists)
