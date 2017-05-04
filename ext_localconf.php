@@ -58,4 +58,4 @@ foreach ($operations as $operationKey) {
         'EXT:caretaker_instance/classes/class.tx_caretakerinstance_Operation_' . $operationKey . '.php:&tx_caretakerinstance_Operation_' . $operationKey;
 }
 
-require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance') . '/ext_conf_include.php');
+require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance') . 'ext_conf_include.php');
