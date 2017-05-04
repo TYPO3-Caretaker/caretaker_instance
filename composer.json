@@ -7,10 +7,12 @@
         "typo3/cms-core": "^6.2.14|^7.6|^8.7"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.0",
         "namelesscoder/typo3-repository-client": "^1.1",
         "mikey179/vfsStream": "1.4.*@dev",
         "phpunit/phpunit": "~4.7.0"
+    },
+    "suggest": {
+        "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
     },
     "autoload": {
         "classmap": [
