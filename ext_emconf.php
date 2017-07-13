@@ -18,7 +18,7 @@ $EM_CONF[$_EXTKEY] = array (
   'clearCacheOnLoad' => 0,
   'lockType' => '',
   'author_company' => '',
-  'version' => '0.7.7',
+  'version' => '0.8.0',
   'constraints' => 
   array (
     'depends' => 
@@ -42,5 +42,5 @@ $EM_CONF[$_EXTKEY] = array (
       2 => 'eid',
     ),
   ),
-  '_md5_values_when_last_written' => 'a:5:{s:9:"ChangeLog";s:4:"9c48";s:10:"README.txt";s:4:"ee2d";s:12:"ext_icon.gif";s:4:"1bdc";s:19:"doc/wizard_form.dat";s:4:"9f12";s:20:"doc/wizard_form.html";s:4:"9378";}',
+  '_md5_values_when_last_written' => '',
 );
