@@ -33,7 +33,7 @@ before_install:
 
 before_script:
   - |
-    set -ev
+    set -e
     if [ "$TRAVIS_ALLOW_FAILURE" == "true" ]; then return; fi;
     if [ "$TYPO3_VERSION" == "^6.2.0" ]; then composer require typo3/cms-composer-installers="1.2.5 as 1.1.4" --no-update; fi;
     composer require typo3/cms="$TYPO3_VERSION";
@@ -42,7 +42,7 @@ before_script:
 
 script:
   - |
-    set -ev
+    set -e
     if [ "$TRAVIS_ALLOW_FAILURE" == "true" ]; then echo "skip testing"; return; fi;
     echo "Running unit tests";
     .Build/bin/phpunit;
@@ -69,7 +69,7 @@ jobs:
       before_script: skip
       script:
         - |
-          set -ev
+          set -e
           if [ -n "$TRAVIS_TAG" ] && [ -n "$TYPO3_ORG_USERNAME" ] && [ -n "$TYPO3_ORG_PASSWORD" ]; then
             echo -e "Preparing upload of release ${TRAVIS_TAG} to TER\n";
             git reset --hard HEAD && git clean -fx;
