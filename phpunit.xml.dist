@@ -1,0 +1,27 @@
+<phpunit
+    backupGlobals="true"
+    backupStaticAttributes="false"
+    bootstrap=".Build/vendor/nimut/testing-framework/res/Configuration/UnitTestsBootstrap.php"
+    colors="true"
+    convertErrorsToExceptions="true"
+    convertWarningsToExceptions="true"
+    forceCoversAnnotation="false"
+    processIsolation="false"
+    stopOnError="false"
+    stopOnFailure="false"
+    stopOnIncomplete="false"
+    stopOnSkipped="false"
+    verbose="true"
+>
+    <php>
+        <env name="TYPO3_INSTALL_DB_USER" value="root" />
+        <env name="TYPO3_INSTALL_DB_PASSWORD" value="" />
+        <env name="TYPO3_INSTALL_DB_DBNAME" value="travis_caretaker_test" />
+        <env name="TYPO3_VERSION" value="^8.7" />
+    </php>
+    <testsuites>
+        <testsuite name="TYPO3 Caretaker Unit Tests">
+            <directory>./Tests/Unit/</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>
