@@ -9,7 +9,7 @@
     "require-dev": {
         "nimut/testing-framework": "^1.0",
         "namelesscoder/typo3-repository-client": "^1.1",
-        "phpunit/phpunit": "^4.8"
+        "nimut/testing-framework": "^1.0"
     },
     "suggest": {
         "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
