@@ -103,7 +103,7 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
      * - Encrypted data signature
      *
      * @param tx_caretakerinstance_CommandRequest $commandRequest
-     * @throws Exception
+     * @throws tx_caretakerinstance_SecurityManagerException
      * @return bool
      */
     public function validateRequest(tx_caretakerinstance_CommandRequest $commandRequest)
@@ -111,17 +111,17 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
         $sessionToken = $commandRequest->getSessionToken();
         $timestamp = $this->cryptoManager->verifySessionToken($sessionToken, $this->privateKey);
         if ((time() - $timestamp) > $this->sessionTokenExpiration) {
-            throw new Exception('Session token expired');
+            throw new tx_caretakerinstance_SessionTokenException('Session token expired', 1500062206);
         } elseif (strlen($this->clientHostAddressRestriction) &&
             $commandRequest->getClientHostAddress() != $this->clientHostAddressRestriction
         ) {
-            throw new Exception('Client IP address is not allowed');
+            throw new tx_caretakerinstance_ClientHostAddressRestrictionException('Client IP address is not allowed', 1500062384);
         } elseif (!$this->cryptoManager->verifySignature(
             $commandRequest->getDataForSignature(),
             $commandRequest->getSignature(),
             $this->clientPublicKey)
         ) {
-            throw new Exception('Signature didn\'t verify');
+            throw new tx_caretakerinstance_SignaturValidationException('Signature didn\'t verify', 1500062398);
         }
 
         return true;

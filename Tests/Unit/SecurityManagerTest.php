@@ -150,12 +150,11 @@ class SecurityManagerTest extends UnitTestCase
         $this->assertTrue($this->securityManager->validateRequest($this->commandRequest));
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Session token expired
-     */
     public function testValidateExpiredRequest()
     {
+        $this->expectException(\tx_caretakerinstance_SessionTokenException::class);
+        $this->expectExceptionCode(1500062206);
+
         $this->cryptoManager->expects($this->once())
             ->method('verifySessionToken')
             ->with($this->equalTo('12345:abcdefg'), $this->equalTo('FakePrivateKey'))
@@ -168,12 +167,11 @@ class SecurityManagerTest extends UnitTestCase
         $this->securityManager->validateRequest($this->commandRequest);
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Client IP address is not allowed
-     */
     public function testClientRestrictionForRequestValidation()
     {
+        $this->expectException(\tx_caretakerinstance_ClientHostAddressRestrictionException::class);
+        $this->expectExceptionCode(1500062384);
+
         $this->securityManager->setClientHostAddressRestriction('192.168.10.200');
 
         $this->cryptoManager->expects($this->once())
@@ -204,12 +202,11 @@ class SecurityManagerTest extends UnitTestCase
         $this->assertTrue($this->securityManager->validateRequest($this->commandRequest));
     }
 
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage Signature didn't verify
-     */
     public function testWrongSignatureDoesntValidate()
     {
+        $this->expectException(\tx_caretakerinstance_SignaturValidationException::class);
+        $this->expectExceptionCode(1500062398);
+
         $this->cryptoManager->expects($this->any())
             ->method('verifySessionToken')
             ->will($this->returnValue(time() - 1));

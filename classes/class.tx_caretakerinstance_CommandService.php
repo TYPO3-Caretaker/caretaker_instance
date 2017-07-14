@@ -96,10 +96,10 @@ class tx_caretakerinstance_CommandService
                 }
                 return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be decrypted');
             }
-        } catch (Exception $exception) {
-            return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be certified (' . $exception->getMessage() . ')');
+        } catch (tx_caretakerinstance_SecurityManagerException $exception) {
+            return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be verified (' . $exception->getCode() . ': ' . $exception->getMessage() . ')');
         }
-        return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be certified');
+        return new tx_caretakerinstance_CommandResult(tx_caretakerinstance_CommandResult::status_error, null, 'The request could not be verified');
     }
 
     /**
