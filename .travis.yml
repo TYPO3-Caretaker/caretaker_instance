@@ -63,6 +63,7 @@ jobs:
   include:
     - stage: deploy to ter
       php: 7.1
+      env: TYPO3_VERSION=
       install: skip
       before_script: skip
       script:
