@@ -138,7 +138,7 @@ class tx_caretakerinstance_ServiceFactory
             if (is_array($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'])) {
                 foreach ($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'] as $key => $operationRef) {
                     if (is_string($operationRef)) {
-                        $operation = \TYPO3\CMS\Core\Utility\GeneralUtility::getUserObj($operationRef);
+                        $operation = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance($operationRef);
                     } elseif ($operationRef instanceof tx_caretakerinstance_IOperation) {
                         $operation = $operationRef;
                     }

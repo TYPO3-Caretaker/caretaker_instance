@@ -4,24 +4,24 @@
     "type": "typo3-cms-extension",
     "homepage": "https://github.com/TYPO3-Caretaker/",
     "require": {
-        "typo3/cms-core": "^6.2.14|^7.6.0"
+        "typo3/cms-core": "^6.2.14|^7.6|^8.7"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.0",
         "namelesscoder/typo3-repository-client": "^1.1",
         "nimut/testing-framework": "^1.0"
     },
+    "suggest": {
+        "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
+    },
     "autoload": {
         "classmap": [
-            "classes",
-            "services"
+            "classes/",
+            "services/"
         ]
     },
     "autoload-dev": {
         "psr-4": {
-            "Caretaker\\CaretakerInstance\\Tests\\": "Tests",
-            "TYPO3\\CMS\\Core\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/core/Tests/",
-            "TYPO3\\CMS\\Fluid\\Tests\\": ".Build/vendor/typo3/cms/typo3/sysext/fluid/Tests/"
+            "Caretaker\\CaretakerInstance\\Tests\\": "Tests/"
         }
     },
     "replace": {

@@ -21,21 +21,20 @@ $EM_CONF[$_EXTKEY] = array (
   'version' => '0.8.0',
   'constraints' => 
   array (
-    'depends' => 
+    'depends' =>
     array (
-      'typo3' => '6.2.0-7.6.99',
-      'php' => '5.3.0-0.0.0',
+      'typo3' => '6.2.0-8.7.99',
     ),
-    'conflicts' => 
+    'conflicts' =>
     array (
     ),
-    'suggests' => 
+    'suggests' =>
     array (
     ),
   ),
-  'autoload' => 
+  'autoload' =>
   array (
-    'classmap' => 
+    'classmap' =>
     array (
       0 => 'services',
       1 => 'classes',

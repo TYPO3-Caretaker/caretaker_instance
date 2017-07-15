@@ -24,6 +24,8 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  * ************************************************************* */
 
+use TYPO3\CMS\Core\SingletonInterface;
+
 /**
  * This is a file of the caretaker project.
  * http://forge.typo3.org/projects/show/extension-caretaker
@@ -45,7 +47,7 @@
  * @author Tobias Liebig <liebig@networkteam.com>
  *
  */
-class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_IOperation
+class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_IOperation, SingletonInterface
 {
     /**
      * An array of tables and table fields that should be cleared before sending.

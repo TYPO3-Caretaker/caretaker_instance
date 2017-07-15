@@ -23,6 +23,8 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\SingletonInterface;
+
 /**
  * This is a file of the caretaker project.
  * http://forge.typo3.org/projects/show/extension-caretaker
@@ -40,7 +42,7 @@
  * @author Tobias Liebig <tobias.liebig@typo3.org>
  *
  */
-class tx_caretakerinstance_Operation_GetDiskSpace implements tx_caretakerinstance_IOperation
+class tx_caretakerinstance_Operation_GetDiskSpace implements tx_caretakerinstance_IOperation, SingletonInterface
 {
     /**
      * @param array $parameter

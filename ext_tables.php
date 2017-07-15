@@ -37,4 +37,4 @@ if (!defined('TYPO3_MODE')) {
     die('Access denied.');
 }
 
-require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance') . '/ext_conf_include.php');
+require(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath('caretaker_instance') . 'ext_conf_include.php');
