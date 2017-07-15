@@ -108,7 +108,7 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
      */
     protected function checkForLatestVersion($versionString, $allowUnstable = false)
     {
-        if (strpos($versionString, '.latest') !== false || strpos($versionString, '.secure') !== false ) {
+        if (strpos($versionString, '.latest') !== false || strpos($versionString, '.secure') !== false) {
             $versionDigits = explode('.', $versionString, 3);
             $versionSource = 'TYPO3versionsSecurity';
             if (strpos($versionString, '.latest') !== false) {
