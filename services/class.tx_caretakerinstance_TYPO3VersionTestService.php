@@ -106,14 +106,15 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
      * @param bool $allowUnstable
      * @return string|bool
      */
-	protected function checkForLatestVersion($versionString, $allowUnstable = false) {
-		if (strpos($versionString, '.latest') !== false || strpos($versionString, '.secure') !== false ) {
+    protected function checkForLatestVersion($versionString, $allowUnstable = false)
+    {
+        if (strpos($versionString, '.latest') !== false || strpos($versionString, '.secure') !== false ) {
             $versionDigits = explode('.', $versionString, 3);
-			$versionSource = 'TYPO3versionsSecurity';
-			if (strpos($versionString, '.latest') !== false) {
-			    $versionSource = $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable';
+            $versionSource = 'TYPO3versionsSecurity';
+            if (strpos($versionString, '.latest') !== false) {
+                $versionSource = $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable';
             }
-			$latestVersions = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Registry')->get('tx_caretaker', $versionSource);
+            $latestVersions = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Registry')->get('tx_caretaker', $versionSource);
             $newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
             if (!$newVersionString) {
                 // try with single version number, used since TYPO3 CMS 7
