@@ -152,8 +152,8 @@ class SecurityManagerTest extends UnitTestCase
 
     public function testValidateExpiredRequest()
     {
-        $this->setExpectException('tx_caretakerinstance_SessionTokenException');
-        $this->setExpectExceptionCode(1500062206);
+        $this->setExpectedException('tx_caretakerinstance_SessionTokenException');
+        $this->setExpectedExceptionCode(1500062206);
 
         $this->cryptoManager->expects($this->once())
             ->method('verifySessionToken')
@@ -169,8 +169,8 @@ class SecurityManagerTest extends UnitTestCase
 
     public function testClientRestrictionForRequestValidation()
     {
-        $this->setExpectException('tx_caretakerinstance_ClientHostAddressRestrictionException');
-        $this->setExpectExceptionCode(1500062384);
+        $this->setExpectedException('tx_caretakerinstance_ClientHostAddressRestrictionException');
+        $this->setExpectedExceptionCode(1500062384);
 
         $this->securityManager->setClientHostAddressRestriction('192.168.10.200');
 
@@ -204,8 +204,8 @@ class SecurityManagerTest extends UnitTestCase
 
     public function testWrongSignatureDoesntValidate()
     {
-        $this->setExpectException('tx_caretakerinstance_SignaturValidationException');
-        $this->setExpectExceptionCode(1500062398);
+        $this->setExpectedException('tx_caretakerinstance_SignaturValidationException');
+        $this->setExpectedExceptionCode(1500062398);
 
         $this->cryptoManager->expects($this->any())
             ->method('verifySessionToken')
