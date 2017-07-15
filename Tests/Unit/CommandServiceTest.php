@@ -150,7 +150,7 @@ class CommandServiceTest extends UnitTestCase
 
         $this->assertFalse($result->isSuccessful());
 
-        $this->assertEquals('The request could not be certified', $result->getMessage());
+        $this->assertEquals('The request could not be verified', $result->getMessage());
     }
 
     public function testExecuteCommandDecryptionFailed()
