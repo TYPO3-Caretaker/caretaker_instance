@@ -115,10 +115,15 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
                 $versionSource = $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable';
             }
             $latestVersions = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Registry')->get('tx_caretaker', $versionSource);
-            $newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
+
+            $newVersionString = isset($latestVersions[$versionDigits[0] . '.' . $versionDigits[1]])
+                    ? $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]]
+                    : false;
             if (!$newVersionString) {
                 // try with single version number, used since TYPO3 CMS 7
-                $newVersionString = $latestVersions[$versionDigits[0]];
+                $newVersionString = isset($latestVersions[$versionDigits[0]])
+                        ? $latestVersions[$versionDigits[0]]
+                        : false;
             }
 
             if (!empty($newVersionString)) {
