@@ -72,7 +72,14 @@
 
             <label index="insecure_extension_test_errors">Fehler:</label>
             <label index="insecure_extension_test_warnings">Warnungen:</label>
-
+            <label index="find_extension_updates_test_description">Finde Extension Updates</label>
+            <label index="find_extension_updates_test_configuration"></label>
+            <label index="find_extension_updates_test_ok">Alle Extensions sind aktuell</label>
+            <label index="find_extension_updates_test_problems">###VALUE_NUM_ERRORS### Fehler und ###VALUE_NUM_WARNINGS### Warnungen</label>
+            <label index="find_extension_updates_test_detailinfo">Extension ###VALUE_EXT_KEY### ist in Version ###VALUE_EXT_VERSION### vorhanden. Aktuell ist ###VALUE_TER_VERSION###.</label>
+            <label index="find_extension_updates_test_detail_error">Fehler:</label>
+            <label index="find_extension_updates_test_detail_warning">Warnungen:</label>
+            <label index="find_extension_updates_test_detail_ok">Ok:</label>
         </languageKey>
     </data>
 </T3locallang>
