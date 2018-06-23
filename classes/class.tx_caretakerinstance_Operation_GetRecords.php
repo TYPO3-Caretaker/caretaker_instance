@@ -126,7 +126,7 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
         $value = $parameter['value'];
         $checkEnableFields = $parameter['checkEnableFields'] == true;
 
-        $this->includeTCA();
+        \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
 
         if (!isset($GLOBALS['TCA'][$table])) {
             return new tx_caretakerinstance_OperationResult(false, 'Table [' . $table . '] not found in the TCA');
@@ -206,20 +206,6 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
             return new tx_caretakerinstance_OperationResult(true, $records);
         }
         return new tx_caretakerinstance_OperationResult(false, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
-    }
-
-    /**
-     * Include TCA to load table definitions
-     *
-     * @return void
-     */
-    protected function includeTCA()
-    {
-        if (!$GLOBALS['TSFE']) {
-            // Make new instance of TSFE object for initializing user:
-            $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
-            $GLOBALS['TSFE']->includeTCA();
-        }
     }
 
     /**
