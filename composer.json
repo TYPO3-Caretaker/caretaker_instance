@@ -1,47 +1,49 @@
 {
-    "name": "caretaker/caretaker_instance",
-    "description": "TYPO3 caretaker instance",
-    "type": "typo3-cms-extension",
-    "homepage": "https://github.com/TYPO3-Caretaker/",
-    "require": {
-        "typo3/cms-core": "^6.2.14|^7.6|^8.7"
-    },
-    "require-dev": {
-        "namelesscoder/typo3-repository-client": "^1.1",
-        "nimut/testing-framework": "^1.0"
-    },
-    "suggest": {
-        "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
-    },
-    "autoload": {
-        "classmap": [
-            "classes/",
-            "services/"
-        ]
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Caretaker\\CaretakerInstance\\Tests\\": "Tests/"
-        }
-    },
-    "replace": {
-        "caretaker_instance": "self.version",
-        "typo3-ter/caretaker_instance": "self.version"
-    },
-    "config": {
-        "vendor-dir": ".Build/vendor",
-        "bin-dir": ".Build/bin"
-    },
-    "scripts": {
-        "post-autoload-dump": [
-            "mkdir -p .Build/Web/typo3conf/ext/",
-            "[ -L .Build/Web/typo3conf/ext/caretaker_instance ] || ln -snvf ../../../../. .Build/Web/typo3conf/ext/caretaker_instance"
-        ]
-    },
-    "extra": {
-        "typo3/cms": {
-            "cms-package-dir": "{$vendor-dir}/typo3/cms",
-            "web-dir": ".Build/Web"
-        }
+  "name": "caretaker/caretaker_instance",
+  "description": "TYPO3 caretaker instance",
+  "type": "typo3-cms-extension",
+  "homepage": "https://github.com/TYPO3-Caretaker/",
+  "require": {
+    "typo3/cms-core": "^6.2.14|^7.6|^8.7"
+  },
+  "require-dev": {
+    "namelesscoder/typo3-repository-client": "^1.1",
+    "nimut/testing-framework": "^1.0"
+  },
+  "suggest": {
+    "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
+  },
+  "autoload": {
+    "classmap": [
+      "classes/",
+      "services/"
+    ]
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Caretaker\\CaretakerInstance\\Tests\\": "Tests/"
     }
+  },
+  "replace": {
+    "caretaker_instance": "self.version",
+    "typo3-ter/caretaker_instance": "self.version"
+  },
+  "config": {
+    "vendor-dir": ".Build/vendor"
+  },
+  "scripts": {
+    "test:phpunit": "TYPO3_PATH_ROOT=$PWD/.Build/public/  .Build/vendor/bin/phpunit -c .Build/vendor/nimut/testing-framework/res/Configuration/UnitTests.xml Tests/Unit/",
+    "test:phplint": "find . -name \\*.php ! -path \"./.Build/*\" | parallel --gnu php -d display_errors=stderr -l {} > /dev/null \\;",
+    "post-autoload-dump": [
+      "@php -r 'is_dir($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/\") || mkdir($extFolder, 0777, true);'",
+      "@php -r 'file_exists($extFolder=__DIR__.\"/.Build/public/typo3conf/ext/caretaker_instance\") || symlink(__DIR__,$extFolder);'"
+    ]
+  },
+  "extra": {
+    "typo3/cms": {
+      "extension-key": "caretaker_instance",
+      "cms-package-dir": "{$vendor-dir}/typo3/cms",
+      "web-dir": ".Build/public"
+    }
+  }
 }
