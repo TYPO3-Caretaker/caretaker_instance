@@ -233,8 +233,8 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 
                 return;
             }
-                // handle error
-                $handling = $this->getStatusOfUpdatableExtensions();
+            // handle error
+            $handling = $this->getStatusOfUpdatableExtensions();
             switch ($handling) {
                     // Warning
                     case 1:
