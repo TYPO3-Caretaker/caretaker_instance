@@ -112,9 +112,7 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
         $timestamp = $this->cryptoManager->verifySessionToken($sessionToken, $this->privateKey);
         if ((time() - $timestamp) > $this->sessionTokenExpiration) {
             throw new tx_caretakerinstance_SessionTokenException('Session token expired', 1500062206);
-        } elseif (strlen($this->clientHostAddressRestriction) &&
-            $commandRequest->getClientHostAddress() != $this->clientHostAddressRestriction
-        ) {
+        } elseif (!$this->isClientHostAddressValid($commandRequest->getClientHostAddress())) {
             throw new tx_caretakerinstance_ClientHostAddressRestrictionException('Client IP address is not allowed', 1500062384);
         } elseif (!$this->cryptoManager->verifySignature(
             $commandRequest->getDataForSignature(),
@@ -161,13 +159,10 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
      */
     public function createSessionToken($clientHostAddress)
     {
-        if (strlen($this->clientHostAddressRestriction) &&
-            $clientHostAddress != $this->clientHostAddressRestriction
-        ) {
-            return false;
+        if ($this->isClientHostAddressValid($clientHostAddress)) {
+            return $this->cryptoManager->createSessionToken(time(), $this->privateKey);
         }
-
-        return $this->cryptoManager->createSessionToken(time(), $this->privateKey);
+        return false;
     }
 
     /**
@@ -271,5 +266,16 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
     public function decodeResult($encryptedData)
     {
         return $this->cryptoManager->decrypt($encryptedData, $this->privateKey);
+    }
+
+    /**
+     * @param string $clientHostAddress
+     * @return bool
+     */
+    private function isClientHostAddressValid($clientHostAddress) {
+        if(strlen($this->clientHostAddressRestriction) && $clientHostAddress != $this->clientHostAddressRestriction) {
+            return false;
+        }
+        return true;
     }
 }
