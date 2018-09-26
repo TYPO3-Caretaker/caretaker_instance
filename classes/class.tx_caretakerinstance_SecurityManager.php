@@ -279,8 +279,17 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
         }
         $clientHostRestrictionAddresses = array_map('trim', explode(',', $this->clientHostAddressRestriction));
         foreach ($clientHostRestrictionAddresses as $clientHostAddressRestriction) {
-            if ($clientHostAddress == $clientHostAddressRestriction) {
-                return true;
+            if (filter_var($clientHostAddressRestriction, FILTER_VALIDATE_IP)) {
+                if ($clientHostAddress == $clientHostAddressRestriction) {
+                    return true;
+                }
+            } else {
+                $hostAccessRestrictions = gethostbynamel($clientHostAddressRestriction . '.');
+                foreach ($hostAccessRestrictions as $hostAccessRestriction) {
+                    if ($clientHostAddress == $hostAccessRestriction) {
+                        return true;
+                    }
+                }
             }
         }
         return false;
