@@ -272,10 +272,17 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
      * @param string $clientHostAddress
      * @return bool
      */
-    private function isClientHostAddressValid($clientHostAddress) {
-        if(strlen($this->clientHostAddressRestriction) && $clientHostAddress != $this->clientHostAddressRestriction) {
-            return false;
+    private function isClientHostAddressValid($clientHostAddress)
+    {
+        if (!strlen($this->clientHostAddressRestriction)) {
+            return true;
         }
-        return true;
+        $clientHostRestrictionAddresses = array_map('trim', explode(',', $this->clientHostAddressRestriction));
+        foreach ($clientHostRestrictionAddresses as $clientHostAddressRestriction) {
+            if ($clientHostAddress == $clientHostAddressRestriction) {
+                return true;
+            }
+        }
+        return false;
     }
 }
