@@ -1,7 +1,7 @@
 <?php
 namespace Caretaker\CaretakerInstance\Tests\Unit;
 
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /***************************************************************
  * Copyright notice
@@ -83,7 +83,9 @@ class OperationManagerTest extends UnitTestCase
     {
         $operationManager = new \tx_caretakerinstance_OperationManager();
 
-        $operation = $this->getMock('\tx_caretakerinstance_IOperation', array('execute'));
+        $operation = $this->getMockBuilder('tx_caretakerinstance_IOperation')
+            ->setMethods(array('execute'))
+            ->getMock();
         $operation->expects($this->once())
             ->method('execute')
             ->with($this->equalTo(array('foo' => 'bar')))
