@@ -83,7 +83,9 @@ class OperationManagerTest extends UnitTestCase
     {
         $operationManager = new \tx_caretakerinstance_OperationManager();
 
-        $operation = $this->getMock('\tx_caretakerinstance_IOperation', array('execute'));
+        $operation = $this->getMockBuilder('tx_caretakerinstance_IOperation')
+            ->setMethods(array('execute'))
+            ->getMock();
         $operation->expects($this->once())
             ->method('execute')
             ->with($this->equalTo(array('foo' => 'bar')))

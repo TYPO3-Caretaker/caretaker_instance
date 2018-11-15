@@ -63,7 +63,8 @@ class SecurityManagerTest extends UnitTestCase
 
     public function setUp()
     {
-        $this->cryptoManager = $this->getMock('\tx_caretakerinstance_ICryptoManager');
+        $this->cryptoManager = $this->getMockBuilder('tx_caretakerinstance_ICryptoManager')
+            ->getMock();
 
         $this->securityManager = new \tx_caretakerinstance_SecurityManager($this->cryptoManager);
         $this->securityManager->setPrivateKey('FakePrivateKey');

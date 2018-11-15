@@ -48,10 +48,9 @@ class ServicesTest extends UnitTestCase
     public function testFindInsecureExtensionCommand()
     {
         $this->markTestSkipped();
-        $stub = $this->getMock(
-            '\tx_caretakerinstance_FindInsecureExtensionTestService',
-            array('getLocationList', 'executeRemoteOperations', 'checkExtension')
-        );
+        $stub = $this->getMockBuilder('tx_caretakerinstance_FindInsecureExtensionTestService')
+            ->setMethods(array('getLocationList', 'executeRemoteOperations', 'checkExtension'))
+            ->getMock();
 
         $stub->expects($this->once())
             ->method('getLocationList')
@@ -111,10 +110,9 @@ class ServicesTest extends UnitTestCase
     {
         $this->markTestSkipped();
 
-        $stub = $this->getMock(
-            '\tx_caretakerinstance_FindInsecureExtensionTestService',
-            array('getConfigValue')
-        );
+        $stub = $this->getMockBuilder('tx_caretakerinstance_FindInsecureExtensionTestService')
+            ->setMethods(array('getConfigValue'))
+            ->getMock();
 
         $stub->expects($this->once())
             ->method('getConfigValue')

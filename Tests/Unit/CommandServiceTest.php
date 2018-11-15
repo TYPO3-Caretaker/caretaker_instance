@@ -68,10 +68,12 @@ class CommandServiceTest extends UnitTestCase
 
     public function setUp()
     {
-        $this->operationManager = $this->getMock('\tx_caretakerinstance_OperationManager',
-            array('executeOperation'));
+        $this->operationManager = $this->getMockBuilder('tx_caretakerinstance_OperationManager')
+            ->setMethods(array('executeOperation'))
+            ->getMock();
 
-        $this->securityManager = $this->getMock('\tx_caretakerinstance_ISecurityManager');
+        $this->securityManager = $this->getMockBuilder('tx_caretakerinstance_ISecurityManager')
+            ->getMock();
 
         $this->commandService = new \tx_caretakerinstance_CommandService(
             $this->operationManager, $this->securityManager);
