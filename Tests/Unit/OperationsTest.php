@@ -2,7 +2,7 @@
 namespace Caretaker\CaretakerInstance\Tests\Unit;
 
 use Caretaker\CaretakerInstance\Tests\Unit\Fixtures\DummyOperation;
-use TYPO3\CMS\Core\Tests\UnitTestCase;
+use Nimut\TestingFramework\TestCase\UnitTestCase;
 
 /***************************************************************
  * Copyright notice

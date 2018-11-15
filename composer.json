@@ -8,7 +8,7 @@
   },
   "require-dev": {
     "namelesscoder/typo3-repository-client": "^1.1",
-    "nimut/testing-framework": "^1.0"
+    "nimut/testing-framework": "^2.0"
   },
   "suggest": {
     "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
