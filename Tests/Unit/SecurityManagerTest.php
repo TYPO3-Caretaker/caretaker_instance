@@ -151,10 +151,13 @@ class SecurityManagerTest extends UnitTestCase
         $this->assertTrue($this->securityManager->validateRequest($this->commandRequest));
     }
 
+    /**
+     * @expectedException \tx_caretakerinstance_SessionTokenException
+     *@expectedExceptionMessage Session token expired
+     * @expectedExceptionCode 1500062206
+     */
     public function testValidateExpiredRequest()
     {
-        $this->setExpectedException('tx_caretakerinstance_SessionTokenException', 'Session token expired', 1500062206);
-
         $this->cryptoManager->expects($this->once())
             ->method('verifySessionToken')
             ->with($this->equalTo('12345:abcdefg'), $this->equalTo('FakePrivateKey'))
@@ -167,10 +170,13 @@ class SecurityManagerTest extends UnitTestCase
         $this->securityManager->validateRequest($this->commandRequest);
     }
 
+    /**
+     * @expectedException \tx_caretakerinstance_ClientHostAddressRestrictionException
+     * @expectedExceptionMessage Client IP address is not allowed
+     * @expectedExceptionCode 1500062384
+     */
     public function testClientRestrictionForRequestValidation()
     {
-        $this->setExpectedException('tx_caretakerinstance_ClientHostAddressRestrictionException', 'Client IP address is not allowed', 1500062384);
-
         $this->securityManager->setClientHostAddressRestriction('192.168.10.200');
 
         $this->cryptoManager->expects($this->once())
@@ -201,10 +207,13 @@ class SecurityManagerTest extends UnitTestCase
         $this->assertTrue($this->securityManager->validateRequest($this->commandRequest));
     }
 
+    /**
+     * @expectedException \tx_caretakerinstance_SignaturValidationException
+     * @expectedExceptionMessage Signature didn't verify
+     * @expectedExceptionCode 1500062398
+     */
     public function testWrongSignatureDoesntValidate()
     {
-        $this->setExpectedException('tx_caretakerinstance_SignaturValidationException', 'Signature didn\'t verify', 1500062398);
-
         $this->cryptoManager->expects($this->any())
             ->method('verifySessionToken')
             ->will($this->returnValue(time() - 1));
