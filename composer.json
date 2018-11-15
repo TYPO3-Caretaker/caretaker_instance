@@ -7,7 +7,6 @@
     "typo3/cms-core": "^6.2.14|^7.6|^8.7"
   },
   "require-dev": {
-    "namelesscoder/typo3-repository-client": "^1.1",
     "nimut/testing-framework": "^2.0"
   },
   "suggest": {
