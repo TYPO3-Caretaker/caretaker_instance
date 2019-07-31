@@ -80,18 +80,19 @@ jobs:
       dist: precise
       php: 5.3
       env: TYPO3_VERSION=^6.2
-    - stage: deploy to ter
-      if: tag IS present AND env(TYPO3_ORG_USERNAME) IS present AND env(TYPO3_ORG_PASSWORD) IS present
-      php: 7.1
-      env: TYPO3_VERSION=
+    - stage: 🚢 to TER
+      if: tag IS present
+      php: 7.0
       install: skip
       before_script: skip
       script:
-        - >
-          echo "Preparing upload of release ${TRAVIS_TAG} to TER";
-          composer global require helhum/ter-client;
-
-        - >
-          TAG_MESSAGE=`git tag -n10 -l $TRAVIS_TAG | sed 's/^[0-9.]*[ ]*//g'`;
-          echo "Uploading release ${TRAVIS_TAG} to TER";
-          $HOME/.composer/vendor/bin/ter-client upload caretaker_instance . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE";
+        - |
+          if [ -n "$TYPO3_ORG_USERNAME" ] && [ -n "$TYPO3_ORG_PASSWORD" ]; then
+            echo -e "Preparing upload of release ${TRAVIS_TAG} to TER\n";
+            # Install ter client
+            composer global require helhum/ter-client
+            # Upload
+            TAG_MESSAGE=`git tag -n10 -l $TRAVIS_TAG | sed 's/^[0-9.]*[ ]*//g'`
+            echo "Uploading release ${TRAVIS_TAG} to TER"
+            $HOME/.composer/vendor/bin/ter-client upload caretaker_instance . -u "$TYPO3_ORG_USERNAME" -p "$TYPO3_ORG_PASSWORD" -m "$TAG_MESSAGE"
+          fi;
