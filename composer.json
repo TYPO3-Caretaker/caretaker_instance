@@ -4,10 +4,10 @@
   "type": "typo3-cms-extension",
   "homepage": "https://github.com/TYPO3-Caretaker/",
   "require": {
-    "typo3/cms-core": "^6.2.14 || ^7.6 || ^8.7"
+    "typo3/cms-core": "^7.6 || ^8.7"
   },
   "require-dev": {
-    "nimut/testing-framework": "^2.0 || ^4.0"
+    "nimut/testing-framework": "^4.0"
   },
   "suggest": {
     "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"

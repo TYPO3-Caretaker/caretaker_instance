@@ -18,12 +18,7 @@ before_install:
 before_script:
   - |
     set -e
-    if [[ "$TYPO3_VERSION" == "^6.2" ]]; then
-      composer require typo3/cms-composer-installers="1.2.5 as 1.1.4" --no-update;
-      composer require typo3/cms "$TYPO3_VERSION";
-    else
-      composer require nimut/typo3-complete "$TYPO3_VERSION";
-    fi
+    composer require nimut/typo3-complete "$TYPO3_VERSION";
     git checkout composer.json;
     export TYPO3_PATH_WEB=$PWD/.Build/public;
 
@@ -62,21 +57,6 @@ jobs:
       dist: trusty
       php: 5.5
       env: TYPO3_VERSION=^7.6
-    - stage: test
-      php: 5.6
-      env: TYPO3_VERSION=^6.2
-    - stage: test
-      dist: trusty
-      php: 5.5
-      env: TYPO3_VERSION=^6.2
-    - stage: test
-      dist: trusty
-      php: 5.4
-      env: TYPO3_VERSION=^6.2
-    - stage: test
-      dist: precise
-      php: 5.3
-      env: TYPO3_VERSION=^6.2
     - stage: 🚢 to TER
       if: tag IS present
       php: 7.0
