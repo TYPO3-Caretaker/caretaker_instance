@@ -1,4 +1,4 @@
-# ![LOGO](ext_icon.gif) TYPO3 Extension caretaker_instance
+# TYPO3 Extension caretaker_instance
 
 [![TYPO3](https://img.shields.io/badge/TYPO3-8.7--9.5-orange.svg?style=flat-square)](https://extensions.typo3.org/extension/caretaker_instance/)
 [![Build Status](https://travis-ci.org/TYPO3-Caretaker/caretaker_instance.svg?branch=master)](https://travis-ci.org/TYPO3-Caretaker/caretaker_instance)
