@@ -7,5 +7,5 @@ crypto.instance.privateKey =
 # cat=basic/enable; type=string; label= Public key of the caretaker server : Required for Secure Communication with the caretaker Server. This key will encrypt the answers to the Caretaker server to ensure Privacy.
 crypto.client.publicKey =
 
-# cat=basic/enable; type=string; label= Optional - Caretaker Server Host host address : Restrict caretaker access to this IP address (should be the caretaker server address)
+# cat=basic/enable; type=string; label= Optional - Caretaker Server Host host address : Restrict caretaker access to this IP address or hostname (should be the caretaker server). You can add a single IP address / hostname or more as a comma separated list.
 security.clientHostAddressRestriction =
