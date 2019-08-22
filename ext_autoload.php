@@ -20,7 +20,6 @@ return array(
     'tx_caretakerinstance_dummyoperation' => $extensionPath . 'tests/fixtures/class.tx_caretakerinstance_DummyOperation.php',
     'tx_caretakerinstance_extensiontestservice' => $extensionPath . 'services/class.tx_caretakerinstance_ExtensionTestService.php',
     'tx_caretakerinstance_extensiontestservicetest' => $extensionPath . 'tests/class.tx_caretakerinstance_ExtensionTestServiceTest.php',
-    'tx_caretakerinstance_findblacklistedbepasswordtestservice' => $extensionPath . 'services/class.tx_caretakerinstance_FindBlacklistedBePasswordTestService.php',
     'tx_caretakerinstance_findextensionupdatestestservice' => $extensionPath . 'services/class.tx_caretakerinstance_FindExtensionUpdatesTestService.php',
     'tx_caretakerinstance_findinsecureextensiontestservice' => $extensionPath . 'services/class.tx_caretakerinstance_FindInsecureExtensionTestService.php',
     'tx_caretakerinstance_icryptomanager' => $extensionClassesPath . 'class.tx_caretakerinstance_ICryptoManager.php',

@@ -115,7 +115,6 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
      * SELECT * FROM be_users WHERE password IN (SELECT password from be_users WHERE deleted = 0 AND disable = 0 GROUP BY password HAVING COUNT(*) >1);
      * </code>
      *
-     * @example ../services/class.tx_caretakerinstance_FindBlacklistedBePasswordTestService.php This class tests if there are duplicate passwords, besides checking for the presence of blacklisted passwords.
      * @param array $parameter A table 'table', field name 'field' and the value 'value' to find the record
      * @return tx_caretakerinstance_OperationResult A set of records as an array or FALSE if no record was found
      */
