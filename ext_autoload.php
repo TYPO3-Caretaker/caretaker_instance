@@ -34,7 +34,6 @@ return array(
     'tx_caretakerinstance_operation_getfilesystemchecksum' => $extensionClassesPath . 'class.tx_caretakerinstance_Operation_GetFilesystemChecksum.php',
     'tx_caretakerinstance_operation_getphpversion' => $extensionClassesPath . 'class.tx_caretakerinstance_Operation_GetPHPVersion.php',
     'tx_caretakerinstance_operation_getrecord' => $extensionClassesPath . 'class.tx_caretakerinstance_Operation_GetRecord.php',
-    'tx_caretakerinstance_operation_getrecords' => $extensionClassesPath . 'class.tx_caretakerinstance_Operation_GetRecords.php',
     'tx_caretakerinstance_operation_gettypo3version' => $extensionClassesPath . 'class.tx_caretakerinstance_Operation_GetTYPO3Version.php',
     'tx_caretakerinstance_operation_matchpredefinedvariable' => $extensionClassesPath . 'class.tx_caretakerinstance_Operation_MatchPredefinedVariable.php',
     'tx_caretakerinstance_operationmanager' => $extensionClassesPath . 'class.tx_caretakerinstance_OperationManager.php',
