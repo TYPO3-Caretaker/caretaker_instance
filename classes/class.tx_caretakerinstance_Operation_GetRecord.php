@@ -23,7 +23,12 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use Doctrine\DBAL\Driver\Statement;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Utility\EidUtility;
 
 /**
  * This is a file of the caretaker project.
@@ -72,7 +77,7 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
         $field = $parameter['field'];
         $value = $parameter['value'];
         $checkEnableFields = $parameter['checkEnableFields'] == true;
-        \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
+        EidUtility::initTCA();
         if (!isset($GLOBALS['TCA'][$table])) {
             return new tx_caretakerinstance_OperationResult(false, 'Table [' . $table . '] not found in the TCA');
         }
@@ -80,13 +85,20 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
             return new tx_caretakerinstance_OperationResult(false, 'Field [' . $field . '] of table [' . $table . '] not found in the TCA');
         }
 
-        $result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-            '*',
-            $table,
-            $field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
+        /** @var QueryBuilder $queryBuilder */
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
+        if (!$checkEnableFields) {
+            $queryBuilder->getRestrictions()->removeAll();
+        }
 
-        if ($result) {
-            $record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result);
+        /** @var Statement $statement */
+        $statement = $queryBuilder->select('*')
+            ->from($table)
+            ->where($queryBuilder->expr()->eq($field, $queryBuilder->createNamedParameter($value)))
+            ->execute();
+
+        if (!$statement->errorInfo()) {
+            $record = $statement->fetch();
             if ($record !== false) {
                 if (isset($this->protectedFieldsByTable[$table])) {
                     $protectedFields = $this->protectedFieldsByTable[$table];
@@ -99,7 +111,9 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
             }
             return new tx_caretakerinstance_OperationResult(true, false);
         }
-        return new tx_caretakerinstance_OperationResult(false, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
+        return new tx_caretakerinstance_OperationResult(
+            false,
+            'Error when executing SQL: [' . $statement->errorInfo() . ']');
     }
 
     /**
@@ -111,51 +125,8 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
     {
         if (!$GLOBALS['TSFE']) {
             // Make new instance of TSFE object for initializing user:
-            $GLOBALS['TSFE'] = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
+            $GLOBALS['TSFE'] = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
             $GLOBALS['TSFE']->includeTCA();
         }
-    }
-
-    /**
-     * A simplified enableFields function (partially copied from sys_page) that
-     * can be used without a full TSFE environment. It doesn't / can't check
-     * fe_group constraints or custom hooks.
-     *
-     * @param $table
-     * @return string The query to append
-     */
-    public function enableFields($table)
-    {
-        $ctrl = $GLOBALS['TCA'][$table]['ctrl'];
-        $query = '';
-        if (is_array($ctrl)) {
-            // Delete field check:
-            if ($ctrl['delete']) {
-                $query .= ' AND ' . $table . '.' . $ctrl['delete'] . ' = 0';
-            }
-
-            // Filter out new place-holder records in case we are NOT in a versioning preview (that means we are online!)
-            if ($ctrl['versioningWS']) {
-                $query .= ' AND ' . $table . '.t3ver_state <= 0'; // Shadow state for new items MUST be ignored!
-            }
-
-            // Enable fields:
-            if (is_array($ctrl['enablecolumns'])) {
-                if ($ctrl['enablecolumns']['disabled']) {
-                    $field = $table . '.' . $ctrl['enablecolumns']['disabled'];
-                    $query .= ' AND ' . $field . ' = 0';
-                }
-                if ($ctrl['enablecolumns']['starttime']) {
-                    $field = $table . '.' . $ctrl['enablecolumns']['starttime'];
-                    $query .= ' AND (' . $field . ' <= ' . time() . ')';
-                }
-                if ($ctrl['enablecolumns']['endtime']) {
-                    $field = $table . '.' . $ctrl['enablecolumns']['endtime'];
-                    $query .= ' AND (' . $field . ' = 0 OR ' . $field . ' > ' . time() . ')';
-                }
-            }
-        }
-
-        return $query;
     }
 }
