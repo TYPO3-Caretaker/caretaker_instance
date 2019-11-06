@@ -4,7 +4,10 @@
   "type": "typo3-cms-extension",
   "homepage": "https://github.com/TYPO3-Caretaker/",
   "require": {
-    "typo3/cms-core": "^8.7 || ^9.5"
+    "typo3/cms-core": "^8.7 || ^9.5",
+    "ext-json": "*",
+    "ext-openssl": "*",
+    "ext-curl": "*"
   },
   "require-dev": {
     "nimut/testing-framework": "^4.0"
