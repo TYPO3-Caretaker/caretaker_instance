@@ -5,7 +5,10 @@
   "homepage": "https://github.com/TYPO3-Caretaker/",
   "license": "GPL-2.0",
   "require": {
-    "typo3/cms-core": "^8.7 || ^9.5"
+    "typo3/cms-core": "^8.7 || ^9.5",
+    "ext-json": "*",
+    "ext-openssl": "*",
+    "ext-curl": "*"
   },
   "require-dev": {
     "nimut/testing-framework": "^4.0"
@@ -25,7 +28,6 @@
     }
   },
   "replace": {
-    "caretaker_instance": "self.version",
     "typo3-ter/caretaker_instance": "self.version"
   },
   "config": {
