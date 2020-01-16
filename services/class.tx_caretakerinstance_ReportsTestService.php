@@ -12,13 +12,13 @@ class tx_caretakerinstance_ReportsTestService extends tx_caretakerinstance_Remot
     public function runTest()
     {
         if (!ExtensionManagementUtility::isLoaded('reports')) {
-            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, "Missing SYSEXT reports!");
+            return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_undefined, 0, 'Missing SYSEXT reports!');
         }
         /** @var \TYPO3\CMS\Reports\Report\Status\Status $statusReport */
         $statusReport = GeneralUtility::makeInstance(\TYPO3\CMS\Reports\Report\Status\Status::class);
         $systemStatus = $statusReport->getSystemStatus();
         $highestSeverity = $statusReport->getHighestSeverity($systemStatus);
-        if($highestSeverity > Status::OK) {
+        if ($highestSeverity > Status::OK) {
             foreach ($systemStatus as $statusProvider) {
                 /** @var Status $status */
                 foreach ($statusProvider as $status) {
@@ -35,11 +35,11 @@ class tx_caretakerinstance_ReportsTestService extends tx_caretakerinstance_Remot
                     CRLF . str_replace(
                         '[WARN]',
                         '⚠️',
-                        str_replace('[ERR]', '❌', implode("", $systemIssues)))
+                        str_replace('[ERR]', '❌', implode('', $systemIssues)))
                 );
             }
         }
 
-        return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, "OK!");
+        return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, 'OK!');
     }
 }
