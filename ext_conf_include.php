@@ -49,4 +49,5 @@ if (\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded('caretaker')) {
     tx_caretakerinstance_ServiceHelper::registerCaretakerTestService($_EXTKEY, 'services', 'tx_caretakerinstance_CheckPath', 'FILE -> Check path', 'Checks for some path stats');
     tx_caretakerinstance_ServiceHelper::registerCaretakerTestService($_EXTKEY, 'services', 'tx_caretakerinstance_DiskSpace', 'Disk Space', 'Check for disk space');
     tx_caretakerinstance_ServiceHelper::registerCaretakerTestService($_EXTKEY, 'services', 'tx_caretakerinstance_Reports', 'TYPO3 -> Reports', 'Check for TYPO3 Reports');
+    tx_caretakerinstance_ServiceHelper::registerCaretakerTestService($_EXTKEY, 'services', 'tx_caretakerinstance_BlacklistedRecords', 'TYPO3 -> Check blacklisted records', 'Find unwanted records');
 }

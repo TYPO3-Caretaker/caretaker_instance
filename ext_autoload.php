@@ -55,5 +55,6 @@ return array(
     'tx_caretakerinstance_servicestest' => $extensionPath . 'tests/class.tx_caretakerinstance_ServicesTest.php',
     'tx_caretakerinstance_typo3versiontestservice' => $extensionPath . 'services/class.tx_caretakerinstance_TYPO3VersionTestService.php',
     'tx_caretakerinstance_typo3versiontestservicetest' => $extensionPath . 'tests/class.tx_caretakerinstance_TYPO3VersionTestServiceTest.php',
-    'tx_caretakerinstance_ReportsTestService' => $extensionPath . 'tests/class.tx_caretakerinstance_ReportsTestService.php'
+    'tx_caretakerinstance_ReportsTestService' => $extensionPath . 'tests/class.tx_caretakerinstance_ReportsTestService.php',
+    'tx_caretakerinstance_BlacklistedRecordsTestService' => $extensionPath . 'services/class.tx_caretakerinstance_BlacklistedRecordsTestService.php',
 );
