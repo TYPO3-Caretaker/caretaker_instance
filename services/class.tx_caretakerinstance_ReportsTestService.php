@@ -30,7 +30,7 @@ class tx_caretakerinstance_ReportsTestService extends tx_caretakerinstance_Remot
             }
             if (isset($systemIssues)) {
                 return tx_caretaker_TestResult::create(
-                    $highestSeverity,
+                    ($highestSeverity == Status::WARNING) ? (int) $this->getConfigValue('status_of_reports') : $highestSeverity,
                     0,
                     CRLF . str_replace(
                         '[WARN]',

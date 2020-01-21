@@ -9,7 +9,29 @@
         </TCEforms>
         <type>array</type>
         <el>
-
+            <status_of_reports>
+                <TCEforms>
+                    <label>Status of warning TYPO3 reports</label>
+                    <config>
+                        <type>select</type>
+                        <items>
+                            <numIndex index="0">
+                                <numIndex index="0">OK</numIndex>
+                                <numIndex index="1">0</numIndex>
+                            </numIndex>
+                            <numIndex index="1">
+                                <numIndex index="0">Warning</numIndex>
+                                <numIndex index="1">1</numIndex>
+                            </numIndex>
+                            <numIndex index="2">
+                                <numIndex index="0">Error</numIndex>
+                                <numIndex index="1">2</numIndex>
+                            </numIndex>
+                        </items>
+                        <default>1</default>
+                    </config>
+                </TCEforms>
+            </status_of_reports>
         </el>
     </ROOT>
 </T3DataStructure>
