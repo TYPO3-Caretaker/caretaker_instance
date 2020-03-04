@@ -23,6 +23,7 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
 
 /**
@@ -145,7 +146,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
                 list($checksum, $md5sOfSubfolder) = $this->getFolderChecksum($path . '/' . $entry);
                 $md5s = array_merge($md5s, $md5sOfSubfolder);
             } else {
-                $relPath = str_replace(PATH_site, '', $path . '/' . $entry);
+                $relPath = str_replace(Environment::getPublicPath() . '/', '', $path . '/' . $entry);
                 $md5s[$relPath] = $this->getFileChecksum($path . '/' . $entry);
             }
         }

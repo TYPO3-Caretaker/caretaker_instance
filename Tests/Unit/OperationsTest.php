@@ -3,6 +3,7 @@ namespace Caretaker\CaretakerInstance\Tests\Unit;
 
 use Caretaker\CaretakerInstance\Tests\Unit\Fixtures\DummyOperation;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Core\Environment;
 
 /***************************************************************
  * Copyright notice
@@ -105,7 +106,7 @@ class OperationsTest extends UnitTestCase
         $this->fail('test runs indefinitely');
         $operation = new \tx_caretakerinstance_Operation_GetFilesystemChecksum();
 
-        $result = $operation->execute(array('path' => PATH_site . '../../'));
+        $result = $operation->execute(array('path' => Environment::getPublicPath() . '/../../'));
 
         $this->assertFalse($result->isSuccessful());
     }
