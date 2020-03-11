@@ -85,15 +85,15 @@ class ext_update
     /**
      * Writes the extension's configuration (version for TYPO3 CMS 6.0+)
      *
-     * @param $extensionConfiguration
+     * @param $extensionConfigurationValue
      * @return void
      */
-    protected function writeExtensionConfiguration($extensionConfiguration)
+    protected function writeExtensionConfiguration($extensionConfigurationValue)
     {
-        /** @var $configurationManager \TYPO3\CMS\Core\Configuration\ConfigurationManager */
-        $configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Configuration\\ConfigurationManager');
-        $configurationManager->setLocalConfigurationValueByPath('EXT/extConf/caretaker_instance', serialize($extensionConfiguration));
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::removeCacheFiles();
+        /** @var $extensionConfiguration \TYPO3\CMS\Core\Configuration\ExtensionConfiguration */
+        $extensionConfiguration = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance(
+            \TYPO3\CMS\Core\Configuration\ExtensionConfiguration::class);
+        $extensionConfiguration->set('caretaker_instance', '', $extensionConfigurationValue);
     }
 
     /**
