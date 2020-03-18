@@ -133,7 +133,3 @@ abstract class tx_caretakerinstance_RemoteTestServiceBase extends tx_caretaker_T
         return true;
     }
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretakerinstance_RemoteTestServiceBase.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretakerinstance_RemoteTestServiceBase.php']);
-}

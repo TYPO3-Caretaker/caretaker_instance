@@ -28,6 +28,7 @@ use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\QueryBuilder;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
 /**
  * This is a file of the caretaker project.
@@ -123,7 +124,7 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
     {
         if (!$GLOBALS['TSFE']) {
             // Make new instance of TSFE object for initializing user:
-            $GLOBALS['TSFE'] = GeneralUtility::makeInstance('TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController', $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
+            $GLOBALS['TSFE'] = GeneralUtility::makeInstance(TypoScriptFrontendController::class, $GLOBALS['TYPO3_CONF_VARS'], 0, 0);
             $GLOBALS['TSFE']->includeTCA();
         }
     }

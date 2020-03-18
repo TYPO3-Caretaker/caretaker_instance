@@ -85,7 +85,7 @@ class tx_caretakerinstance_OperationResult
     }
 
     /**
-     * @return The Operation Result as an array
+     * @return array The Operation Result as an array
      */
     public function toArray()
     {

@@ -25,6 +25,7 @@
 
 use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * This is a file of the caretaker project.
@@ -52,7 +53,7 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
      * Get the file / folder checksum of a given path
      *
      * @param array $parameter Path to a file or folder
-     * @return The checksum of the given folder or file
+     * @return tx_caretakerinstance_OperationResult The checksum of the given folder or file
      */
     public function execute($parameter = array())
     {
@@ -102,8 +103,8 @@ class tx_caretakerinstance_Operation_GetFilesystemChecksum implements tx_caretak
         }
 
         // getFileAbsFileName can't handle directory path with trailing / correctly
-        $path = \TYPO3\CMS\Core\Utility\GeneralUtility::getFileAbsFileName($path);
-        if (\TYPO3\CMS\Core\Utility\GeneralUtility::isAllowedAbsPath($path)) {
+        $path = GeneralUtility::getFileAbsFileName($path);
+        if (GeneralUtility::isAllowedAbsPath($path)) {
             return $path;
         }
         return false;
