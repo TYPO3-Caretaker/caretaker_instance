@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.0.0] - 2020-03-18
+
+### Added
+- Support for TYPO3 v10
+
+### Removed
+- Support for TYPO3 v8
+
 ## [2.1.0] - 2020-01-29
 
 ### Added
@@ -32,6 +40,7 @@ All notable changes to this project will be documented in this file.
 - Check for blacklisted backend passwords ([#70])
 - GIF extension icon
 
+[3.0.0]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.0.0...3.0.0
 [2.0.0]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/1.0.0...2.0.0
 [2.0.1]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.0.0...2.0.1
 [2.1.0]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.0.1...2.1.0
