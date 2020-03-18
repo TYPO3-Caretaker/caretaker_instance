@@ -23,7 +23,9 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Information\Typo3Version;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * This is a file of the caretaker project.
@@ -49,10 +51,13 @@ class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinst
 {
     /**
      * @param array $parameter None
-     * @return the current PHP version
+     * @return tx_caretakerinstance_OperationResult the current PHP version
      */
     public function execute($parameter = array())
     {
-        return new tx_caretakerinstance_OperationResult(true, TYPO3_version);
+        if (defined('TYPO3_version')) {
+            return new tx_caretakerinstance_OperationResult(true, TYPO3_version);
+        }
+        return new tx_caretakerinstance_OperationResult(true, GeneralUtility::makeInstance(Typo3Version::class)->getVersion());
     }
 }

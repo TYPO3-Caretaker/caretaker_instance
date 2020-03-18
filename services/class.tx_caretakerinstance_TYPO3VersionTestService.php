@@ -23,6 +23,9 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Registry;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * This is a file of the caretaker project.
  * http://forge.typo3.org/projects/show/extension-caretaker
@@ -110,7 +113,7 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
     {
         if (strpos($versionString, '.latest') !== false) {
             $versionDigits = explode('.', $versionString, 3);
-            $latestVersions = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\CMS\Core\Registry')->get('tx_caretaker', $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable');
+            $latestVersions = GeneralUtility::makeInstance(Registry::class)->get('tx_caretaker', $allowUnstable ? 'TYPO3versions' : 'TYPO3versionsStable');
             $newVersionString = $latestVersions[$versionDigits[0] . '.' . $versionDigits[1]];
             if (!$newVersionString) {
                 // try with single version number, used since TYPO3 CMS 7
@@ -127,8 +130,4 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
 
         return $versionString;
     }
-}
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_TYPO3VersionTestService.php']);
 }

@@ -23,7 +23,10 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Core\Environment;
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * This is a file of the caretaker project.
@@ -83,14 +86,14 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
     {
         switch ($scope) {
             case 'system':
-                $path = PATH_typo3 . 'sysext/';
+                $path = Environment::getPublicPath() . '/typo3/sysext/';
                 break;
             case 'global':
-                $path = PATH_typo3 . 'ext/';
+                $path = Environment::getPublicPath() . '/typo3/ext/';
                 break;
             case 'local':
             default:
-                $path = PATH_typo3conf . 'ext/';
+                $path = Environment::getPublicPath() . '/typo3conf/ext/';
                 break;
         }
 
@@ -108,11 +111,11 @@ class tx_caretakerinstance_Operation_GetExtensionList implements tx_caretakerins
         $path = $this->getPathForScope($scope);
         $extensionInfo = array();
         if (@is_dir($path)) {
-            $extensionFolders = \TYPO3\CMS\Core\Utility\GeneralUtility::get_dirs($path);
+            $extensionFolders = GeneralUtility::get_dirs($path);
             if (is_array($extensionFolders)) {
                 foreach ($extensionFolders as $extKey) {
                     $extensionInfo[$extKey]['ext_key'] = $extKey;
-                    $extensionInfo[$extKey]['installed'] = (bool)\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extKey);
+                    $extensionInfo[$extKey]['installed'] = (bool)ExtensionManagementUtility::isLoaded($extKey);
 
                     if (@is_file($path . $extKey . '/ext_emconf.php')) {
                         $_EXTKEY = $extKey;

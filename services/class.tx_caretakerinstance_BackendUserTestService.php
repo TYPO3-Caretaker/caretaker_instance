@@ -117,7 +117,3 @@ class tx_caretakerinstance_BackendUserTestService extends tx_caretakerinstance_R
         return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 0, '');
     }
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_BackendUserTestService.php']);
-}

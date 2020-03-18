@@ -117,7 +117,3 @@ class tx_caretakerinstance_CheckPathTestService extends tx_caretakerinstance_Rem
         return tx_caretaker_TestResult::create(tx_caretaker_Constants::state_ok, 1);
     }
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_CheckPathTestService.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_CheckPathTestService.php']);
-}

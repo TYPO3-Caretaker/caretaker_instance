@@ -23,6 +23,9 @@
  * This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Configuration\ExtensionConfiguration;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+
 /**
  * This is a file of the caretaker project.
  * http://forge.typo3.org/projects/show/extension-caretaker
@@ -53,8 +56,8 @@ class ext_update
     {
         $extConf = $this->getExtConf();
 
-        $show = !strlen($extConf['crypto.']['instance.']['publicKey']) ||
-            !strlen($extConf['crypto.']['instance.']['privateKey']);
+        $show = !strlen($extConf['crypto']['instance']['publicKey']) ||
+            !strlen($extConf['crypto']['instance']['privateKey']);
 
         return $show;
     }
@@ -71,8 +74,8 @@ class ext_update
         $this->factory = tx_caretakerinstance_ServiceFactory::getInstance();
         try {
             list($publicKey, $privateKey) = $this->factory->getCryptoManager()->generateKeyPair();
-            $extConf['crypto.']['instance.']['publicKey'] = $publicKey;
-            $extConf['crypto.']['instance.']['privateKey'] = $privateKey;
+            $extConf['crypto']['instance']['publicKey'] = $publicKey;
+            $extConf['crypto']['instance']['privateKey'] = $privateKey;
             $this->writeExtensionConfiguration($extConf);
             $content = 'Success: Generated public / private key<br /><br />Public key:<br />' . $publicKey;
         } catch (Exception $exception) {
@@ -85,15 +88,14 @@ class ext_update
     /**
      * Writes the extension's configuration (version for TYPO3 CMS 6.0+)
      *
-     * @param $extensionConfiguration
+     * @param $extensionConfigurationValue
      * @return void
      */
-    protected function writeExtensionConfiguration($extensionConfiguration)
+    protected function writeExtensionConfiguration($extensionConfigurationValue)
     {
-        /** @var $configurationManager \TYPO3\CMS\Core\Configuration\ConfigurationManager */
-        $configurationManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Core\\Configuration\\ConfigurationManager');
-        $configurationManager->setLocalConfigurationValueByPath('EXT/extConf/caretaker_instance', serialize($extensionConfiguration));
-        \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::removeCacheFiles();
+        /** @var $extensionConfiguration ExtensionConfiguration */
+        $extensionConfiguration = GeneralUtility::makeInstance(ExtensionConfiguration::class);
+        $extensionConfiguration->set('caretaker_instance', '', $extensionConfigurationValue);
     }
 
     /**
@@ -103,11 +105,6 @@ class ext_update
      */
     protected function getExtConf()
     {
-        $extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance']);
-        if (!$extConf) {
-            $extConf = array();
-        }
-
-        return $extConf;
+        return GeneralUtility::makeInstance(ExtensionConfiguration::class)->get('caretaker_instance');
     }
 }

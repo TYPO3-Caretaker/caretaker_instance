@@ -51,23 +51,20 @@ class ServiceFactoryTest extends UnitTestCase
     {
         // Simulate TYPO3 ext conf
 
-        $extConf = array(
-            'crypto.' => array(
-                'instance.' => array(
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['caretaker_instance'] = array(
+            'crypto' => array(
+                'instance' => array(
                     'publicKey' => 'FakePublicKey',
                     'privateKey' => 'FakePrivateKey',
                 ),
-                'client.' => array(
+                'client' => array(
                     'publicKey' => 'FakeClientPublicKey',
                 ),
             ),
-            'security.' => array(
+            'security' => array(
                 'clientHostAddressRestriction' => '10.0.0.1',
             ),
         );
-
-        $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance'] =
-            serialize($extConf);
 
         $factory = \tx_caretakerinstance_ServiceFactory::getInstance();
         $commandService = $factory->getCommandService();

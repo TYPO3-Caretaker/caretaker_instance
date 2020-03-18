@@ -51,7 +51,7 @@ class tx_caretakerinstance_Operation_GetPHPVersion implements tx_caretakerinstan
      * Get the current PHP version
      *
      * @param array $parameter None
-     * @return the current PHP version
+     * @return tx_caretakerinstance_OperationResult the current PHP version
      */
     public function execute($parameter = array())
     {
