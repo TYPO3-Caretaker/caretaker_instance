@@ -24,6 +24,7 @@
  ***************************************************************/
 
 use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 
 /**
  * This is a file of the caretaker project.
@@ -57,12 +58,12 @@ class tx_caretakerinstance_Operation_GetExtensionVersion implements tx_caretaker
     {
         $extensionKey = $parameter['extensionKey'];
 
-        if (!\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::isLoaded($extensionKey)) {
+        if (!ExtensionManagementUtility::isLoaded($extensionKey)) {
             return new tx_caretakerinstance_OperationResult(false, 'Extension [' . $extensionKey . '] is not loaded');
         }
 
         $_EXTKEY = $extensionKey;
-        @include(\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extPath($extensionKey, 'ext_emconf.php'));
+        @include(ExtensionManagementUtility::extPath($extensionKey, 'ext_emconf.php'));
 
         if (is_array($EM_CONF[$extensionKey])) {
             return new tx_caretakerinstance_OperationResult(true, $EM_CONF[$extensionKey]['version']);

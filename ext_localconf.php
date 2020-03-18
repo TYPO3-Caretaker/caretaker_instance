@@ -38,7 +38,7 @@ if (!defined('TYPO3_MODE')) {
 }
 
 // Add eID script for caretaker instance frontend service
-$TYPO3_CONF_VARS['FE']['eID_include']['tx_caretakerinstance'] = 'EXT:caretaker_instance/eid/eid.tx_caretakerinstance.php';
+$GLOBALS['TYPO3_CONF_VARS']['FE']['eID_include']['tx_caretakerinstance'] = \Caretaker\CaretakerInstance\Controller\EidController::class . '::execute';
 
 // Register default caretaker Operations
 $operations = array(
@@ -53,7 +53,7 @@ $operations = array(
     'GetDiskSpace',
 );
 foreach ($operations as $operationKey) {
-    $TYPO3_CONF_VARS['EXTCONF']['caretaker_instance']['operations'][$operationKey] =
+    $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['caretaker_instance']['operations'][$operationKey] =
         'tx_caretakerinstance_Operation_' . $operationKey;
 }
 

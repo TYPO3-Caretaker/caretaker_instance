@@ -80,7 +80,7 @@ class tx_caretakerinstance_ServiceFactory
      */
     public function __construct()
     {
-        $this->extConf = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['caretaker_instance']);
+        $this->extConf = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['caretaker_instance'];
     }
 
     /**
@@ -118,10 +118,10 @@ class tx_caretakerinstance_ServiceFactory
     {
         if ($this->securityManager == null) {
             $this->securityManager = new tx_caretakerinstance_SecurityManager($this->getCryptoManager());
-            $this->securityManager->setPublicKey($this->extConf['crypto.']['instance.']['publicKey']);
-            $this->securityManager->setPrivateKey($this->extConf['crypto.']['instance.']['privateKey']);
-            $this->securityManager->setClientPublicKey($this->extConf['crypto.']['client.']['publicKey']);
-            $this->securityManager->setClientHostAddressRestriction($this->extConf['security.']['clientHostAddressRestriction']);
+            $this->securityManager->setPublicKey($this->extConf['crypto']['instance']['publicKey']);
+            $this->securityManager->setPrivateKey($this->extConf['crypto']['instance']['privateKey']);
+            $this->securityManager->setClientPublicKey($this->extConf['crypto']['client']['publicKey']);
+            $this->securityManager->setClientHostAddressRestriction($this->extConf['security']['clientHostAddressRestriction']);
         }
 
         return $this->securityManager;

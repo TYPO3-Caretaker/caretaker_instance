@@ -126,7 +126,3 @@ class tx_caretakerinstance_DiskSpaceTestService extends tx_caretakerinstance_Rem
         return $value * (pow(1024, $factor));
     }
 }
-
-if (defined('TYPO3_MODE') && $TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_DiskSpaceTestService.php']) {
-    include_once($TYPO3_CONF_VARS[TYPO3_MODE]['XCLASS']['ext/caretaker_instance/services/class.tx_caretaker_DiskSpaceTestService.php']);
-}

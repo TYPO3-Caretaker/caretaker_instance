@@ -3,6 +3,9 @@ namespace Caretaker\CaretakerInstance\Tests\Unit;
 
 use Caretaker\CaretakerInstance\Tests\Unit\Fixtures\DummyOperation;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Core\Environment;
+use TYPO3\CMS\Core\Information\Typo3Version;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /***************************************************************
  * Copyright notice
@@ -105,7 +108,7 @@ class OperationsTest extends UnitTestCase
         $this->fail('test runs indefinitely');
         $operation = new \tx_caretakerinstance_Operation_GetFilesystemChecksum();
 
-        $result = $operation->execute(array('path' => PATH_site . '../../'));
+        $result = $operation->execute(array('path' => Environment::getPublicPath() . '/../../'));
 
         $this->assertFalse($result->isSuccessful());
     }
@@ -129,7 +132,11 @@ class OperationsTest extends UnitTestCase
 
         $this->assertTrue($result->isSuccessful());
 
-        $this->assertEquals(TYPO3_version, $result->getValue());
+        if (defined('TYPO3_version')) {
+            $this->assertEquals(TYPO3_version, $result->getValue());
+        } else {
+            $this->assertEquals(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), $result->getValue());
+        }
     }
 
     public function testOperation_GetExtensionVersionReturnsExtensionVersionForInstalledExtension()
