@@ -69,16 +69,16 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
                     $success = (preg_match($parameter['match'], $value) >= 1);
                     break;
                 case '>=':
-                    $success = ($parameter['match'] >= $value);
+                    $success = ($value >= $parameter['match']);
                     break;
                 case '<=':
-                    $success = ($parameter['match'] <= $value);
+                    $success = ($value <= $parameter['match']);
                     break;
                 case '>':
-                    $success = ($parameter['match'] > $value);
+                    $success = ($value > $parameter['match']);
                     break;
                 case '<':
-                    $success = ($parameter['match'] < $value);
+                    $success = ($value < $parameter['match']);
                     break;
                 case '!=':
                     $success = ($parameter['match'] != $value);
@@ -106,14 +106,19 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
         switch ($key) {
             case 'GLOBALS':
                 $value = $GLOBALS;
-
                 // decode TYPO3_CONF_VARS->EXT->extConf children if requested
                 if ($keyPath[0] == 'TYPO3_CONF_VARS' && $keyPath[1] == 'EXT' && $keyPath[2] == 'extConf' && $keyPath[3]) {
-                    $value = clone $GLOBALS;
-                    $serializedValue = $value[$keyPath[0]][$keyPath[1]][$keyPath[2]][$keyPath[3]];
-                    $value[$keyPath[0]][$keyPath[1]][$keyPath[2]][$keyPath[3]] = unserialize($serializedValue);
+                    $serializedValue = $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf'][$keyPath[3]];
+                    $value = array(
+                        'TYPO3_CONF_VARS' => array(
+                            'EXT' => array(
+                                'extConf' => array(
+                                    $keyPath[3] => unserialize($serializedValue),
+                                ),
+                            ),
+                        ),
+                    );
                 }
-
                 break;
 
             case '_POST':
