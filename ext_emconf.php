@@ -11,7 +11,7 @@ $EM_CONF[$_EXTKEY] = array (
   'clearCacheOnLoad' => 0,
   'lockType' => '',
   'author_company' => '',
-  'version' => '3.0.0',
+  'version' => '3.0.1',
   'constraints' => 
   array (
     'depends' =>
@@ -31,7 +31,6 @@ $EM_CONF[$_EXTKEY] = array (
     array (
       0 => 'services',
       1 => 'classes',
-      2 => 'eid',
     ),
   ),
   '_md5_values_when_last_written' => '',

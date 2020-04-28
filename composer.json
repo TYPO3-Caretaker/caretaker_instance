@@ -17,6 +17,9 @@
     "friendsofphp/php-cs-fixer": "Tool to automatically fix PHP coding standards issues"
   },
   "autoload": {
+    "psr-4": {
+      "Caretaker\\CaretakerInstance\\": "Classes"
+    },
     "classmap": [
       "classes/",
       "services/"
@@ -24,7 +27,6 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "Caretaker\\CaretakerInstance\\": "Classes/",
       "Caretaker\\CaretakerInstance\\Tests\\": "Tests/"
     }
   },
