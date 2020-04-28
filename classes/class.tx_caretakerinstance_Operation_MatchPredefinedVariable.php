@@ -69,16 +69,16 @@ class tx_caretakerinstance_Operation_MatchPredefinedVariable implements tx_caret
                     $success = (preg_match($parameter['match'], $value) >= 1);
                     break;
                 case '>=':
-                    $success = ($parameter['match'] >= $value);
+                    $success = ($value >= $parameter['match']);
                     break;
                 case '<=':
-                    $success = ($parameter['match'] <= $value);
+                    $success = ($value <= $parameter['match']);
                     break;
                 case '>':
-                    $success = ($parameter['match'] > $value);
+                    $success = ($value > $parameter['match']);
                     break;
                 case '<':
-                    $success = ($parameter['match'] < $value);
+                    $success = ($value < $parameter['match']);
                     break;
                 case '!=':
                     $success = ($parameter['match'] != $value);
