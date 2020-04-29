@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.1] - 2020-04-29
+
+### Changed
+- Fix TYPO3_CONF_VARS tests ([#58], [#78])
+
 ## [2.1.0] - 2020-01-29
 
 ### Added
@@ -35,8 +40,11 @@ All notable changes to this project will be documented in this file.
 [2.0.0]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/1.0.0...2.0.0
 [2.0.1]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.0.0...2.0.1
 [2.1.0]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.0.1...2.1.0
+[2.1.1]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.1.0...2.1.1
 
+[#58]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/58
 [#68]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/68
 [#69]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/69
 [#70]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/70
 [#75]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/75
+[#78]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/78
