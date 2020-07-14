@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [2.1.2] - 2020-07-14
+
+### Changed
+- Fix Operation GetRecord
+
 ## [2.1.1] - 2020-04-29
 
 ### Changed
@@ -41,6 +46,7 @@ All notable changes to this project will be documented in this file.
 [2.0.1]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.0.0...2.0.1
 [2.1.0]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.0.1...2.1.0
 [2.1.1]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.1.0...2.1.1
+[2.1.2]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.1.1...2.1.2
 
 [#58]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/58
 [#68]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/68
