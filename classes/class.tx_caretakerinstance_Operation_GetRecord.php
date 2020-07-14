@@ -96,7 +96,7 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
             ->where($queryBuilder->expr()->eq($field, $queryBuilder->createNamedParameter($value)))
             ->execute();
 
-        if (!$statement->errorInfo()) {
+        if (!$statement->errorInfo() || $statement->errorCode() == '00000') {
             $record = $statement->fetch();
             if ($record !== false) {
                 if (isset($this->protectedFieldsByTable[$table])) {
