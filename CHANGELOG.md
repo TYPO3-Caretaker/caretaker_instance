@@ -1,6 +1,11 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.0.3] - 2020-08-04
+
+### Changed
+- Fix test service for insecure extensions ([#81])
+
 ## [3.0.2] - 2020-07-14
 
 ### Changed
@@ -59,6 +64,7 @@ All notable changes to this project will be documented in this file.
 [3.0.0]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/2.1.0...3.0.0
 [3.0.1]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/3.0.0...3.0.1
 [3.0.2]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/3.0.1...3.0.2
+[3.0.3]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/3.0.2...3.0.3
 
 [#58]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/58
 [#68]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/68
@@ -68,3 +74,4 @@ All notable changes to this project will be documented in this file.
 [#75]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/75
 [#78]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/78
 [#79]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/79
+[#81]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/81
