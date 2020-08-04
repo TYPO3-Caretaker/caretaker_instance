@@ -89,7 +89,8 @@ class SecurityManagerTest extends UnitTestCase
                 'raw' => '{"foo": "bar"}',
                 // Signature over raw data and session token sent from client
                 'signature' => 'abcdefg',
-            ));
+            )
+        );
     }
 
     public function testCreateSessionToken()
@@ -199,9 +200,11 @@ class SecurityManagerTest extends UnitTestCase
         $this->cryptoManager->expects($this->once())
             ->method('verifySignature')
             // Verify session token and raw data
-            ->with($this->equalTo('12345:abcdefg${"foo": "bar"}'),
+            ->with(
+                $this->equalTo('12345:abcdefg${"foo": "bar"}'),
                 $this->equalTo('abcdefg'),
-                $this->equalTo('FakeClientPublicKey'))
+                $this->equalTo('FakeClientPublicKey')
+            )
             ->will($this->returnValue(true));
 
         $this->assertTrue($this->securityManager->validateRequest($this->commandRequest));

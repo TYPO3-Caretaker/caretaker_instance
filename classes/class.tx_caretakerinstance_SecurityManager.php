@@ -114,10 +114,12 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
             throw new tx_caretakerinstance_SessionTokenException('Session token expired', 1500062206);
         } elseif (!$this->isClientHostAddressValid($commandRequest->getClientHostAddress())) {
             throw new tx_caretakerinstance_ClientHostAddressRestrictionException('Client IP address is not allowed', 1500062384);
-        } elseif (!$this->cryptoManager->verifySignature(
-            $commandRequest->getDataForSignature(),
-            $commandRequest->getSignature(),
-            $this->clientPublicKey)
+        } elseif (
+            !$this->cryptoManager->verifySignature(
+                $commandRequest->getDataForSignature(),
+                $commandRequest->getSignature(),
+                $this->clientPublicKey
+            )
         ) {
             throw new tx_caretakerinstance_SignaturValidationException('Signature didn\'t verify', 1500062398);
         }
