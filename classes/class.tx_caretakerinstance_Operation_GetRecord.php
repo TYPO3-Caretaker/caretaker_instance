@@ -113,7 +113,8 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
         }
         return new tx_caretakerinstance_OperationResult(
             false,
-            'Error when executing SQL: [' . $statement->errorInfo() . ']');
+            'Error when executing SQL: [' . $statement->errorInfo() . ']'
+        );
     }
 
     /**

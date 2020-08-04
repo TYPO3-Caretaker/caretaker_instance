@@ -81,7 +81,8 @@ class tx_caretakerinstance_TYPO3VersionTestService extends tx_caretakerinstance_
         $checkResult = $this->checkVersionRange(
             $version,
             $minVersion,
-            $maxVersion);
+            $maxVersion
+        );
 
         if ($checkResult) {
             $message = 'TYPO3 version ' . $version . ' is installed';
