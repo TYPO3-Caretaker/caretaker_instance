@@ -192,10 +192,8 @@ class RemoteCommandConnectorTest extends UnitTestCase
 
         $connector->expects($this->once())->method('executeHttpRequest')
             ->with($this->equalTo($url . '?eID=\tx_caretakerinstance&rst=1'))
-            ->will($this->returnValue(array(
-                'response' => $fakeSessionToken,
-                'info' => array('http_code' => 200),
-            ))
+            ->will(
+                $this->returnValue(array('response' => $fakeSessionToken, 'info' => array('http_code' => 200)))
             );
 
         $connector->setInstance($instance);
@@ -224,10 +222,8 @@ class RemoteCommandConnectorTest extends UnitTestCase
         $connector->expects($this->once())
             ->method('executeHttpRequest')
             ->with($this->equalTo($url . '?eID=\tx_caretakerinstance&rst=1'))
-            ->will($this->returnValue(array(
-                'response' => $fakeSessionToken,
-                'info' => array('http_code' => 200),
-            ))
+            ->will(
+                $this->returnValue(array('response' => $fakeSessionToken, 'info' => array('http_code' => 200)))
             );
 
         $connector->setInstance($instance);
@@ -261,10 +257,8 @@ class RemoteCommandConnectorTest extends UnitTestCase
 
         $connector->expects($this->once())->method('executeHttpRequest')
             ->with($this->equalTo($url . '?eID=\tx_caretakerinstance&rst=1'))
-            ->will($this->returnValue(array(
-                'response' => $fakeSessionToken,
-                'info' => array('http_code' => 404),
-            ))
+            ->will(
+                $this->returnValue(array('response' => $fakeSessionToken, 'info' => array('http_code' => 404)))
             );
 
         $connector->setInstance($instance);
@@ -327,12 +321,8 @@ class RemoteCommandConnectorTest extends UnitTestCase
                     'st' => '==sessionToken==',
                     's' => '==Signature==',
                 ))
-            )->will($this->returnValue(
-                array(
-                    'response' => '==encryptedString==',
-                    'info' => array('http_code' => 200),
-                )
-            )
+            )->will(
+                $this->returnValue(array('response' => '==encryptedString==', 'info' => array('http_code' => 200)))
             );
 
         $result = $connector->executeRequest($request);
@@ -375,12 +365,8 @@ class RemoteCommandConnectorTest extends UnitTestCase
                     'st' => '==sessionToken==',
                     's' => '==Signature==',
                 ))
-            )->will($this->returnValue(
-                array(
-                    'response' => 'AnyStringButJson',
-                    'info' => array('http_code' => 404),
-                )
-            )
+            )->will(
+                $this->returnValue(array('response' => 'AnyStringButJson', 'info' => array('http_code' => 404)))
             );
 
         $result = $connector->executeRequest($request);
