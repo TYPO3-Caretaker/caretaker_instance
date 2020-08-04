@@ -209,7 +209,7 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
         // Ext is in TER
         if (is_array($ter_info)) {
             // Ext is reviewed as secure or not reviewed at all
-            if ($ter_info['reviewstate'] > -1) {
+            if ($ter_info['reviewstate'] != -1) {
                 return array(0, '');
             }
 
