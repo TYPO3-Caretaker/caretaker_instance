@@ -75,10 +75,9 @@ class tx_caretakerinstance_DiskSpaceTestService extends tx_caretakerinstance_Rem
             'free: ' . $this->humanFilesize($diskSpace['free']) .
             ' ; total: ' . $this->humanFilesize($diskSpace['total']) .
             (
-            $minFreeAbsolute > 0 ? (
-                ' ; expected free: ' . $this->getConfigValue('min_free') .
-                $this->getConfigValue('min_free_unit')
-            ) : ''
+                $minFreeAbsolute > 0 ? (
+                    ' ; expected free: ' . $this->getConfigValue('min_free') . $this->getConfigValue('min_free_unit')
+                ) : ''
             ) . ')';
 
         if (!empty($minFreeAbsolute)) {
