@@ -206,7 +206,8 @@ class OperationsTest extends UnitTestCase
         $key = 'GLOBALS|Foo|bar';
         $operation = new \tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
-        $result = $operation->execute(array(
+        $result = $operation->execute(
+            array(
                 'key' => $key,
                 'match' => $GLOBALS['Foo']['bar'],
             )
@@ -220,7 +221,8 @@ class OperationsTest extends UnitTestCase
         $key = 'GLOBALS|Foo|bar';
         $operation = new \tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
-        $result = $operation->execute(array(
+        $result = $operation->execute(
+            array(
                 'key' => $key,
                 'match' => '/baz/',
                 'usingRegexp' => true,
@@ -236,7 +238,8 @@ class OperationsTest extends UnitTestCase
         $key = 'GLOBALS|Foo|bar';
         $operation = new \tx_caretakerinstance_Operation_MatchPredefinedVariable();
 
-        $result = $operation->execute(array(
+        $result = $operation->execute(
+            array(
                 'key' => $key,
                 'match' => 'an other value',
             )
