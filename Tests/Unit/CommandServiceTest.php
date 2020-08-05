@@ -68,13 +68,17 @@ class CommandServiceTest extends UnitTestCase
 
     public function setUp()
     {
-        $this->operationManager = $this->getMock('\tx_caretakerinstance_OperationManager',
-            array('executeOperation'));
+        $this->operationManager = $this->getMock(
+            '\tx_caretakerinstance_OperationManager',
+            array('executeOperation')
+        );
 
         $this->securityManager = $this->getMock('\tx_caretakerinstance_ISecurityManager');
 
         $this->commandService = new \tx_caretakerinstance_CommandService(
-            $this->operationManager, $this->securityManager);
+            $this->operationManager,
+            $this->securityManager
+        );
 
         $this->commandRequest = new \tx_caretakerinstance_CommandRequest(
             array(
@@ -84,12 +88,14 @@ class CommandServiceTest extends UnitTestCase
                         array('mock', array('foo' => 'bar')),
                     ),
                 ),
-            ));
+            )
+        );
     }
 
     public function testWrapCommandResultEncodesResult()
     {
-        $result = new \tx_caretakerinstance_CommandResult(true,
+        $result = new \tx_caretakerinstance_CommandResult(
+            true,
             new \tx_caretakerinstance_OperationResult(true, array('foo' => 'bar'))
         );
 

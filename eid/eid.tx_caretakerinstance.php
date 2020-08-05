@@ -81,7 +81,8 @@ try {
                 'data' => array(),
                 'raw' => $data,
                 'signature' => $signature,
-            ));
+            )
+        );
 
         $result = $commandService->executeCommand($request);
 

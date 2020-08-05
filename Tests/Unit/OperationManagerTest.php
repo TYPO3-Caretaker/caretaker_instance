@@ -49,8 +49,10 @@ class OperationManagerTest extends UnitTestCase
     public function testRegisterOperationAsClass()
     {
         $operationManager = new \tx_caretakerinstance_OperationManager();
-        $operationManager->registerOperation('get_php_version',
-            'tx_caretakerinstance_Operation_GetPHPVersion');
+        $operationManager->registerOperation(
+            'get_php_version',
+            'tx_caretakerinstance_Operation_GetPHPVersion'
+        );
         $operation = $operationManager->getOperation('get_php_version');
         $this->assertInstanceOf('\tx_caretakerinstance_Operation_GetPHPVersion', $operation);
     }
@@ -58,8 +60,10 @@ class OperationManagerTest extends UnitTestCase
     public function testRegisterOperationAsInstance()
     {
         $operationManager = new \tx_caretakerinstance_OperationManager();
-        $operationManager->registerOperation('get_php_version',
-            new \tx_caretakerinstance_Operation_GetPHPVersion());
+        $operationManager->registerOperation(
+            'get_php_version',
+            new \tx_caretakerinstance_Operation_GetPHPVersion()
+        );
         $operation = $operationManager->getOperation('get_php_version');
         $this->assertInstanceOf('\tx_caretakerinstance_Operation_GetPHPVersion', $operation);
     }
