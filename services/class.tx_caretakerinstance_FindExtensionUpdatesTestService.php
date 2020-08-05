@@ -225,15 +225,15 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
 
                 return;
             }
-                // Check whitelist
-                $ext_whitelist = $this->getCustomExtensionWhitelist();
+            // Check whitelist
+            $ext_whitelist = $this->getCustomExtensionWhitelist();
             if (in_array($ext_key, $ext_whitelist)) {
                 $oks[] = array('message' => $message, 'values' => $value);
 
                 return;
             }
-                // handle error
-                $handling = $this->getStatusOfUpdatableExtensions();
+            // handle error
+            $handling = $this->getStatusOfUpdatableExtensions();
             switch ($handling) {
                     // Warning
                     case 1:

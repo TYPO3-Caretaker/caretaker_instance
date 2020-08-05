@@ -142,7 +142,7 @@ class tx_caretakerinstance_ServiceFactory
                     } elseif ($operationRef instanceof tx_caretakerinstance_IOperation) {
                         $operation = $operationRef;
                     }
-                        // TODO log error if some strange value is registered
+                    // TODO log error if some strange value is registered
 
                     $this->operationManager->registerOperation($key, $operation);
                 }

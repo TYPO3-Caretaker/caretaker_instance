@@ -61,23 +61,24 @@ class ServicesTest extends UnitTestCase
         $stub->expects($this->once())
             ->method('executeRemoteOperations')
             ->with($this->equalTo(array(array('GetExtensionList', array('locations' => array('local'))))))
-            ->will($this->returnValue(
-                new \tx_caretakerinstance_CommandResult(
-                    true,
-                    array(
-                        new \tx_caretakerinstance_OperationResult(
-                            true,
-                            array(
-                                'tt_address' => array(
-                                    'isInstalled' => true,
-                                    'version' => '2.1.4',
-                                    'location' => array('local'),
-                                ),
-                            )
-                        ),
+            ->will(
+                $this->returnValue(
+                    new \tx_caretakerinstance_CommandResult(
+                        true,
+                        array(
+                            new \tx_caretakerinstance_OperationResult(
+                                true,
+                                array(
+                                    'tt_address' => array(
+                                        'isInstalled' => true,
+                                        'version' => '2.1.4',
+                                        'location' => array('local'),
+                                    ),
+                                )
+                            ),
+                        )
                     )
                 )
-            )
             );
 
         $stub->expects($this->once())

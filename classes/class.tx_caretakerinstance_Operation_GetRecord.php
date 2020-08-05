@@ -81,7 +81,8 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
         $result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
             '*',
             $table,
-            $field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
+            $field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : '')
+        );
 
         if ($result) {
             $record = $GLOBALS['TYPO3_DB']->sql_fetch_assoc($result);
@@ -97,7 +98,10 @@ class tx_caretakerinstance_Operation_GetRecord implements tx_caretakerinstance_I
             }
             return new tx_caretakerinstance_OperationResult(true, false);
         }
-        return new tx_caretakerinstance_OperationResult(false, 'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']');
+        return new tx_caretakerinstance_OperationResult(
+            false,
+            'Error when executing SQL: [' . $GLOBALS['TYPO3_DB']->sql_error() . ']'
+        );
     }
 
     /**

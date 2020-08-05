@@ -56,8 +56,10 @@ class CommandResultTest extends UnitTestCase
 
         $json = $result->toJson();
 
-        $this->assertEquals('{"status":0,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}',
-            $json);
+        $this->assertEquals(
+            '{"status":0,"results":[{"status":true,"value":"foo"},{"status":true,"value":false},{"status":true,"value":["foo","bar"]}],"message":"Test message"}',
+            $json
+        );
     }
 
     public function testCommandResultFromJson()

@@ -117,10 +117,12 @@ class tx_caretakerinstance_SecurityManager implements tx_caretakerinstance_ISecu
         ) {
             // Client IP address is not allowed
             return false;
-        } elseif (!$this->cryptoManager->verifySignature(
-            $commandRequest->getDataForSignature(),
-            $commandRequest->getSignature(),
-            $this->clientPublicKey)
+        } elseif (
+            !$this->cryptoManager->verifySignature(
+                $commandRequest->getDataForSignature(),
+                $commandRequest->getSignature(),
+                $this->clientPublicKey
+            )
         ) {
             // Signature didn't verify
             return false;
