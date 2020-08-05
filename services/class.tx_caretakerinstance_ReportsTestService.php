@@ -35,7 +35,8 @@ class tx_caretakerinstance_ReportsTestService extends tx_caretakerinstance_Remot
                     CRLF . str_replace(
                         '[WARN]',
                         '⚠️',
-                        str_replace('[ERR]', '❌', implode('', $systemIssues)))
+                        str_replace('[ERR]', '❌', implode('', $systemIssues))
+                    )
                 );
             }
         }

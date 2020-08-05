@@ -156,7 +156,10 @@ class tx_caretakerinstance_Operation_GetRecords implements tx_caretakerinstance_
         $GLOBALS['TYPO3_DB']->store_lastBuiltQuery = 0;
         if (!is_array($field)) {
             $result = $GLOBALS['TYPO3_DB']->exec_SELECTquery(
-                '*', $table, $field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : ''));
+                '*',
+                $table,
+                $field . ' = ' . $GLOBALS['TYPO3_DB']->fullQuoteStr($value, $table) . ($checkEnableFields ? $this->enableFields($table) : '')
+            );
         } else {
             $arrSql = array();
             $arrSql['SELECT'] = '*';
