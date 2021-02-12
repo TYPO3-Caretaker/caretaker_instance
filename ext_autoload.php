@@ -50,6 +50,7 @@ return array(
     'tx_caretakerinstance_securitymanager' => $extensionClassesPath . 'class.tx_caretakerinstance_SecurityManager.php',
     'tx_caretakerinstance_securitymanagertest' => $extensionPath . 'tests/class.tx_caretakerinstance_SecurityManagerTest.php',
     'tx_caretakerinstance_servicefactory' => $extensionClassesPath . 'class.tx_caretakerinstance_ServiceFactory.php',
+    'tx_caretakerinstance_ServiceFactory' => $extensionClassesPath . 'class.tx_caretakerinstance_ServiceFactory.php',
     'tx_caretakerinstance_servicefactorytest' => $extensionPath . 'tests/class.tx_caretakerinstance_ServiceFactoryTest.php',
     'tx_caretakerinstance_servicehelper' => $extensionClassesPath . 'class.tx_caretakerinstance_ServiceHelper.php',
     'tx_caretakerinstance_servicestest' => $extensionPath . 'tests/class.tx_caretakerinstance_ServicesTest.php',
