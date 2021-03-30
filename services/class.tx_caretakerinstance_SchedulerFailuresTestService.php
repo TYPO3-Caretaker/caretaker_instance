@@ -8,9 +8,9 @@ class tx_caretakerinstance_SchedulerFailuresTestService extends tx_caretakerinst
      */
     public function runTest(): tx_caretaker_TestResult
     {
-        $operations = [
-            ['GetScheduler', []]
-        ];
+        $operations = array(
+            array('GetScheduler', array()),
+        );
 
         $commandResult = $this->executeRemoteOperations($operations);
 
@@ -20,7 +20,7 @@ class tx_caretakerinstance_SchedulerFailuresTestService extends tx_caretakerinst
 
         $results = $commandResult->getOperationResults();
 
-        $errors = [];
+        $errors = array();
 
         /** @var tx_caretakerinstance_OperationResult $operationResult */
         foreach ($results as $operationResult) {

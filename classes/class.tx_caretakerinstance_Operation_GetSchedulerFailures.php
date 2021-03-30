@@ -37,7 +37,7 @@ class tx_caretakerinstance_Operation_GetSchedulerFailures implements tx_caretake
 {
     public function execute($parameter = array()): tx_caretakerinstance_OperationResult
     {
-        $results = [];
+        $results = array();
 
         $connection = GeneralUtility::makeInstance(ConnectionPool::class);
         $query = $connection->getQueryBuilderForTable('tx_scheduler_task');
@@ -49,12 +49,12 @@ class tx_caretakerinstance_Operation_GetSchedulerFailures implements tx_caretake
                 continue;
             }
             try {
-                $exception = unserialize($row['lastexecution_failure'], ['allowed_classes' => false]);
+                $exception = unserialize($row['lastexecution_failure'], array('allowed_classes' => false));
             } catch (Throwable $exception) {
                 $results[$taskUid] = 'unserialize exception: ' . (string)$exception;
                 continue;
             }
-            $keepKeys = ['code', 'file', 'line', 'message'];
+            $keepKeys = array('code', 'file', 'line', 'message');
             foreach (array_keys($exception) as $key) {
                 if (!in_array($key, $keepKeys, true)) {
                     unset($exception[$key]);
