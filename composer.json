@@ -5,7 +5,7 @@
   "homepage": "https://github.com/TYPO3-Caretaker/",
   "license": "GPL-2.0",
   "require": {
-    "typo3/cms-core": "^9.5 || ^10.4",
+    "typo3/cms-core": "^11.5",
     "ext-json": "*",
     "ext-openssl": "*",
     "ext-curl": "*"
