@@ -132,11 +132,8 @@ class OperationsTest extends UnitTestCase
 
         $this->assertTrue($result->isSuccessful());
 
-        if (defined('TYPO3_version')) {
-            $this->assertEquals(TYPO3_version, $result->getValue());
-        } else {
-            $this->assertEquals(GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), $result->getValue());
-        }
+        $this->assertEquals(
+            GeneralUtility::makeInstance(Typo3Version::class)->getVersion(), $result->getValue());
     }
 
     public function testOperation_GetExtensionVersionReturnsExtensionVersionForInstalledExtension()
