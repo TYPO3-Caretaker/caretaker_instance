@@ -1,6 +1,14 @@
 # Changelog
 All notable changes to this project will be documented in this file.
 
+## [3.1.0] - 2023-02-02
+
+### Added
+- Support for TYPO3 v11
+
+### Removed
+- Support for TYPO3 v10
+
 ## [3.0.3] - 2020-08-04
 
 ### Changed
@@ -65,6 +73,7 @@ All notable changes to this project will be documented in this file.
 [3.0.1]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/3.0.0...3.0.1
 [3.0.2]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/3.0.1...3.0.2
 [3.0.3]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/3.0.2...3.0.3
+[3.1.0]: https://github.com/TYPO3-Caretaker/caretaker_instance/compare/3.0.3...3.1.0
 
 [#58]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/58
 [#68]: https://github.com/TYPO3-Caretaker/caretaker_instance/issues/68
