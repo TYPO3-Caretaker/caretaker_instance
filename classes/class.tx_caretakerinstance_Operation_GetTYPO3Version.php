@@ -55,9 +55,7 @@ class tx_caretakerinstance_Operation_GetTYPO3Version implements tx_caretakerinst
      */
     public function execute($parameter = array())
     {
-        if (defined('TYPO3_version')) {
-            return new tx_caretakerinstance_OperationResult(true, TYPO3_version);
-        }
-        return new tx_caretakerinstance_OperationResult(true, GeneralUtility::makeInstance(Typo3Version::class)->getVersion());
+        return new tx_caretakerinstance_OperationResult(true,
+            GeneralUtility::makeInstance(Typo3Version::class)->getVersion());
     }
 }

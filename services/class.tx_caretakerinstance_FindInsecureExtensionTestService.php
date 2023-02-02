@@ -34,6 +34,11 @@
  * $Id$
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extensionmanager\Domain\Model\Extension;
+use TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository;
+
 /**
  * Check insecure extensions
  *
@@ -282,13 +287,13 @@ class tx_caretakerinstance_FindInsecureExtensionTestService extends tx_caretaker
      */
     public function getExtensionTerInfos($ext_key, $ext_version)
     {
-        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
-        $repo = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $repo = $objectManager->get(ExtensionRepository::class);
         $repo->initializeObject();
 
         $extension = $repo->findOneByExtensionKeyAndVersion($ext_key, $ext_version);
 
-        if ($extension === null || !$extension instanceof \TYPO3\CMS\Extensionmanager\Domain\Model\Extension) {
+        if ($extension === null || !$extension instanceof Extension) {
             return false;
         }
 

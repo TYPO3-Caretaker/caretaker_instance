@@ -34,6 +34,12 @@
  * $Id$
  */
 
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\MathUtility;
+use TYPO3\CMS\Core\Utility\VersionNumberUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
+use TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository;
+
 /**
  * Check insecure extensions
  *
@@ -264,6 +270,40 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
     }
 
     /**
+     * Method to raise a version number
+     *
+     * @param string $raise one of "main", "sub", "dev" - the version part to raise by one
+     * @param string $version (like 4.1.20)
+     * @return string
+     * @throws \TYPO3\CMS\Core\Exception
+     */
+    public function raiseVersionNumber($raise, $version)
+    {
+        if (!in_array($raise, ['main', 'sub', 'dev'])) {
+            throw new \TYPO3\CMS\Core\Exception('RaiseVersionNumber expects one of "main", "sub" or "dev".', 1342639555);
+        }
+        $parts = GeneralUtility::intExplode('.', $version . '..');
+        $parts[0] = MathUtility::forceIntegerInRange($parts[0], 0, 999);
+        $parts[1] = MathUtility::forceIntegerInRange($parts[1], 0, 999);
+        $parts[2] = MathUtility::forceIntegerInRange($parts[2], 0, 999);
+        switch ((string)$raise) {
+            case 'main':
+                $parts[0]++;
+                $parts[1] = 0;
+                $parts[2] = 0;
+                break;
+            case 'sub':
+                $parts[1]++;
+                $parts[2] = 0;
+                break;
+            case 'dev':
+                $parts[2]++;
+                break;
+        }
+        return $parts[0] . '.' . $parts[1] . '.' . $parts[2];
+    }
+
+    /**
      * @param string $ext_key
      * @param string $ext_version
      * @param string $typo3Version
@@ -271,14 +311,14 @@ class tx_caretakerinstance_FindExtensionUpdatesTestService extends tx_caretakeri
      */
     public function getLatestExtensionTerInfos($ext_key, $ext_version, $typo3Version = '')
     {
-        $objectManager = \TYPO3\CMS\Core\Utility\GeneralUtility::makeInstance('TYPO3\\CMS\\Extbase\\Object\\ObjectManager');
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
-        /** @var TYPO3\CMS\Extensionmanager\Domain\Repository\ExtensionRepository $repo */
-        $repo = $objectManager->get('TYPO3\\CMS\\Extensionmanager\\Domain\\Repository\\ExtensionRepository');
+        /** @var ExtensionRepository $repo */
+        $repo = $objectManager->get(ExtensionRepository::class);
         $repo->initializeObject();
 
-        $highestVersion = \TYPO3\CMS\Core\Utility\VersionNumberUtility::convertVersionNumberToInteger(
-            \TYPO3\CMS\Core\Utility\VersionNumberUtility::raiseVersionNumber('main', $ext_version)
+        $highestVersion = VersionNumberUtility::convertVersionNumberToInteger(
+            $this->raiseVersionNumber('main', $ext_version)
         );
 
         if ($this->isTYPO3VersionIgnored()) {
