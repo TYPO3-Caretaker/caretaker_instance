@@ -27,6 +27,10 @@ $EM_CONF[$_EXTKEY] = array (
   ),
   'autoload' =>
   array (
+    'psr-4' =>
+    array (
+      'Caretaker\\CaretakerInstance\\' => 'Classes',
+    ),
     'classmap' =>
     array (
       0 => 'services',
