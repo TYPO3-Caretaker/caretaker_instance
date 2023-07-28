@@ -71,11 +71,12 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
             throw new \Exception('Public key missing', 1423738632);
         }
 
-        openssl_seal($data, $cryptedData, $envelopeKeys, array($publicKey), "RC4");
+        $iv = openssl_random_pseudo_bytes(32);
+        $result = openssl_seal($data, $cryptedData, $envelopeKeys, array($publicKey), "AES256", $iv);
 
         $envelopeKey = $envelopeKeys[0];
 
-        $crypted = base64_encode($envelopeKey) . ':' . base64_encode($cryptedData);
+        $crypted = base64_encode($envelopeKey) . ':' . base64_encode($cryptedData) . ':' . base64_encode($iv);
 
         return $crypted;
     }
@@ -95,15 +96,17 @@ class tx_caretakerinstance_OpenSSLCryptoManager extends tx_caretakerinstance_Abs
             throw new \Exception('Private key missing', 1423738633);
         }
 
-        list($envelopeKey, $cryptedData) = explode(':', $data);
+        list($envelopeKey, $cryptedData, $iv) = explode(':', $data);
 
         $envelopeKey = base64_decode($envelopeKey);
         $cryptedData = base64_decode($cryptedData);
+        $iv = base64_decode($iv);
 
-        openssl_open($cryptedData, $decrypted, $envelopeKey, $privateKey, "RC4");
+        openssl_open($cryptedData, $decrypted, $envelopeKey, $privateKey, "AES256", $iv);
 
         return $decrypted;
     }
+
 
     /**
      * Sign the data with the given private key
